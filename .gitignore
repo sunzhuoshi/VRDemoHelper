@@ -27,3 +27,15 @@
 *.exe
 *.out
 *.app
+
+SteamVRDemoHelper/Debug/
+SteamVRDemoHelper/Release/
+SteamVRDemoCore/x64/
+SteamVRDemoHelper/x64/
+ipch/
+.vs/
+Debug/
+Release/
+*.VC.db
+*.opendb
+*.user
