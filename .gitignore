@@ -39,3 +39,5 @@ Release/
 *.VC.db
 *.opendb
 *.user
+x64/
+*.log
