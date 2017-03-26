@@ -27,7 +27,7 @@ namespace steam_vr_demo_helper {
 
 	std::string getCurrentProcessName()
 	{
-		char buf[MAX_PATH] = "", *tmp;
+		char buf[MAX_PATH] = "", *tmp = NULL;
 		std::string result;
 
 		if (GetModuleFileNameA(NULL, buf, MAX_PATH))
