@@ -1,0 +1,9 @@
+log4cplus.rootLogger=DEBUG, HELPER
+ 
+log4cplus.appender.HELPER=log4cplus::RollingFileAppender    
+log4cplus.appender.HELPER.MaxFileSize=100MB  
+log4cplus.appender.HELPER.MaxBackupIndex=10  
+ 
+log4cplus.appender.HELPER.File=helper.log  
+log4cplus.appender.HELPER.layout=log4cplus::PatternLayout  
+log4cplus.appender.HELPER.layout.ConversionPattern=[%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n  

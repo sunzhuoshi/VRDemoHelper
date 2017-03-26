@@ -194,8 +194,6 @@ SteamVRDemoLogServer::~SteamVRDemoLogServer()
 
 bool SteamVRDemoLogServer::start(unsigned short port)
 {
-	log4cplus::PropertyConfigurator config(PROPERTY_FILE);
-	config.configure();
 	log4cplus::Logger logger = log4cplus::Logger::getRoot();
 
 	m_serverSocket = new log4cplus::helpers::ServerSocket(port, false, false, "127.0.0.1");
