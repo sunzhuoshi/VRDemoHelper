@@ -193,6 +193,7 @@
     <Image Include="SteamVRDemoHelper.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="rule_config.ini" />
     <None Include="log4cplus.props" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

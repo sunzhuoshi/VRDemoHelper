@@ -78,5 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="log4cplus.props" />
+    <None Include="rule_config.ini" />
   </ItemGroup>
 </Project>

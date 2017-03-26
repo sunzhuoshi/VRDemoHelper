@@ -1,9 +1,21 @@
-log4cplus.rootLogger=DEBUG, HELPER
+# no appender for the root logger
+log4cplus.rootLogger=DEBUG
+
+log4cplus.logger.CLIENT=DEBUG, CLIENT
+log4cplus.logger.SERVER=DEBUG, SERVER
+  
+log4cplus.appender.CLIENT=log4cplus::RollingFileAppender    
+log4cplus.appender.CLIENT.MaxFileSize=100MB  
+log4cplus.appender.CLIENT.MaxBackupIndex=10  
  
-log4cplus.appender.HELPER=log4cplus::RollingFileAppender    
-log4cplus.appender.HELPER.MaxFileSize=100MB  
-log4cplus.appender.HELPER.MaxBackupIndex=10  
+log4cplus.appender.CLIENT.File=helper.log  
+log4cplus.appender.CLIENT.layout=log4cplus::PatternLayout  
+log4cplus.appender.CLIENT.layout.ConversionPattern=[%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n  
+
+log4cplus.appender.SERVER=log4cplus::RollingFileAppender    
+log4cplus.appender.SERVER.MaxFileSize=100MB  
+log4cplus.appender.SERVER.MaxBackupIndex=10  
  
-log4cplus.appender.HELPER.File=helper.log  
-log4cplus.appender.HELPER.layout=log4cplus::PatternLayout  
-log4cplus.appender.HELPER.layout.ConversionPattern=[%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n  
+log4cplus.appender.SERVER.File=hook.log  
+log4cplus.appender.SERVER.layout=log4cplus::PatternLayout  
+log4cplus.appender.SERVER.layout.ConversionPattern=[%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n  

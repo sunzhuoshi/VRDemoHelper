@@ -12,13 +12,13 @@ namespace steam_vr_demo_helper {
 		{
 			tmp = strrchr(buf, '\\');
 			if (tmp) {
-				*(tmp + 1) = '\0';
+				*tmp = '\0';
 			}
 		}
 		return std::string(buf);
 	}
 
-	std::string getHookDllPath(const std::string &dllName)
+	std::string getFileFullPath(const std::string &dllName)
 	{
 		std::ostringstream result;
 		result << getCurrentExePath().c_str() << "\\" << dllName.c_str();
