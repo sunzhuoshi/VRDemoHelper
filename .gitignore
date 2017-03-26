@@ -41,3 +41,4 @@ Release/
 *.user
 x64/
 *.log
+/SteamVRDemoHelper/*.aps
