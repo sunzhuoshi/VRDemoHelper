@@ -30,12 +30,30 @@
     <ClInclude Include="SteamVRDemoHelper.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SteamVRDemoLogServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XGetopt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="argcargv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SteamVRDemoHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SteamVRDemoLogServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XGetopt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="argcargv.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
