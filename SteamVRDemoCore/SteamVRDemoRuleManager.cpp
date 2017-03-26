@@ -2,6 +2,8 @@
 #include "SteamVRDemoRuleManager.h"
 
 #include <sstream>
+#include <log4cplus\log4cplus.h>
+#include "SteamVRDemoUtil.h"
 
 enum RuleMessage {
 	RM_UNKNOWN = -1,
@@ -27,11 +29,37 @@ const SteamVRDemoRuleManager::TokenMap SteamVRDemoRuleManager::s_ruleActionToken
 };
 
 SteamVRDemoRuleManager::RuleItemList SteamVRDemoRuleManager::s_ruleItemList;
+SteamVRDemoRuleManager::NameList SteamVRDemoRuleManager::s_ignoredProcessNameList = {
+	"EXPLORER.EXE"
+};
+
+bool SteamVRDemoRuleManager::ifIgnore(const std::string &processName)
+{
+	bool result = false;
+	std::string pn = processName;
+	for (auto &c : pn) c = toupper(c);
+	for (NameList::const_iterator it = SteamVRDemoRuleManager::s_ignoredProcessNameList.begin(); it != SteamVRDemoRuleManager::s_ignoredProcessNameList.end(); ++it) {
+		if (pn == *it) {
+			result = true;
+			break;
+		}
+	}
+	return result;
+}
 
 void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 {
 	char className[MAX_PATH];
 	RuleAction action = RA_UNKNOWN;
+
+	log4cplus::Logger logger = log4cplus::Logger::getInstance("SERVER");
+	DWORD processId = GetCurrentProcessId();
+	std::string processName = steam_vr_demo_helper::getCurrentProcessName();
+	std::string messageStr;
+
+	if (SteamVRDemoRuleManager::ifIgnore(processName)) {
+		return;
+	}
 
 	RealGetWindowClassA(wnd, className, MAX_PATH);
 	for (RuleItemList::const_iterator it = SteamVRDemoRuleManager::s_ruleItemList.begin(); it != SteamVRDemoRuleManager::s_ruleItemList.end(); ++it) {
@@ -39,6 +67,19 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 			action = it->m_action;
 		}
 	}
+	switch (message)
+	{
+	case HCBT_ACTIVATE:
+		messageStr = "ACTIVATE";
+		break;
+	case HCBT_CREATEWND:
+		messageStr = "CREATE";
+		break;
+	default:
+		break;
+	}
+	LOG4CPLUS_INFO(logger, "[" << messageStr << "] ID=" << processId << ", name=" << processName << ", Class=" << className << std::endl);
+
 	if (RA_UNKNOWN != action) {
 		ShowWindow(wnd, action);
 	}
@@ -55,7 +96,7 @@ int SteamVRDemoRuleManager::parseValue(const std::string &token, const TokenMap 
 	trimmer.clear();
 	trimmer >> fixedToken;
 	// to upper
-	for (auto & c : fixedToken) { c = toupper(c); };
+	for (auto & c : fixedToken) c = toupper(c);
 
 	for (TokenMap::const_iterator it = tokenMap.begin(); it != tokenMap.end(); ++it) {
 		if (it->first == fixedToken) {

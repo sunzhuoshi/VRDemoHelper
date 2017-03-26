@@ -6,7 +6,6 @@
 class SteamVRDemoRuleManager
 {
 public:
-	typedef std::map<std::string, int> TokenMap;
 	enum RuleMessage {
 		RM_UNKNOWN = -1,
 		RM_ACTIVATE = HCBT_CREATEWND,
@@ -33,9 +32,13 @@ public:
 				m_action != RA_UNKNOWN;
 		};
 	};
-	typedef std::list<RuleItem> RuleItemList;
+	typedef std::map<std::string, int> TokenMap;
 	static const TokenMap s_ruleMessageTokenMap, s_ruleActionTokenMap;
+	typedef std::list<std::string> NameList;
+	static NameList s_ignoredProcessNameList;
+	typedef std::list<RuleItem> RuleItemList;
 	static RuleItemList s_ruleItemList;
+	static bool ifIgnore(const std::string &processName);
 	static void handleMessage(int message, HWND wnd);
 	static int parseValue(const std::string &token, const TokenMap &tokenMap);
 	static bool parseSection(const std::string &sectionName, const std::string &filePath, RuleItem &ruleItem);
