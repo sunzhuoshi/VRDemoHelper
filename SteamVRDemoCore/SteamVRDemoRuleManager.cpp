@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "SteamVRDemoRuleManager.h"
 
+#include <string.h>
 #include <sstream>
 #include <log4cplus\log4cplus.h>
 #include "SteamVRDemoUtil.h"
+
+const char *IGNORE_LIST_SECTION = "IgnoreList";
 
 enum RuleMessage {
 	RM_UNKNOWN = -1,
@@ -33,13 +36,51 @@ SteamVRDemoRuleManager::NameList SteamVRDemoRuleManager::s_ignoredProcessNameLis
 	"EXPLORER.EXE"
 };
 
+// TODO: move it into a common file to share
+std::string Trim(const std::string &str)
+{
+	std::string result;
+	std::stringstream trimmer;
+
+	trimmer << str;
+	trimmer.clear();
+	trimmer >> result;
+	return result;
+}
+
+// TODO: move it into a common file to share
+std::vector<std::string>& split(const std::string &text, char sep, std::vector<std::string> &tokens) {
+	std::size_t start = 0, end = 0;
+	while ((end = text.find(sep, start)) != std::string::npos) {
+		tokens.push_back(text.substr(start, end - start));
+		start = end + 1;
+	}
+	tokens.push_back(text.substr(start));
+	return tokens;
+}
+
+// TODO: move it into a common file to share
+typedef std::pair<std::string, std::string> KeyValuePair;
+bool ParseKeyValue(const std::string &line, KeyValuePair &keyValue)
+{
+	bool result = false;
+	std::string trimmedLine = Trim(line);
+	std::vector<std::string> splited;
+	split(line, '=', splited);
+	if (2 == splited.size()) {
+		keyValue.first = splited[0];
+		keyValue.second = splited[1];
+		result = true;
+	}
+	return result;
+}
+
 bool SteamVRDemoRuleManager::ifIgnore(const std::string &processName)
 {
 	bool result = false;
-	std::string pn = processName;
-	for (auto &c : pn) c = toupper(c);
+
 	for (NameList::const_iterator it = SteamVRDemoRuleManager::s_ignoredProcessNameList.begin(); it != SteamVRDemoRuleManager::s_ignoredProcessNameList.end(); ++it) {
-		if (pn == *it) {
+		if (0 == _stricmp(processName.c_str(), it->c_str())) {
 			result = true;
 			break;
 		}
@@ -88,18 +129,10 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 int SteamVRDemoRuleManager::parseValue(const std::string &token, const TokenMap &tokenMap)
 {
 	int result = -1;
-	std::string fixedToken;
-
-	// trim it
-	std::stringstream trimmer;
-	trimmer << token;
-	trimmer.clear();
-	trimmer >> fixedToken;
-	// to upper
-	for (auto & c : fixedToken) c = toupper(c);
+	std::string trimmedToken = Trim(token);
 
 	for (TokenMap::const_iterator it = tokenMap.begin(); it != tokenMap.end(); ++it) {
-		if (it->first == fixedToken) {
+		if (0 == _stricmp(it->first.c_str(), trimmedToken.c_str())) {
 			result = it->second;
 			break;
 		}
@@ -107,8 +140,27 @@ int SteamVRDemoRuleManager::parseValue(const std::string &token, const TokenMap 
 	return result;
 }
 
+bool SteamVRDemoRuleManager::parseIgnoreListSection(const std::string &filePath) {
+	bool result = false;
+	char buf[1024] = "";
+	DWORD p = 0, ret = GetPrivateProfileSectionA(IGNORE_LIST_SECTION, buf, sizeof(buf), filePath.c_str());
+	std::ostringstream line;
+	while (p < ret) {
+		line << buf[p];
+		if ('\0' == buf[p]) {
+			KeyValuePair keyValue;
+			if (ParseKeyValue(line.str(), keyValue)) {
+				s_ignoredProcessNameList.push_back(keyValue.second);
+			}
+			line.str("");
+			line.clear();
+		}
+		p++;
+	}
+	return result;
+}
 
-bool SteamVRDemoRuleManager::parseSection(const std::string &sectionName, const std::string &filePath, RuleItem &ruleItem) {
+bool SteamVRDemoRuleManager::parseRuleSection(const std::string &sectionName, const std::string &filePath, RuleItem &ruleItem) {
 	bool result = true;
 	char value[MAX_PATH];
 
@@ -134,12 +186,17 @@ bool SteamVRDemoRuleManager::init(const char *configFilePath)
 		while (p < ret) {
 			sectionName << buf[p];
 			if ('\0' == buf[p]) {
-				RuleItem ruleItem;
-				if (parseSection(sectionName.str() , configFilePath, ruleItem)) {
-					SteamVRDemoRuleManager::s_ruleItemList.push_back(ruleItem);
+				if (0 == _stricmp(IGNORE_LIST_SECTION, sectionName.str().c_str())) {
+					parseIgnoreListSection(configFilePath);
 				}
 				else {
-					// TODO: log it as a warning
+					RuleItem ruleItem;
+					if (parseRuleSection(sectionName.str(), configFilePath, ruleItem)) {
+						SteamVRDemoRuleManager::s_ruleItemList.push_back(ruleItem);
+					}
+					else {
+						// TODO: log it as a warning
+					}
 				}
 				sectionName.str("");
 				sectionName.clear();

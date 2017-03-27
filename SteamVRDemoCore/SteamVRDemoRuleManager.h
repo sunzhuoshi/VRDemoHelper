@@ -41,7 +41,8 @@ public:
 	static bool ifIgnore(const std::string &processName);
 	static void handleMessage(int message, HWND wnd);
 	static int parseValue(const std::string &token, const TokenMap &tokenMap);
-	static bool parseSection(const std::string &sectionName, const std::string &filePath, RuleItem &ruleItem);
+	static bool parseIgnoreListSection(const std::string &filePath);
+	static bool parseRuleSection(const std::string &sectionName, const std::string &filePath, RuleItem &ruleItem);
 	static bool init(const char *configFilePath);
 };
 
