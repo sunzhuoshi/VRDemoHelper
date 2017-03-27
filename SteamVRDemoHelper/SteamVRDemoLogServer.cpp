@@ -194,14 +194,14 @@ SteamVRDemoLogServer::~SteamVRDemoLogServer()
 
 bool SteamVRDemoLogServer::start(unsigned short port)
 {
-	log4cplus::Logger logger = log4cplus::Logger::getInstance("SERVER");
+	log4cplus::Logger serverLogger = log4cplus::Logger::getInstance("SERVER");
 
 	m_serverSocket = new log4cplus::helpers::ServerSocket(port, false, false, "127.0.0.1");
 	if (!m_serverSocket->isOpen()) {
-		LOG4CPLUS_ERROR(logger, "Could not open server socket, maybe port " << port << " is already in use." << std::endl);
+		LOG4CPLUS_ERROR(serverLogger, "Could not open server socket, maybe port " << port << " is already in use." << std::endl);
 		return false;
 	}
-	LOG4CPLUS_INFO(logger, "Log server is listening on port: " << port << std::endl);
+	LOG4CPLUS_INFO(serverLogger, "Log server is listening on port: " << port << std::endl);
 
 	log4cplus::thread::AbstractThread::start();
 	return true;
