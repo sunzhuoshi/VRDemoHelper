@@ -29,13 +29,12 @@ const SteamVRDemoRuleManager::TokenMap SteamVRDemoRuleManager::s_ruleActionToken
 	{"MAX", SW_MAXIMIZE },
 	{"MIN", SW_MINIMIZE },
 	{"HIDE", SW_HIDE },
+	{"CLOSE", WM_CLOSE},
 	{"FULL", SteamVRDemoRuleManager::RA_FULL}
 };
 
 SteamVRDemoRuleManager::RuleItemList SteamVRDemoRuleManager::s_ruleItemList;
-SteamVRDemoRuleManager::NameList SteamVRDemoRuleManager::s_ignoredProcessNameList = {
-	"EXPLORER.EXE"
-};
+SteamVRDemoRuleManager::NameList SteamVRDemoRuleManager::s_ignoredProcessNameList;
 
 // TODO: move it into a common file to share
 std::string Trim(const std::string &str)
@@ -151,7 +150,11 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 		case RA_FULL:
 			performFullScreenAction(wnd);
 			break;
+		case RA_CLOSE:
+			PostMessage(wnd, WM_CLOSE, 0, 0);
+			break;
 		default:
+			// show window commands
 			ShowWindow(wnd, action);
 			break;
 		}

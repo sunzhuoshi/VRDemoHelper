@@ -16,7 +16,8 @@ public:
 		RA_MAX = SW_MAXIMIZE,
 		RA_MIN = SW_MINIMIZE,
 		RA_HIDE = SW_HIDE,
-		RA_FULL = SW_HIDE + 1
+		RA_FULL = SW_MAX + 1,
+		RA_CLOSE = WM_CLOSE,
 	};
 	struct RuleItem {
 		std::string m_ruleName;
