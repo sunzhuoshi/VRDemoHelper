@@ -6,13 +6,14 @@
 class SteamVRDemoRuleManager
 {
 public:
+	static const int UNKNOWN_TOKEN = -1;
 	enum RuleMessage {
-		RM_UNKNOWN = -1,
+		RM_UNKNOWN = UNKNOWN_TOKEN,
 		RM_ACTIVATE = HCBT_CREATEWND,
 		RM_CREATE = HCBT_ACTIVATE
 	};
 	enum RuleAction {
-		RA_UNKNOWN = -1,
+		RA_UNKNOWN = UNKNOWN_TOKEN,
 		RA_MAX = SW_MAXIMIZE,
 		RA_MIN = SW_MINIMIZE,
 		RA_HIDE = SW_HIDE,
@@ -34,8 +35,8 @@ public:
 				m_action != RA_UNKNOWN;
 		};
 	};
-	typedef std::map<std::string, int> TokenMap;
-	static const TokenMap s_ruleMessageTokenMap, s_ruleActionTokenMap;
+	typedef std::map<int, std::string> TokenMap;
+	static TokenMap s_ruleMessageTokenMap, s_ruleActionTokenMap;
 	typedef std::list<std::string> NameList;
 	static NameList s_ignoredProcessNameList;
 	typedef std::list<RuleItem> RuleItemList;

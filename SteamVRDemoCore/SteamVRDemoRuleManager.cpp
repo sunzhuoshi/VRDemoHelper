@@ -4,7 +4,7 @@
 #include <string.h>
 #include <sstream>
 #include <log4cplus\log4cplus.h>
-#include "SteamVRDemoUtil.h"
+#include "util\l4util.h"
 
 const char *IGNORE_LIST_SECTION = "IgnoreList";
 
@@ -20,60 +20,21 @@ enum RuleAction {
 	RA_HIDE = SW_HIDE
 };
 
-const SteamVRDemoRuleManager::TokenMap SteamVRDemoRuleManager::s_ruleMessageTokenMap = {
-	{"CREATE", HCBT_CREATEWND},
-	{"ACTIVATE", HCBT_ACTIVATE }
+SteamVRDemoRuleManager::TokenMap SteamVRDemoRuleManager::s_ruleMessageTokenMap = {
+	{HCBT_ACTIVATE, "ACTIVATE"},
+	{HCBT_CREATEWND, "CREATE"}
 };
 
-const SteamVRDemoRuleManager::TokenMap SteamVRDemoRuleManager::s_ruleActionTokenMap = {
-	{"MAX", SW_MAXIMIZE },
-	{"MIN", SW_MINIMIZE },
-	{"HIDE", SW_HIDE },
-	{"CLOSE", WM_CLOSE},
-	{"FULL", SteamVRDemoRuleManager::RA_FULL}
+SteamVRDemoRuleManager::TokenMap SteamVRDemoRuleManager::s_ruleActionTokenMap = {
+	{SW_MAXIMIZE, "MAX"},
+	{SW_MINIMIZE, "MIN"},
+	{SW_HIDE, "HIDE"},
+	{WM_CLOSE, "CLOSE"},
+	{SteamVRDemoRuleManager::RA_FULL, "FULL"}
 };
 
 SteamVRDemoRuleManager::RuleItemList SteamVRDemoRuleManager::s_ruleItemList;
 SteamVRDemoRuleManager::NameList SteamVRDemoRuleManager::s_ignoredProcessNameList;
-
-// TODO: move it into a common file to share
-std::string Trim(const std::string &str)
-{
-	std::string result;
-	std::stringstream trimmer;
-
-	trimmer << str;
-	trimmer.clear();
-	trimmer >> result;
-	return result;
-}
-
-// TODO: move it into a common file to share
-std::vector<std::string>& split(const std::string &text, char sep, std::vector<std::string> &tokens) {
-	std::size_t start = 0, end = 0;
-	while ((end = text.find(sep, start)) != std::string::npos) {
-		tokens.push_back(text.substr(start, end - start));
-		start = end + 1;
-	}
-	tokens.push_back(text.substr(start));
-	return tokens;
-}
-
-// TODO: move it into a common file to share
-typedef std::pair<std::string, std::string> KeyValuePair;
-bool ParseKeyValue(const std::string &line, KeyValuePair &keyValue)
-{
-	bool result = false;
-	std::string trimmedLine = Trim(line);
-	std::vector<std::string> splited;
-	split(line, '=', splited);
-	if (2 == splited.size()) {
-		keyValue.first = splited[0];
-		keyValue.second = splited[1];
-		result = true;
-	}
-	return result;
-}
 
 bool SteamVRDemoRuleManager::ifIgnore(const std::string &processName)
 {
@@ -105,7 +66,7 @@ void SteamVRDemoRuleManager::performFullScreenAction(HWND wnd)
 		windowRect.top < desktopRect.top ||
 		windowRect.bottom < desktopRect.bottom) {
 		LOG4CPLUS_DEBUG(logger, "Window is not full screen size, toggole it");
-		// TODO: check why it desn't work with Unreal 4 games(works with Unity games)
+		// TODO: check why it desn't work with Unreal 4 games(it works with Unity games)
 		PostMessageA(wnd, WM_SYSKEYDOWN, VK_RETURN, 1 << 29 | 0x001C0001);
 		PostMessageA(wnd, WM_SYSCHAR, 13, 1 << 29 | 0x001C0001);
 	}
@@ -118,8 +79,7 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 
 	log4cplus::Logger logger = log4cplus::Logger::getInstance("SERVER");
 	DWORD processId = GetCurrentProcessId();
-	std::string processName = steam_vr_demo_helper::getCurrentProcessName();
-	std::string messageStr;
+	std::string processName = l4util::getCurrentProcessName();
 
 	if (SteamVRDemoRuleManager::ifIgnore(processName)) {
 		return;
@@ -131,19 +91,7 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 			action = it->m_action;
 		}
 	}
-	// TODO: refactor to make it extendable
-	switch (message)
-	{
-	case HCBT_ACTIVATE:
-		messageStr = "ACTIVATE";
-		break;
-	case HCBT_CREATEWND:
-		messageStr = "CREATE";
-		break;
-	default:
-		break;
-	}
-	LOG4CPLUS_INFO(logger, "[" << messageStr << "] ID=" << processId << ", name=" << processName << ", Class=" << className << std::endl);
+	LOG4CPLUS_INFO(logger, "[" << SteamVRDemoRuleManager::s_ruleMessageTokenMap[message] << "] ID=" << processId << ", name=" << processName << ", Class=" << className << std::endl);
 
 	if (RA_UNKNOWN != action) {
 		switch (action) {
@@ -163,12 +111,12 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 
 int SteamVRDemoRuleManager::parseValue(const std::string &token, const TokenMap &tokenMap)
 {
-	int result = -1;
-	std::string trimmedToken = Trim(token);
+	int result = UNKNOWN_TOKEN;
+	std::string trimmedToken = (token);
 
 	for (TokenMap::const_iterator it = tokenMap.begin(); it != tokenMap.end(); ++it) {
-		if (0 == _stricmp(it->first.c_str(), trimmedToken.c_str())) {
-			result = it->second;
+		if (0 == _stricmp(it->second.c_str(), trimmedToken.c_str())) {
+			result = it->first;
 			break;
 		}
 	}
@@ -183,8 +131,8 @@ bool SteamVRDemoRuleManager::parseIgnoreListSection(const std::string &filePath)
 	while (p < ret) {
 		line << buf[p];
 		if ('\0' == buf[p]) {
-			KeyValuePair keyValue;
-			if (ParseKeyValue(line.str(), keyValue)) {
+			l4util::StringPair keyValue;
+			if (l4util::parseProperty(line.str(), keyValue)) {
 				s_ignoredProcessNameList.push_back(keyValue.second);
 			}
 			line.str("");
@@ -199,6 +147,7 @@ bool SteamVRDemoRuleManager::parseRuleSection(const std::string &sectionName, co
 	bool result = true;
 	char value[MAX_PATH];
 
+	// TODO: refactor it with GetPrivateProfileSection
 	result &= (0 < GetPrivateProfileStringA(sectionName.c_str(), "ClassName", "", value, sizeof(value), filePath.c_str()));
 	ruleItem.m_className = value;
 

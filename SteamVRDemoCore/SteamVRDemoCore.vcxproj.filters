@@ -27,10 +27,10 @@
     <ClInclude Include="SteamVRDemoCore.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\SteamVRDemoHelper\SteamVRDemoUtil.h">
+    <ClInclude Include="SteamVRDemoRuleManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SteamVRDemoRuleManager.h">
+    <ClInclude Include="..\Libs\util\l4util.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,10 +44,10 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\SteamVRDemoHelper\SteamVRDemoUtil.cpp">
+    <ClCompile Include="SteamVRDemoRuleManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SteamVRDemoRuleManager.cpp">
+    <ClCompile Include="..\Libs\util\l4util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

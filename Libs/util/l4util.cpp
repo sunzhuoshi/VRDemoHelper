@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "SteamVRDemoUtil.h"
 
-#include <sstream>
+#include "l4util.h"
+#include <sstream> 
+#include <minwindef.h>
 
-namespace steam_vr_demo_helper {
-
+namespace l4util {
 	std::string getCurrentExePath()
 	{
 		char buf[MAX_PATH] = "", *tmp;
@@ -18,10 +18,10 @@ namespace steam_vr_demo_helper {
 		return std::string(buf);
 	}
 
-	std::string getFileFullPath(const std::string &dllName)
+	std::string getFileFullPath(const std::string &dllFileName)
 	{
 		std::ostringstream result;
-		result << getCurrentExePath().c_str() << "\\" << dllName.c_str();
+		result << getCurrentExePath().c_str() << "\\" << dllFileName.c_str();
 		return result.str();
 	}
 
@@ -42,4 +42,4 @@ namespace steam_vr_demo_helper {
 		}
 		return result;
 	}
-} // namespace
+}

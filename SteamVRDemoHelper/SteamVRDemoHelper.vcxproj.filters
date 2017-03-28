@@ -39,9 +39,6 @@
     <ClInclude Include="argcargv.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SteamVRDemoUtil.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -59,7 +56,7 @@
     <ClCompile Include="argcargv.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SteamVRDemoUtil.cpp">
+    <ClCompile Include="..\Libs\util\l4util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
