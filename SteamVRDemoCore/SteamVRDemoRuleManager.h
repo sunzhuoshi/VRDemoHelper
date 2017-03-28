@@ -15,7 +15,8 @@ public:
 		RA_UNKNOWN = -1,
 		RA_MAX = SW_MAXIMIZE,
 		RA_MIN = SW_MINIMIZE,
-		RA_HIDE = SW_HIDE
+		RA_HIDE = SW_HIDE,
+		RA_FULL = SW_HIDE + 1
 	};
 	struct RuleItem {
 		std::string m_ruleName;
@@ -39,6 +40,7 @@ public:
 	typedef std::list<RuleItem> RuleItemList;
 	static RuleItemList s_ruleItemList;
 	static bool ifIgnore(const std::string &processName);
+	static void performFullScreenAction(HWND wnd);
 	static void handleMessage(int message, HWND wnd);
 	static int parseValue(const std::string &token, const TokenMap &tokenMap);
 	static bool parseIgnoreListSection(const std::string &filePath);

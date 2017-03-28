@@ -29,6 +29,7 @@ const SteamVRDemoRuleManager::TokenMap SteamVRDemoRuleManager::s_ruleActionToken
 	{"MAX", SW_MAXIMIZE },
 	{"MIN", SW_MINIMIZE },
 	{"HIDE", SW_HIDE },
+	{"FULL", SteamVRDemoRuleManager::RA_FULL}
 };
 
 SteamVRDemoRuleManager::RuleItemList SteamVRDemoRuleManager::s_ruleItemList;
@@ -88,6 +89,29 @@ bool SteamVRDemoRuleManager::ifIgnore(const std::string &processName)
 	return result;
 }
 
+void SteamVRDemoRuleManager::performFullScreenAction(HWND wnd)
+{
+	HWND desktopWindow = GetDesktopWindow();
+	RECT desktopRect, windowRect;
+	log4cplus::Logger logger = log4cplus::Logger::getInstance("SERVER");
+
+	GetWindowRect(desktopWindow, &desktopRect);
+	GetWindowRect(wnd, &windowRect);
+
+	LOG4CPLUS_DEBUG(logger, "Desktop width: " << desktopRect.right << ", height: " << desktopRect.bottom);
+	LOG4CPLUS_DEBUG(logger, "Window width: " << windowRect.right - windowRect.left << ", height: " << desktopRect.bottom - desktopRect.top);
+
+	if (windowRect.left > desktopRect.left ||
+		windowRect.right < desktopRect.right ||
+		windowRect.top < desktopRect.top ||
+		windowRect.bottom < desktopRect.bottom) {
+		LOG4CPLUS_DEBUG(logger, "Window is not full screen size, toggole it");
+		// TODO: check why it desn't work with Unreal 4 games(works with Unity games)
+		PostMessageA(wnd, WM_SYSKEYDOWN, VK_RETURN, 1 << 29 | 0x001C0001);
+		PostMessageA(wnd, WM_SYSCHAR, 13, 1 << 29 | 0x001C0001);
+	}
+}
+
 void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 {
 	char className[MAX_PATH];
@@ -108,6 +132,7 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 			action = it->m_action;
 		}
 	}
+	// TODO: refactor to make it extendable
 	switch (message)
 	{
 	case HCBT_ACTIVATE:
@@ -122,7 +147,14 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 	LOG4CPLUS_INFO(logger, "[" << messageStr << "] ID=" << processId << ", name=" << processName << ", Class=" << className << std::endl);
 
 	if (RA_UNKNOWN != action) {
-		ShowWindow(wnd, action);
+		switch (action) {
+		case RA_FULL:
+			performFullScreenAction(wnd);
+			break;
+		default:
+			ShowWindow(wnd, action);
+			break;
+		}
 	}
 }
 
