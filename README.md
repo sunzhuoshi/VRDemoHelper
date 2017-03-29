@@ -1,5 +1,5 @@
 # VRDemoHelper
-A simple tool to make Stream VR demonstration better and easier
+A simple tool to make VR demonstration better and easier
 
 Features
 1. Maximize VR game window for demonstration, both win32 and x64 games(only x64 supported now)
