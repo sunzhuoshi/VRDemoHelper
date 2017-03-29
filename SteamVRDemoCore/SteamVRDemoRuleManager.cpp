@@ -66,9 +66,10 @@ void SteamVRDemoRuleManager::performFullScreenAction(HWND wnd)
 		windowRect.top < desktopRect.top ||
 		windowRect.bottom < desktopRect.bottom) {
 		LOG4CPLUS_DEBUG(logger, "Window is not full screen size, toggole it");
-		// TODO: check why it desn't work with Unreal 4 games(it works with Unity games)
-		PostMessageA(wnd, WM_SYSKEYDOWN, VK_RETURN, 1 << 29 | 0x001C0001);
-		PostMessageA(wnd, WM_SYSCHAR, 13, 1 << 29 | 0x001C0001);
+		PostMessageA(wnd, WM_KEYDOWN, VK_MENU, 0);				// Post WM_KEYDOWN for Unreal games
+		// TODO: check if char code or repeat is necessary
+		PostMessageA(wnd, WM_SYSKEYDOWN, VK_RETURN, 1 << 29 | 0x001C0001);  // ALT down | char code = 1C | repeat = 1
+		PostMessageA(wnd, WM_KEYUP, VK_MENU, 0);				// Post WM_KEYUP for Unreal games  
 	}
 }
 
