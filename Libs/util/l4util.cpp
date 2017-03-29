@@ -3,6 +3,7 @@
 #include "l4util.h"
 #include <sstream> 
 #include <minwindef.h>
+#include <Windows.h>
 
 namespace l4util {
 	std::string getCurrentExePath()
@@ -42,4 +43,18 @@ namespace l4util {
 		}
 		return result;
 	}
+	std::string loadString(UINT id) 
+	{
+		std::string result;
+		char buf[MAX_PATH];	// just be lazy to use MAX_PATH
+		HMODULE instance = GetModuleHandle(NULL);
+		
+		if (instance) {
+			if (0 < LoadStringA(instance, id, buf, MAX_PATH)) {
+				result = std::string(buf);
+			}
+		}
+		return result;
+	}
+
 }

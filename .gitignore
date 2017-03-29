@@ -27,6 +27,7 @@
 *.exe
 *.out
 *.app
+*.aps
 
 SteamVRDemoHelper/Debug/
 SteamVRDemoHelper/Release/
@@ -41,4 +42,3 @@ Release/
 *.user
 x64/
 *.log
-/SteamVRDemoHelper/*.aps

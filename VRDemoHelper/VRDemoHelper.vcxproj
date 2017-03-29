@@ -284,6 +284,7 @@ del /q *.log
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Libs\util\l4util.h" />
     <ClInclude Include="argcargv.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

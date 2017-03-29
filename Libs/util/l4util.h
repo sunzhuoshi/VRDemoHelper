@@ -44,4 +44,5 @@ namespace l4util {
 	std::string getCurrentExePath();
 	std::string getFileFullPath(const std::string &relativePath);
 	std::string getCurrentProcessName();
+	std::string loadString(UINT id);
 }
