@@ -6,7 +6,7 @@
 
 #include <log4cplus/log4cplus.h>
 #include "util/l4util.h"
-#include "VRDemoRuleManager.h"
+#include "VRDemoArbiter.h"
 
 #define HELPER_NAME "VRDemoHelper"				// used to tell if we're in helper process
 
@@ -52,7 +52,7 @@ void fnDelayInit()
 	if (!bIsHelperProcess) {
 		fnInitLog();
 		log4cplus::Logger logger = log4cplus::Logger::getInstance("SERVER");
-		if (!VRDemoRuleManager::init(szConfigFilePath)) {
+		if (!VRDemoArbiter::getInstance().init(szConfigFilePath)) {
 			LOG4CPLUS_ERROR(logger, "Failed to parse rule config file: " << szConfigFilePath << std::endl);
 		}
 	}
@@ -76,7 +76,7 @@ VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lPar
 		case HCBT_CREATEWND:
 		case HCBT_ACTIVATE:
 		{
-			VRDemoRuleManager::handleMessage(nCode, (HWND)wParam);
+			VRDemoArbiter::getInstance().arbitrate(VRDemoArbiter::RT_MESSAGE, nCode, (HWND)wParam);
 		}
 		break;
 		default:

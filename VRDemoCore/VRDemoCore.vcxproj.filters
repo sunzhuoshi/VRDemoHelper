@@ -30,7 +30,7 @@
     <ClInclude Include="VRDemoCore.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="VRDemoRuleManager.h">
+    <ClInclude Include="..\Common\VRDemoArbiter.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,10 +44,10 @@
     <ClCompile Include="VRDemoCore.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="VRDemoRuleManager.cpp">
+    <ClCompile Include="..\Common\util\l4util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\util\l4util.cpp">
+    <ClCompile Include="..\Common\VRDemoArbiter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
