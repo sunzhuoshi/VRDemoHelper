@@ -158,7 +158,7 @@ namespace loggingserver
 		log4cplus::thread::AbstractThreadPtr self_reference;
 		log4cplus::helpers::Socket clientsock;
 		Reaper & reaper;
-	};
+	};                                        
 
 
 	void loggingserver::ClientThread::run()

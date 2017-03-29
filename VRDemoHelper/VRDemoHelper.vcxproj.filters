@@ -53,13 +53,13 @@
     <ClCompile Include="argcargv.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Libs\util\l4util.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="VRDemoHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="VRDemoLogServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\util\l4util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -41,13 +41,13 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Libs\util\l4util.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="VRDemoCore.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="VRDemoRuleManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\util\l4util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

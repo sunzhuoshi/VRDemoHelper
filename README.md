@@ -7,11 +7,11 @@ A simple tool to make VR demonstration better and easier
 1. Maximize VR game window for demonstration, both win32(not supported now) and x64 games
 2. Hide Steam VR popup window automatically(developing)  
 TODO: use overlap window or notification rather than popup window to show the notification?
-3. show FPS overlay
+3. show FPS overlay(low priority, for steam already supports it)
 4. Minimize performance loss 
 ### TODO 
 1. support "search" trigger type to deal with Steam popup window(it seems not to be hooked)
-2. add default implementation and create one if log4cplus.prop or rule_config.ini don't exist
+2. add default implementation and create one if log4cplus.prop or rule_config.ini doesn't exist
 3. hook D3D to show FPS like fraps
 4. support win32 games
 

@@ -138,13 +138,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Libs\log4cplus\include;..\Libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Libs\log4cplus\bin</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Common\log4cplus\bin\</AdditionalLibraryDirectories>
       <AdditionalDependencies>log4cplusD_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
@@ -152,7 +152,7 @@
     </ResourceCompile>
     <PostBuildEvent>
       <Command>echo copying log4cplus dll...
-copy /Y $(ProjectDir)..\Libs\log4cplus\bin\log4cplusD_x64.dll $(TargetDir)
+copy /Y $(ProjectDir)..\Common\log4cplus\bin\log4cplusD_x64.dll $(TargetDir)
 
 echo copying log4cplus props...
 copy /Y $(ProjectDir)log4cplus.props $(TargetDir)
@@ -212,14 +212,14 @@ copy /Y $(ProjectDir)rule_config.ini $(TargetDir)</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Libs\log4cplus\include;..\Libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Libs\log4cplus\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Common\log4cplus\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>log4cplus_x64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
@@ -228,7 +228,7 @@ copy /Y $(ProjectDir)rule_config.ini $(TargetDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>echo copying log4cplus dll...
-copy /Y $(ProjectDir)..\Libs\log4cplus\bin\log4cplus_x64.dll $(TargetDir)
+copy /Y $(ProjectDir)..\Common\log4cplus\bin\log4cplus_x64.dll $(TargetDir)
 
 echo copying log4cplus props...
 copy /Y $(ProjectDir)log4cplus.props $(TargetDir)
@@ -246,14 +246,14 @@ copy /Y $(ProjectDir)rule_config.ini $(TargetDir)</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Libs\log4cplus\include;..\Libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Libs\log4cplus\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Common\log4cplus\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>log4cplus_x64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
@@ -262,7 +262,7 @@ copy /Y $(ProjectDir)rule_config.ini $(TargetDir)</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>echo copying log4cplus dll...
-copy /Y $(ProjectDir)..\Libs\log4cplus\bin\log4cplus_x64.dll $(TargetDir)
+copy /Y $(ProjectDir)..\Common\log4cplus\bin\log4cplus_x64.dll $(TargetDir)
 
 echo copying log4cplus props...
 copy /Y $(ProjectDir)log4cplus.props $(TargetDir)
@@ -294,7 +294,7 @@ del /q *.log
     <ClInclude Include="XGetopt.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Libs\util\l4util.cpp" />
+    <ClCompile Include="..\Common\util\l4util.cpp" />
     <ClCompile Include="argcargv.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
