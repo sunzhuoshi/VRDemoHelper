@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "SteamVRDemoRuleManager.h"
+﻿#include "stdafx.h"
+#include "VRDemoRuleManager.h"
 
 #include <string.h>
 #include <sstream>
@@ -20,27 +20,27 @@ enum RuleAction {
 	RA_HIDE = SW_HIDE
 };
 
-SteamVRDemoRuleManager::TokenMap SteamVRDemoRuleManager::s_ruleMessageTokenMap = {
+VRDemoRuleManager::TokenMap VRDemoRuleManager::s_ruleMessageTokenMap = {
 	{HCBT_ACTIVATE, "ACTIVATE"},
 	{HCBT_CREATEWND, "CREATE"}
 };
 
-SteamVRDemoRuleManager::TokenMap SteamVRDemoRuleManager::s_ruleActionTokenMap = {
+VRDemoRuleManager::TokenMap VRDemoRuleManager::s_ruleActionTokenMap = {
 	{SW_MAXIMIZE, "MAX"},
 	{SW_MINIMIZE, "MIN"},
 	{SW_HIDE, "HIDE"},
 	{WM_CLOSE, "CLOSE"},
-	{SteamVRDemoRuleManager::RA_FULL, "FULL"}
+	{VRDemoRuleManager::RA_FULL, "FULL"}
 };
 
-SteamVRDemoRuleManager::RuleItemList SteamVRDemoRuleManager::s_ruleItemList;
-SteamVRDemoRuleManager::NameList SteamVRDemoRuleManager::s_ignoredProcessNameList;
+VRDemoRuleManager::RuleItemList VRDemoRuleManager::s_ruleItemList;
+VRDemoRuleManager::NameList VRDemoRuleManager::s_ignoredProcessNameList;
 
-bool SteamVRDemoRuleManager::ifIgnore(const std::string &processName)
+bool VRDemoRuleManager::ifIgnore(const std::string &processName)
 {
 	bool result = false;
 
-	for (NameList::const_iterator it = SteamVRDemoRuleManager::s_ignoredProcessNameList.begin(); it != SteamVRDemoRuleManager::s_ignoredProcessNameList.end(); ++it) {
+	for (NameList::const_iterator it = VRDemoRuleManager::s_ignoredProcessNameList.begin(); it != VRDemoRuleManager::s_ignoredProcessNameList.end(); ++it) {
 		if (0 == _stricmp(processName.c_str(), it->c_str())) {
 			result = true;
 			break;
@@ -49,7 +49,7 @@ bool SteamVRDemoRuleManager::ifIgnore(const std::string &processName)
 	return result;
 }
 
-void SteamVRDemoRuleManager::performFullScreenAction(HWND wnd)
+void VRDemoRuleManager::performFullScreenAction(HWND wnd)
 {
 	HWND desktopWindow = GetDesktopWindow();
 	RECT desktopRect, windowRect;
@@ -73,7 +73,7 @@ void SteamVRDemoRuleManager::performFullScreenAction(HWND wnd)
 	}
 }
 
-void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
+void VRDemoRuleManager::handleMessage(int message, HWND wnd)
 {
 	char className[MAX_PATH];
 	RuleAction action = RA_UNKNOWN;
@@ -82,17 +82,17 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 	DWORD processId = GetCurrentProcessId();
 	std::string processName = l4util::getCurrentProcessName();
 
-	if (SteamVRDemoRuleManager::ifIgnore(processName)) {
+	if (VRDemoRuleManager::ifIgnore(processName)) {
 		return;
 	}
 
 	RealGetWindowClassA(wnd, className, MAX_PATH);
-	for (RuleItemList::const_iterator it = SteamVRDemoRuleManager::s_ruleItemList.begin(); it != SteamVRDemoRuleManager::s_ruleItemList.end(); ++it) {
+	for (RuleItemList::const_iterator it = VRDemoRuleManager::s_ruleItemList.begin(); it != VRDemoRuleManager::s_ruleItemList.end(); ++it) {
 		if (it->m_className == className && it->m_message == message) {
 			action = it->m_action;
 		}
 	}
-	LOG4CPLUS_INFO(logger, "[" << SteamVRDemoRuleManager::s_ruleMessageTokenMap[message] << "] ID=" << processId << ", name=" << processName << ", Class=" << className << std::endl);
+	LOG4CPLUS_INFO(logger, "[" << VRDemoRuleManager::s_ruleMessageTokenMap[message] << "] ID=" << processId << ", name=" << processName << ", Class=" << className << std::endl);
 
 	if (RA_UNKNOWN != action) {
 		switch (action) {
@@ -110,7 +110,7 @@ void SteamVRDemoRuleManager::handleMessage(int message, HWND wnd)
 	}
 }
 
-int SteamVRDemoRuleManager::parseValue(const std::string &token, const TokenMap &tokenMap)
+int VRDemoRuleManager::parseValue(const std::string &token, const TokenMap &tokenMap)
 {
 	int result = UNKNOWN_TOKEN;
 	std::string trimmedToken = (token);
@@ -124,7 +124,7 @@ int SteamVRDemoRuleManager::parseValue(const std::string &token, const TokenMap 
 	return result;
 }
 
-bool SteamVRDemoRuleManager::parseIgnoreListSection(const std::string &filePath) {
+bool VRDemoRuleManager::parseIgnoreListSection(const std::string &filePath) {
 	bool result = false;
 	char buf[1024] = "";
 	DWORD p = 0, ret = GetPrivateProfileSectionA(IGNORE_LIST_SECTION, buf, sizeof(buf), filePath.c_str());
@@ -144,7 +144,7 @@ bool SteamVRDemoRuleManager::parseIgnoreListSection(const std::string &filePath)
 	return result;
 }
 
-bool SteamVRDemoRuleManager::parseRuleSection(const std::string &sectionName, const std::string &filePath, RuleItem &ruleItem) {
+bool VRDemoRuleManager::parseRuleSection(const std::string &sectionName, const std::string &filePath, RuleItem &ruleItem) {
 	bool result = true;
 	char value[MAX_PATH];
 
@@ -153,15 +153,15 @@ bool SteamVRDemoRuleManager::parseRuleSection(const std::string &sectionName, co
 	ruleItem.m_className = value;
 
 	result &= (0 < GetPrivateProfileStringA(sectionName.c_str(), "Message", "", value, sizeof(value), filePath.c_str()));
-	ruleItem.m_message = (RuleMessage)parseValue(value, SteamVRDemoRuleManager::s_ruleMessageTokenMap);
+	ruleItem.m_message = (RuleMessage)parseValue(value, VRDemoRuleManager::s_ruleMessageTokenMap);
 	
 	result &= (0 < GetPrivateProfileStringA(sectionName.c_str(), "Action", "", value, sizeof(value), filePath.c_str()));
-	ruleItem.m_action = (RuleAction)parseValue(value, SteamVRDemoRuleManager::s_ruleActionTokenMap);
+	ruleItem.m_action = (RuleAction)parseValue(value, VRDemoRuleManager::s_ruleActionTokenMap);
 
 	return result;
 }
 
-bool SteamVRDemoRuleManager::init(const char *configFilePath)
+bool VRDemoRuleManager::init(const char *configFilePath)
 {
 	bool result = true;
 	char buf[1024];
@@ -177,7 +177,7 @@ bool SteamVRDemoRuleManager::init(const char *configFilePath)
 				else {
 					RuleItem ruleItem;
 					if (parseRuleSection(sectionName.str(), configFilePath, ruleItem)) {
-						SteamVRDemoRuleManager::s_ruleItemList.push_back(ruleItem);
+						VRDemoRuleManager::s_ruleItemList.push_back(ruleItem);
 					}
 					else {
 						// TODO: log it as a warning

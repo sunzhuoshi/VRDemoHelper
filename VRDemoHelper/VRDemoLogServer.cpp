@@ -1,12 +1,30 @@
 #include "stdafx.h"
-#include "SteamVRDemoLogServer.h"
+#include "VRDemoLogServer.h"
 
 #include <list>
 #include <iostream>
 #include <log4cplus\log4cplus.h>
 
-const char *PROPERTY_FILE = "hook.props";
 
+// Module:  LOG4CPLUS
+// File:    loggingserver.cxx
+// Created: 5/2003
+// Author:  Tad E. Smith
+//
+//
+// Copyright 2003-2017 Tad E. Smith
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 namespace loggingserver
 {
 	typedef std::list<log4cplus::thread::AbstractThreadPtr> ThreadQueueType;
@@ -180,19 +198,19 @@ namespace loggingserver
 } // namespace loggingserver
 
 
-SteamVRDemoLogServer::SteamVRDemoLogServer() :
+VRDemoLogServer::VRDemoLogServer() :
 	m_serverSocket(nullptr),
 	m_runFlag(true)
 {
 }
 
 
-SteamVRDemoLogServer::~SteamVRDemoLogServer()
+VRDemoLogServer::~VRDemoLogServer()
 {
 	delete m_serverSocket;
 }
 
-bool SteamVRDemoLogServer::start(unsigned short port)
+bool VRDemoLogServer::start(unsigned short port)
 {
 	log4cplus::Logger serverLogger = log4cplus::Logger::getInstance("SERVER");
 
@@ -207,7 +225,7 @@ bool SteamVRDemoLogServer::start(unsigned short port)
 	return true;
 }
 
-void SteamVRDemoLogServer::run()
+void VRDemoLogServer::run()
 {
 	loggingserver::Reaper reaper;
 
@@ -219,7 +237,7 @@ void SteamVRDemoLogServer::run()
 	}
 }
 
-void SteamVRDemoLogServer::stop()
+void VRDemoLogServer::stop()
 {
 	m_runFlag = false;
 	

@@ -3,7 +3,7 @@
 #include <map>
 #include <list>
 
-class SteamVRDemoRuleManager
+class VRDemoRuleManager
 {
 public:
 	static const int UNKNOWN_TOKEN = -1;

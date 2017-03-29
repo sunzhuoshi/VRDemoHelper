@@ -27,27 +27,21 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SteamVRDemoHelper.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="SteamVRDemoLogServer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="XGetopt.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="argcargv.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="VRDemoHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VRDemoLogServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="SteamVRDemoHelper.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="SteamVRDemoLogServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="XGetopt.cpp">
@@ -59,22 +53,28 @@
     <ClCompile Include="..\Libs\util\l4util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="VRDemoHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="VRDemoLogServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="SteamVRDemoHelper.rc">
-      <Filter>资源文件</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="SteamVRDemoHelper.ico">
+    <Image Include="VRDemoHelper.ico">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="Iconarchive-Red-Orb-Alphabet-Letter-S.ico">
+    <Image Include="Notification.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="log4cplus.props" />
     <None Include="rule_config.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VRDemoHelper.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

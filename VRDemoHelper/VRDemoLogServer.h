@@ -7,12 +7,12 @@ namespace log4cplus {
 	}
 }
 
-class SteamVRDemoLogServer : public log4cplus::thread::AbstractThread
+class VRDemoLogServer : public log4cplus::thread::AbstractThread
 {
 public:
-	typedef log4cplus::helpers::SharedObjectPtr<SteamVRDemoLogServer> SteamVRDemoLogServerPtr;
-	SteamVRDemoLogServer();
-	~SteamVRDemoLogServer();
+	typedef log4cplus::helpers::SharedObjectPtr<VRDemoLogServer> VRDemoLogServerPtr;
+	VRDemoLogServer();
+	~VRDemoLogServer();
 	bool start(unsigned short port);
 	void run();
 	void stop();
