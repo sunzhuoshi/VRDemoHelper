@@ -286,6 +286,7 @@ del /q *.log
   <ItemGroup>
     <ClInclude Include="..\Common\VRDemoArbiter.h" />
     <ClInclude Include="..\Common\util\l4util.h" />
+    <ClInclude Include="..\Common\VRDemoEventDispatcher.h" />
     <ClInclude Include="argcargv.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -298,6 +299,7 @@ del /q *.log
   <ItemGroup>
     <ClCompile Include="..\Common\util\l4util.cpp" />
     <ClCompile Include="..\Common\VRDemoArbiter.cpp" />
+    <ClCompile Include="..\Common\VRDemoEventDispatcher.cpp" />
     <ClCompile Include="argcargv.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -10,6 +10,10 @@ VRDemoWindowPoller::VRDemoWindowPoller() :
     m_runFlag(true),
     m_pauseFlag(false)
 {
+    VRDemoEventDispatcher::getInstance().addEventListener(
+        VRDemoEventDispatcher::EV_PAUSE_CHANGED, 
+        VRDemoEventDispatcher::VRDemoEventListenerPtr(this)
+    );
 }
 
 
@@ -59,6 +63,18 @@ void VRDemoWindowPoller::resume()
 {
     m_pauseFlag = false;
 }
+
+void VRDemoWindowPoller::handleEvent(int event, unsigned long long param)
+{
+    switch (event) {
+    case VRDemoEventDispatcher::Event::EV_PAUSE_CHANGED:
+        m_pauseFlag = 0 != param;
+        break;
+    default:
+        break;
+    }
+}
+
 
 BOOL CALLBACK VRDemoWindowPoller::enumChildProc(HWND wnd, LPARAM param)
 {

@@ -1,10 +1,12 @@
 #pragma once
 #include <log4cplus\thread\threads.h>
+#include <VRDemoEventDispatcher.h>
 
 /*
   Rule type "POLL" owner
 */
-class VRDemoWindowPoller : public log4cplus::thread::AbstractThread
+class VRDemoWindowPoller : public log4cplus::thread::AbstractThread,
+    public IVRDemoEventListener
 {
 public:
     typedef log4cplus::helpers::SharedObjectPtr<VRDemoWindowPoller> VRDemoWindowPollerPtr;
@@ -15,6 +17,7 @@ public:
     void stop();
     void pause();
     void resume();
+    void handleEvent(int event, unsigned long long param);
     bool isPaused() {
         return m_pauseFlag;
     }
