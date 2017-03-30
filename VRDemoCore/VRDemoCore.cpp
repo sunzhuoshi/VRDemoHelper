@@ -47,12 +47,12 @@ void fnInitLog()
 void fnDelayInit()
 {
 	bIsHelperProcess = fnIsHelperProcess();
-	// We don't log messages when loaded by helper process,
+	// We do nothing when loaded by helper process(not necessary, either),
 	// or it will cause file dead lock, for client and server will try to use the same SERVER file apender 
 	if (!bIsHelperProcess) {
 		fnInitLog();
 		log4cplus::Logger logger = log4cplus::Logger::getInstance("SERVER");
-		if (!VRDemoArbiter::getInstance().init(szConfigFilePath)) {
+		if (!VRDemoArbiter::getInstance().init(szConfigFilePath, "SERVER")) {
 			LOG4CPLUS_ERROR(logger, "Failed to parse rule config file: " << szConfigFilePath << std::endl);
 		}
 	}

@@ -4,6 +4,8 @@
 #include <map>
 #include <list>
 
+#include <log4cplus\log4cplus.h>
+
 class VRDemoArbiter
 {
 public:
@@ -30,17 +32,41 @@ public:
 		std::string m_ruleName;
 		std::string m_className;
         RuleType    m_type;
-		RuleMessage m_message;
 		RuleAction  m_action;
+    private:
+        RuleMessage m_message;
+    public:
 		RuleItem() : m_message(RM_UNKNOWN),
 			m_action(RA_UNKNOWN),
             m_type(RT_UNKNOWN)
 		{};
+        RuleMessage getMessage() const { return m_message; };
+        void setMessage(RuleMessage message) {
+            m_message = message;
+            if (RM_UNKNOWN != m_message && RT_UNKNOWN == m_type) {
+                m_type = RT_MESSAGE;
+            }
+        }
 		bool isValid() {
-			return m_ruleName.length() > 0 &&
-				m_className.length() > 0 &&
-				m_message != RM_UNKNOWN &&
-				m_action != RA_UNKNOWN;
+            bool valid = false;
+
+            if (!m_ruleName.empty()) {
+                switch (m_type) {
+                    case RT_POLL:
+                        if (!m_className.empty() && RA_UNKNOWN != m_action) {
+                            valid = true;
+                        }
+                        break;
+                    case RT_MESSAGE:
+                        if (!m_className.empty() && RA_UNKNOWN != m_action && RM_UNKNOWN != m_action) {
+                            valid = true;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return valid;
         };
         std::string toString() const {
             std::ostringstream buf;
@@ -55,7 +81,7 @@ public:
 private:
     typedef std::map<int, std::string> TokenMap;
     typedef std::list<std::string> NameList;
-    typedef std::list<RuleItem> RuleItemList;
+    typedef std::map<std::string, RuleItem> RuleItemMap;
 public:
     VRDemoArbiter::VRDemoArbiter() {};
     VRDemoArbiter::~VRDemoArbiter() {};
@@ -63,8 +89,9 @@ public:
         static VRDemoArbiter instance;
         return instance;
     }
-    bool init(const std::string &configFilePath);
+    bool init(const std::string &configFilePath, const std::string &loggerName);
     bool arbitrate(RuleType type, int message, HWND wnd);
+    static const std::string RULE_CONFIG_FILE;
 private:
 	bool ifIgnore(const std::string &processName);
 
@@ -81,8 +108,9 @@ private:
     static TokenMap s_ruleActionTokenMap;
     static const std::string IGNORE_LIST_SECTION;
 
-    NameList m_ignoredProcessNameList;
-    RuleItemList m_ruleItemList;
+    NameList m_ignoredProcessNameList; // TODO: use set
+    RuleItemMap m_ruleItemMap;
     std::string m_configFilePath;
+    log4cplus::Logger m_logger;
 };
 

@@ -24,13 +24,13 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Libs\util\l4util.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="VRDemoCore.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\VRDemoArbiter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\util\l4util.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -284,17 +284,20 @@ del /q *.log
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Libs\util\l4util.h" />
+    <ClInclude Include="..\Common\VRDemoArbiter.h" />
+    <ClInclude Include="..\Common\util\l4util.h" />
     <ClInclude Include="argcargv.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="VRDemoHelper.h" />
     <ClInclude Include="VRDemoLogServer.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="VRDemoWindowPoller.h" />
     <ClInclude Include="XGetopt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Common\util\l4util.cpp" />
+    <ClCompile Include="..\Common\VRDemoArbiter.cpp" />
     <ClCompile Include="argcargv.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -306,6 +309,7 @@ del /q *.log
     </ClCompile>
     <ClCompile Include="VRDemoHelper.cpp" />
     <ClCompile Include="VRDemoLogServer.cpp" />
+    <ClCompile Include="VRDemoWindowPoller.cpp" />
     <ClCompile Include="XGetopt.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -39,7 +39,13 @@
     <ClInclude Include="VRDemoLogServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Libs\util\l4util.h">
+    <ClInclude Include="VRDemoWindowPoller.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\VRDemoArbiter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\util\l4util.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -60,6 +66,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\util\l4util.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="VRDemoWindowPoller.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\VRDemoArbiter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

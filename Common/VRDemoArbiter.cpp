@@ -7,6 +7,7 @@
 #include "util\l4util.h"
 
 const std::string VRDemoArbiter::IGNORE_LIST_SECTION = "IgnoreList";
+const std::string VRDemoArbiter::RULE_CONFIG_FILE = "rule_config.ini";
 
 VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleTypeTokenMap = {
     {VRDemoArbiter::RT_MESSAGE, "MESSAGE"},
@@ -15,8 +16,9 @@ VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleTypeTokenMap = {
 };
 
 VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleMessageTokenMap = {
-	{HCBT_ACTIVATE, "ACTIVATE"},
-	{HCBT_CREATEWND, "CREATE"}
+    {HCBT_ACTIVATE, "ACTIVATE"},
+    {HCBT_CREATEWND, "CREATE"},
+    {VRDemoArbiter::RM_UNKNOWN, "UNKNOWN"}
 };
 
 VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleActionTokenMap = {
@@ -24,7 +26,8 @@ VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleActionTokenMap = {
 	{SW_MINIMIZE, "MIN"},
 	{SW_HIDE, "HIDE"},
 	{WM_CLOSE, "CLOSE"},
-	{VRDemoArbiter::RA_FULL, "FULL"}
+	{VRDemoArbiter::RA_FULL, "FULL"},
+    {VRDemoArbiter::RA_UNKNOWN, "UNKNOWN"}
 };
 
 bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
@@ -32,26 +35,30 @@ bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
     bool result = false;
     char className[MAX_PATH];
     RuleAction action = RA_UNKNOWN;
+    DWORD processId = 0;
 
-    log4cplus::Logger logger = log4cplus::Logger::getInstance("SERVER");
-    DWORD processId = GetCurrentProcessId();
-    std::string processName = l4util::getCurrentProcessName();
+    GetWindowThreadProcessId(wnd, &processId);
 
-    if (!ifIgnore(processName)) {
+    std::string processName = l4util::getProcessNameWithWindow(wnd);
+
+    // if we can't get process name, then we can do less...
+    if (!ifIgnore(processName) && processName.size()) {
         RealGetWindowClassA(wnd, className, MAX_PATH);
 
-        LOG4CPLUS_INFO(logger, "[" << VRDemoArbiter::s_ruleMessageTokenMap[message] << "] ID=" << processId << ", name=" << processName << ", Class=" << className << std::endl);
+        LOG4CPLUS_INFO(m_logger, "[ " << VRDemoArbiter::s_ruleTypeTokenMap[type] << " | " << VRDemoArbiter::s_ruleMessageTokenMap[message] << " ] ID=" << processId << ", name=" << processName << ", Class=" << className << std::endl);
 
-        RuleItemList::const_iterator it = m_ruleItemList.begin();
-
-        while (it != m_ruleItemList.end()) {
-            if (type == it->m_type && it->m_className == className && it->m_message == message) {
-                action = it->m_action;
+        RuleItemMap::const_iterator it = m_ruleItemMap.begin();
+        while (it != m_ruleItemMap.end()) {
+            if (type == it->second.m_type && 
+                0 == it->second.m_className.compare(className) && 
+                it->second.getMessage() == message) {
+                action = it->second.m_action;
                 break;
             }
+            ++it;
         }
-        if (it != m_ruleItemList.end()) {
-            performAction(wnd, *it);
+        if (it != m_ruleItemMap.end()) {
+            performAction(wnd, it->second);
             result = true;
         }
     }
@@ -74,6 +81,7 @@ bool VRDemoArbiter::ifIgnore(const std::string &processName)
 
 void VRDemoArbiter::performAction(HWND wnd, const RuleItem &ruleItem)
 {
+    LOG4CPLUS_WARN(m_logger, "Performing action, rule item: " << ruleItem.toString());
     switch (ruleItem.m_action) {
     case RA_FULL:
         performFullScreenAction(wnd, ruleItem);
@@ -88,7 +96,7 @@ void VRDemoArbiter::performAction(HWND wnd, const RuleItem &ruleItem)
         ShowWindow(wnd, ruleItem.m_action);
         break;
     default:
-        LOG4CPLUS_WARN(log4cplus::Logger::getInstance("SERVER"), "Unknown action, rule item: " << ruleItem.toString());
+        LOG4CPLUS_WARN(m_logger, "Unknown action, rule item: " << ruleItem.toString());
         break;
     }
 }
@@ -98,19 +106,18 @@ void VRDemoArbiter::performFullScreenAction(HWND wnd, const RuleItem &ruleItem)
 {
 	HWND desktopWindow = GetDesktopWindow();
 	RECT desktopRect, windowRect;
-	log4cplus::Logger logger = log4cplus::Logger::getInstance("SERVER");
 
 	GetWindowRect(desktopWindow, &desktopRect);
 	GetWindowRect(wnd, &windowRect);
 
-	LOG4CPLUS_DEBUG(logger, "Desktop width: " << desktopRect.right << ", height: " << desktopRect.bottom);
-	LOG4CPLUS_DEBUG(logger, "Window width: " << windowRect.right - windowRect.left << ", height: " << desktopRect.bottom - desktopRect.top);
+	LOG4CPLUS_DEBUG(m_logger, "Desktop width: " << desktopRect.right << ", height: " << desktopRect.bottom);
+	LOG4CPLUS_DEBUG(m_logger, "Window width: " << windowRect.right - windowRect.left << ", height: " << desktopRect.bottom - desktopRect.top);
 
 	if (windowRect.left > desktopRect.left ||
 		windowRect.right < desktopRect.right ||
 		windowRect.top < desktopRect.top ||
 		windowRect.bottom < desktopRect.bottom) {
-		LOG4CPLUS_DEBUG(logger, "Window is not full screen size, toggole it");
+		LOG4CPLUS_DEBUG(m_logger, "Window is not full screen size, toggole it");
 		PostMessageA(wnd, WM_KEYDOWN, VK_MENU, 0);				// Post WM_KEYDOWN for Unreal games
 		// TODO: check if char code or repeat is necessary
 		PostMessageA(wnd, WM_SYSKEYDOWN, VK_RETURN, 1 << 29 | 0x001C0001);  // ALT down | char code = 1C | repeat = 1
@@ -133,69 +140,122 @@ int VRDemoArbiter::parseValue(const std::string &token, const TokenMap &tokenMap
 }
 
 bool VRDemoArbiter::parseIgnoreListSection(const std::string &filePath) {
-	bool result = false;
-	char buf[1024] = "";
-	DWORD p = 0, ret = GetPrivateProfileSectionA(VRDemoArbiter::IGNORE_LIST_SECTION.c_str(), buf, sizeof(buf), filePath.c_str());
-	std::ostringstream line;
-	while (p < ret) {
-		line << buf[p];
-		if ('\0' == buf[p]) {
-			l4util::StringPair keyValue;
-			if (l4util::parseProperty(line.str(), keyValue)) {
-				m_ignoredProcessNameList.push_back(keyValue.second);
-			}
-			line.str("");
-			line.clear();
-		}
-		p++;
-	}
+    bool result = false;
+
+    // if not empty(parse), ignore the later ones
+    if (m_ignoredProcessNameList.empty()) {
+        char buf[1024] = "";
+        DWORD p = 0, ret = GetPrivateProfileSectionA(VRDemoArbiter::IGNORE_LIST_SECTION.c_str(), buf, sizeof(buf), filePath.c_str());
+        std::ostringstream line;
+
+        while (p < ret) {
+            line << buf[p];
+            if ('\0' == buf[p]) {
+                l4util::StringPair keyValue;
+                if (l4util::parseProperty(line.str(), keyValue)) {
+                    if (std::string::npos == keyValue.first.find('#')) {
+                        m_ignoredProcessNameList.push_back(keyValue.second);
+                    }
+                }
+                line.str("");
+                line.clear();
+                result = true;
+            }
+            p++;
+        }
+    }
+    else {
+        LOG4CPLUS_WARN(m_logger, "Ignore process name list already defined, check your config file: \n" << filePath);
+    }
 	return result;
 }
 
 bool VRDemoArbiter::parseRuleSection(const std::string &sectionName, const std::string &filePath, RuleItem &ruleItem) {
-	bool result = true;
-	char value[MAX_PATH];
+	bool result = false;
+	char buf[1024];
+    DWORD p = 0, ret = GetPrivateProfileSectionA(sectionName.c_str(), buf, sizeof(buf), filePath.c_str());
 
-	// TODO: refactor it with GetPrivateProfileSection
-	result &= (0 < GetPrivateProfileStringA(sectionName.c_str(), "ClassName", "", value, sizeof(value), filePath.c_str()));
-	ruleItem.m_className = value;
-
-	result &= (0 < GetPrivateProfileStringA(sectionName.c_str(), "Message", "", value, sizeof(value), filePath.c_str()));
-	ruleItem.m_message = (RuleMessage)parseValue(value, VRDemoArbiter::s_ruleMessageTokenMap);
-	
-	result &= (0 < GetPrivateProfileStringA(sectionName.c_str(), "Action", "", value, sizeof(value), filePath.c_str()));
-	ruleItem.m_action = (RuleAction)parseValue(value, VRDemoArbiter::s_ruleActionTokenMap);
-
+    if (ret <= sizeof(buf) - 2) {
+        std::ostringstream line;
+        RuleItem tmpRuleItem;
+        tmpRuleItem.m_ruleName = sectionName;
+        while (p < ret) {
+            if ('\0' != buf[p]) {
+                line << buf[p];
+            }
+            else {
+                l4util::StringPair keyValue;
+                if (l4util::parseProperty(line.str(), keyValue)) {
+                    if (l4util::matchKey(keyValue.first, "ClassName")) {
+                        tmpRuleItem.m_className = keyValue.second;
+                    }
+                    else if (l4util::matchKey(keyValue.first, "Type")) {
+                        tmpRuleItem.m_type = (RuleType)parseValue(keyValue.second, VRDemoArbiter::s_ruleTypeTokenMap);
+                    }
+                    else if (l4util::matchKey(keyValue.first, "Message")) {
+                        tmpRuleItem.setMessage((RuleMessage)parseValue(keyValue.second, VRDemoArbiter::s_ruleMessageTokenMap));
+                    }
+                    else if (l4util::matchKey(keyValue.first, "Action")) {
+                        tmpRuleItem.m_action = (RuleAction)parseValue(keyValue.second, VRDemoArbiter::s_ruleActionTokenMap);
+                    }
+                }
+                line.str("");
+                line.clear();
+            }
+            p++;
+        }
+        if (tmpRuleItem.isValid()) {
+            ruleItem = tmpRuleItem;
+            result = true;
+        }
+    }
+    else {
+        LOG4CPLUS_WARN(m_logger, "Section too large: " << sectionName);
+    }
 	return result;
 }
 
-bool VRDemoArbiter::init(const std::string &configFilePath)
+bool VRDemoArbiter::init(const std::string &configFilePath, const std::string &loggerName)
 {
 	bool result = true;
 	char buf[1024];
 	DWORD p = 0, ret = GetPrivateProfileSectionNamesA(buf, sizeof(buf), configFilePath.c_str());
+    log4cplus::Logger logger = log4cplus::Logger::getInstance(loggerName);
+
+    LOG4CPLUS_DEBUG(logger, "Initializing VR Demo Arbitar, file path: " << configFilePath);
 	if (0 < ret) {
 		std::ostringstream sectionName;
 		while (p < ret) {
-			sectionName << buf[p];
-			if ('\0' == buf[p]) {
+            if ('\0' != buf[p]) {
+                sectionName << buf[p];
+            } 
+            else {
+                std::string sectionKey = l4util::toUpper(sectionName.str());
 				if (0 == _stricmp(VRDemoArbiter::IGNORE_LIST_SECTION.c_str(), sectionName.str().c_str())) {
 					parseIgnoreListSection(configFilePath);
 				}
 				else {
 					RuleItem ruleItem;
-					if (parseRuleSection(sectionName.str(), configFilePath, ruleItem)) {
-						m_ruleItemList.push_back(ruleItem);
-					}
-					else {
-                        LOG4CPLUS_WARN(log4cplus::Logger::getInstance("SERVER"), "Invalid section: " << sectionName.str());
-					}
+                    if (!m_ruleItemMap.count(sectionKey)) {
+                        if (parseRuleSection(sectionName.str(), configFilePath, ruleItem)) {
+                            m_ruleItemMap[sectionKey] = ruleItem;
+                        }
+                        else {
+                            LOG4CPLUS_WARN(logger, "Invalid section: " << sectionName.str());
+                        }
+                    }
+                    else {
+                        LOG4CPLUS_WARN(logger, "Duplicated section name: " << sectionName.str() << ", only the first one will be used");
+                    }
 				}
 				sectionName.str("");
 				sectionName.clear();
-			}
+            }
 			p++;
 		}
+        m_configFilePath = configFilePath;
+        m_logger = logger;
+        LOG4CPLUS_DEBUG(logger, "VR Demo Arbitar inited");
 	}
 	else {
 		result = false;

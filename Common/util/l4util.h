@@ -1,10 +1,17 @@
 #pragma once
 #include <string>
 #include <sstream>
+#include <algorithm>
 #include <vector>
 
 namespace l4util {
 	typedef std::pair<std::string, std::string> StringPair;
+
+    inline std::string toUpper(const std::string &str) {
+        std::string result = str;
+        std::transform(result.begin(), result.end(), result.begin(), ::toupper);
+        return result;
+    }
 
 	inline std::string trim(const std::string &str)
 	{
@@ -27,6 +34,11 @@ namespace l4util {
 		return tokens;
 	}
 
+    inline bool matchKey(const std::string &key, const std::string &name) {
+        std::string trimmedKey = trim(key);
+        return (0 == _stricmp(trimmedKey.c_str(), name.c_str()));
+    }
+
 	inline bool parseProperty(const std::string &line, StringPair &keyValue)
 	{
 		bool result = false;
@@ -44,5 +56,7 @@ namespace l4util {
 	std::string getCurrentExePath();
 	std::string getFileFullPath(const std::string &relativePath);
 	std::string getCurrentProcessName();
-	std::string loadString(UINT id);
+    std::string getProcessNameWithWindow(HWND wnd);
+    std::string getProcessNameWithProcessId(DWORD processId);
+    std::string loadString(UINT id);
 }

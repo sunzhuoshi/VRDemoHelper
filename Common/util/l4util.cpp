@@ -4,6 +4,7 @@
 #include <sstream> 
 #include <minwindef.h>
 #include <Windows.h>
+#include <Psapi.h>
 
 namespace l4util {
 	std::string getCurrentExePath()
@@ -43,6 +44,41 @@ namespace l4util {
 		}
 		return result;
 	}
+
+    std::string getProcessNameWithWindow(HWND wnd)
+    {
+        DWORD processId;
+
+        GetWindowThreadProcessId(wnd, &processId);
+        return getProcessNameWithProcessId(processId);
+    }
+
+    std::string getProcessNameWithProcessId(DWORD processId)
+    {
+        char buf[MAX_PATH] = "", *p = nullptr;
+
+        HANDLE processHandle = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, processId);
+
+        if (processHandle) {
+            GetProcessImageFileName(processHandle, buf, sizeof(buf));
+            p = strrchr(buf, '\\');
+            if (p) {
+                p++;
+            }
+            CloseHandle(processHandle);
+        }
+        else {
+            int i = 0;
+            i++;
+        }
+        if (p) {
+            return p;
+        }
+        else {
+            return "";
+        }
+    }
+
 	std::string loadString(UINT id) 
 	{
 		std::string result;

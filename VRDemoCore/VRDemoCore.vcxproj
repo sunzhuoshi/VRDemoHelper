@@ -223,7 +223,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Libs\util\l4util.h" />
+    <ClInclude Include="..\Common\util\l4util.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="VRDemoCore.h" />
     <ClInclude Include="..\Common\VRDemoArbiter.h" />
