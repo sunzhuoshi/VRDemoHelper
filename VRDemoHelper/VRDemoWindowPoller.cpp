@@ -7,7 +7,8 @@
 #include "util\l4util.h"
 
 VRDemoWindowPoller::VRDemoWindowPoller() :
-    m_runFlag(true)
+    m_runFlag(true),
+    m_pauseFlag(false)
 {
 }
 
@@ -36,7 +37,7 @@ void VRDemoWindowPoller::run()
     while (m_runFlag)
     {
         m_event.timed_wait(POLL_INTERVAL);
-        if (m_runFlag) {
+        if (m_runFlag && !m_pauseFlag) {
             EnumWindows(&VRDemoWindowPoller::enumChildProc, (LPARAM)this);
         }
     }
@@ -47,6 +48,16 @@ void VRDemoWindowPoller::stop()
     m_runFlag = false;
     m_event.signal();
     this->join();
+}
+
+void VRDemoWindowPoller::pause()
+{
+    m_pauseFlag = true;
+}
+
+void VRDemoWindowPoller::resume()
+{
+    m_pauseFlag = false;
 }
 
 BOOL CALLBACK VRDemoWindowPoller::enumChildProc(HWND wnd, LPARAM param)
@@ -60,10 +71,9 @@ BOOL VRDemoWindowPoller::realEnumChildProc(HWND wnd)
     BOOL cont = FALSE;
     if (m_runFlag) {
         DWORD processId;
-        HWND ownerWindow;
 
         GetWindowThreadProcessId(wnd, &processId);
-        // NOTE: DO NOT use GetParent(wnd), use GetWindow(wnd, GW_OWNER) instead
+        // handle other processes only
         if (GetCurrentProcessId() != processId) {
             VRDemoArbiter::getInstance().arbitrate(VRDemoArbiter::RT_POLL, VRDemoArbiter::RM_UNKNOWN, wnd);
         }

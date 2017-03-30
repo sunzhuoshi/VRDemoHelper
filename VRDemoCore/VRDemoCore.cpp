@@ -10,9 +10,9 @@
 
 #define HELPER_NAME "VRDemoHelper"				// used to tell if we're in helper process
 
-// 这是导出变量的一个示例
 BOOL bIsHelperProcess = FALSE;
 
+// All instances share data segment
 #pragma data_seg(".shared")
 VRDEMOCORE_API CHAR szConfigFilePath[MAX_PATH] = "";
 VRDEMOCORE_API BOOL bTrace = FALSE;
