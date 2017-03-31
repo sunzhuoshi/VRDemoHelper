@@ -8,6 +8,8 @@
 
 const std::string VRDemoArbiter::IGNORE_LIST_SECTION = "IgnoreList";
 const std::string VRDemoArbiter::RULE_CONFIG_FILE = "rule_config.ini";
+const std::string VRDemoArbiter::PREFIX_HIDE_STEAM_VR_NOTIFICATION = "SteamVR";
+const std::string VRDemoArbiter::PREFIX_MAXIMIZE_GAMES = "Game";
 
 VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleTypeTokenMap = {
     {VRDemoArbiter::RT_MESSAGE, "MESSAGE"},
@@ -49,11 +51,21 @@ bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
 
         RuleItemMap::const_iterator it = m_ruleItemMap.begin();
         while (it != m_ruleItemMap.end()) {
-            if (type == it->second.m_type && 
-                0 == it->second.m_className.compare(className) && 
-                it->second.getMessage() == message) {
-                action = it->second.m_action;
-                break;
+            bool okToGo = false;
+            if (l4util::keyStartWith(it->first, VRDemoArbiter::PREFIX_MAXIMIZE_GAMES)) {
+                okToGo = m_maximizeGames;
+            }
+            else if (l4util::keyStartWith(it->first, VRDemoArbiter::PREFIX_HIDE_STEAM_VR_NOTIFICATION)) {
+                okToGo = m_hideSteamVrNotifcation;
+            }
+            else {
+                okToGo = true;
+            }
+            if (okToGo && type == it->second.m_type &&
+                    0 == it->second.m_className.compare(className) &&
+                    it->second.getMessage() == message) {
+                    action = it->second.m_action;
+                    break;
             }
             ++it;
         }

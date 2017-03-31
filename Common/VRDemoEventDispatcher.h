@@ -22,8 +22,8 @@ class VRDemoEventDispatcher
 public:
     enum Event {
         EV_PAUSE_CHANGED,
-        EV_MAXIMIZE_GAME_CHANGED,
-        EV_CLOSE_STEAM_WARNING_CHANGE
+        EV_MAXIMIZE_GAMES_CHANGED,
+        EV_HIDE_STEAM_VR_NOTIFICATION_CHANGED
     };
     typedef log4cplus::helpers::SharedObjectPtr<IVRDemoEventListener> VRDemoEventListenerPtr;
     typedef std::list<VRDemoEventListenerPtr> VRDemoEventListenerList;

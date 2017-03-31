@@ -91,7 +91,11 @@ public:
     }
     bool init(const std::string &configFilePath, const std::string &loggerName);
     bool arbitrate(RuleType type, int message, HWND wnd);
+    void setMaximizeGames(bool maximizeGames) { m_maximizeGames = maximizeGames; }
+    void setHideSteamVrNotification(bool hideSteamVrNotification) { m_hideSteamVrNotifcation = hideSteamVrNotification; }
     static const std::string RULE_CONFIG_FILE;
+    static const std::string PREFIX_MAXIMIZE_GAMES;
+    static const std::string PREFIX_HIDE_STEAM_VR_NOTIFICATION;
 private:
 	bool ifIgnore(const std::string &processName);
 
@@ -112,5 +116,7 @@ private:
     RuleItemMap m_ruleItemMap;
     std::string m_configFilePath;
     log4cplus::Logger m_logger;
+    bool m_maximizeGames;
+    bool m_hideSteamVrNotifcation;
 };
 

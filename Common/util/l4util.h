@@ -39,6 +39,10 @@ namespace l4util {
         return (0 == _stricmp(trimmedKey.c_str(), name.c_str()));
     }
 
+    inline bool keyStartWith(const std::string &key, const std::string &prefix) {
+        return 0 == toUpper(trim(key)).find(toUpper(trim(prefix)));
+    }
+
 	inline bool parseProperty(const std::string &line, StringPair &keyValue)
 	{
 		bool result = false;

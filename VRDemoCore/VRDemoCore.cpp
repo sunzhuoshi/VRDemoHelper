@@ -17,6 +17,8 @@ BOOL bIsHelperProcess = FALSE;
 VRDEMOCORE_API CHAR szConfigFilePath[MAX_PATH] = "";
 VRDEMOCORE_API BOOL bTrace = FALSE;
 VRDEMOCORE_API BOOL bPause = FALSE;
+VRDEMOCORE_API BOOL bMaximizeGames = TRUE;
+VRDEMOCORE_API BOOL bHideSteamVrNotification = TRUE;
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
@@ -98,3 +100,15 @@ VRDEMOCORE_API VOID WINAPI fnSetPause(BOOL bPause_)
 {
     bPause = bPause_;
 }
+
+VRDEMOCORE_API VOID WINAPI fnSetMaximizeGames(BOOL nMaximizeGames_)
+{
+    bPause = nMaximizeGames_;
+}
+
+
+VRDEMOCORE_API VOID WINAPI fnHideSteamVrNotification(BOOL nHideSteamVrNotification)
+{
+    bPause = nHideSteamVrNotification;
+}
+

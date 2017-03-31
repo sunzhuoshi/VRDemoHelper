@@ -65,9 +65,16 @@ void VRDemoWindowPoller::resume()
 
 void VRDemoWindowPoller::handleEvent(int event, unsigned long long param)
 {
+    bool flag = 0 != param;
     switch (event) {
     case VRDemoEventDispatcher::Event::EV_PAUSE_CHANGED:
-        m_pauseFlag = 0 != param;
+        m_pauseFlag = flag;
+        break;
+    case VRDemoEventDispatcher::EV_HIDE_STEAM_VR_NOTIFICATION_CHANGED:
+        VRDemoArbiter::getInstance().setHideSteamVrNotification(flag);
+        break;
+    case VRDemoEventDispatcher::EV_MAXIMIZE_GAMES_CHANGED:
+        VRDemoArbiter::getInstance().setMaximizeGames(flag);
         break;
     default:
         break;
