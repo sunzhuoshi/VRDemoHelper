@@ -294,6 +294,7 @@ del /q *.log
     <ClInclude Include="VRDemoHelper.h" />
     <ClInclude Include="VRDemoLogServer.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="VRDemoNotificationManager.h" />
     <ClInclude Include="VRDemoWindowPoller.h" />
     <ClInclude Include="XGetopt.h" />
   </ItemGroup>
@@ -313,6 +314,7 @@ del /q *.log
     <ClCompile Include="VRDemoCoreWrapper.cpp" />
     <ClCompile Include="VRDemoHelper.cpp" />
     <ClCompile Include="VRDemoLogServer.cpp" />
+    <ClCompile Include="VRDemoNotificationManager.cpp" />
     <ClCompile Include="VRDemoWindowPoller.cpp" />
     <ClCompile Include="XGetopt.cpp" />
   </ItemGroup>
