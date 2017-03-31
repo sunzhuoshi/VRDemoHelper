@@ -16,7 +16,7 @@ BOOL bIsHelperProcess = FALSE;
 #pragma data_seg(".shared")
 VRDEMOCORE_API CHAR szConfigFilePath[MAX_PATH] = "";
 VRDEMOCORE_API BOOL bTrace = FALSE;
-VRDEMOCORE_API BOOL bActive = TRUE;
+VRDEMOCORE_API BOOL bPause = FALSE;
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
@@ -40,7 +40,7 @@ void fnInitLog()
 	if (bTrace) {
 		log4cplus::SharedAppenderPtr append_1(new log4cplus::SocketAppender("127.0.0.1", 8888, "127.0.0.1"));
 		append_1->setName(LOG4CPLUS_TEXT("First"));
-		log4cplus::Logger::getInstance("SERVER").addAppender(append_1);
+		log4cplus::Logger::getInstance(VR_DEMO_LOGGER_SERVER).addAppender(append_1);
 	}
 }
 
@@ -51,8 +51,8 @@ void fnDelayInit()
 	// or it will cause file dead lock, for client and server will try to use the same SERVER file apender 
 	if (!bIsHelperProcess) {
 		fnInitLog();
-		log4cplus::Logger logger = log4cplus::Logger::getInstance("SERVER");
-		if (!VRDemoArbiter::getInstance().init(szConfigFilePath, "SERVER")) {
+		log4cplus::Logger logger = log4cplus::Logger::getInstance(VR_DEMO_LOGGER_SERVER);
+		if (!VRDemoArbiter::getInstance().init(szConfigFilePath, VR_DEMO_LOGGER_SERVER)) {
 			LOG4CPLUS_ERROR(logger, "Failed to parse rule config file: " << szConfigFilePath << std::endl);
 		}
 	}
@@ -69,7 +69,7 @@ VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lPar
 	}
 
 	// we don't handle hook messages in helper process
-	if (!bIsHelperProcess)
+	if (!bIsHelperProcess && !bPause)
 	{
 		switch (nCode)
 		{
@@ -92,4 +92,9 @@ VRDEMOCORE_API BOOL WINAPI fnInit(const char *szConfigFilePath_, BOOL bTrace_)
 	// TODO: local config file content into share data segment
 	bTrace = bTrace_;
 	return TRUE;
+}
+
+VRDEMOCORE_API VOID WINAPI fnSetPause(BOOL bPause_)
+{
+    bPause = bPause_;
 }

@@ -212,7 +212,7 @@ VRDemoLogServer::~VRDemoLogServer()
 
 bool VRDemoLogServer::start(unsigned short port)
 {
-	log4cplus::Logger serverLogger = log4cplus::Logger::getInstance("SERVER");
+	log4cplus::Logger serverLogger = log4cplus::Logger::getInstance(VR_DEMO_LOGGER_SERVER);
 
 	m_serverSocket = new log4cplus::helpers::ServerSocket(port, false, false, "127.0.0.1");
 	if (!m_serverSocket->isOpen()) {

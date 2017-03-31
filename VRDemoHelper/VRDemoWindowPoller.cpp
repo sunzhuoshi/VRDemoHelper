@@ -24,11 +24,10 @@ VRDemoWindowPoller::~VRDemoWindowPoller()
 bool VRDemoWindowPoller::init()
 {
     bool result = false;
-    log4cplus::Logger serverLogger = log4cplus::Logger::getInstance("CLIENT");
 
     if (VRDemoArbiter::getInstance().init(
         l4util::getFileFullPath(VRDemoArbiter::RULE_CONFIG_FILE),
-        "CLIENT"
+        VR_DEMO_LOGGER_CLIENT
     )) {
         start();
         result = true;
