@@ -8,10 +8,11 @@
 #include "util\l4util.h"
 #include "VRDemoConfigurator.h"
 
-const std::string VRDemoArbiter::IGNORE_LIST_SECTION = "IgnoreList";
-const std::string VRDemoArbiter::FILE_SETTINGS = "settings.ini";
-const std::string VRDemoArbiter::PREFIX_HIDE_STEAM_VR_NOTIFICATION = "SteamVR";
-const std::string VRDemoArbiter::PREFIX_MAXIMIZE_GAMES = "Game";
+const std::string VRDemoArbiter::SECTION_IGNORE_LIST = "A.IgnoreList";
+const std::string VRDemoArbiter::SECTION_PREFIX_HIDE_STEAM_VR_NOTIFICATION = "A.SteamVR";
+const std::string VRDemoArbiter::SECTION_PREFIX_MAXIMIZE_GAMES = "A.Game";
+const std::string VRDemoArbiter::SECTION_PREFIX_ALL = "A.";    // A stands for Arbiter
+
 
 VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleTypeTokenMap = {
     {VRDemoArbiter::RT_MESSAGE, "MESSAGE"},
@@ -50,15 +51,19 @@ bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
         if (!ifIgnore(processName) && processName.size()) {
             RealGetWindowClassA(wnd, className, MAX_PATH);
 
-            LOG4CPLUS_INFO(m_logger, "[ " << VRDemoArbiter::s_ruleTypeTokenMap[type] << " | " << VRDemoArbiter::s_ruleMessageTokenMap[message] << " ] ID=" << processId << ", name=" << processName << ", Class=" << className << std::endl);
+            if (m_trace) {
+                LOG4CPLUS_INFO(m_logger, "[ " << VRDemoArbiter::s_ruleTypeTokenMap[type] << " | " << 
+                    VRDemoArbiter::s_ruleMessageTokenMap[message] << " ] ID=" << processId 
+                    << ", name=" << processName << ", Class=" << className << std::endl);
+            }
 
             RuleItemMap::const_iterator it = m_ruleItemMap.begin();
             while (it != m_ruleItemMap.end()) {
                 BOOL okToGo = FALSE;
-                if (l4util::keyStartWith(it->first, VRDemoArbiter::PREFIX_MAXIMIZE_GAMES)) {
+                if (l4util::keyStartWith(it->first, VRDemoArbiter::SECTION_PREFIX_MAXIMIZE_GAMES)) {
                     okToGo = m_toggles->m_maximizeGames;
                 }
-                else if (l4util::keyStartWith(it->first, VRDemoArbiter::PREFIX_HIDE_STEAM_VR_NOTIFICATION)) {
+                else if (l4util::keyStartWith(it->first, VRDemoArbiter::SECTION_PREFIX_HIDE_STEAM_VR_NOTIFICATION)) {
                     okToGo = m_toggles->m_hideSteamVrNotifcation;
                 }
                 else {
@@ -155,43 +160,45 @@ int VRDemoArbiter::parseValue(const std::string &token, const TokenMap &tokenMap
 	return result;
 }
 
-bool VRDemoArbiter::init(const std::string &loggerName, const Toggles& toggles)
+bool VRDemoArbiter::init(const std::string &loggerName, const Toggles& toggles, bool trace)
 {
     bool result = false;
     log4cplus::Logger logger = log4cplus::Logger::getInstance(loggerName);
 
     LOG4CPLUS_DEBUG(logger, "Initializing VR Demo Arbitar...");
     for (auto sectionIt : VRDemoConfigurator::getInstance().getSections()) {
-        if (l4util::matchKey(sectionIt.first, VRDemoArbiter::IGNORE_LIST_SECTION)) {
-            for (auto propertyIt : sectionIt.second) {
-                m_ignoredProcessNameList.push_back(propertyIt.second);
-            }
-        }
-        else {
-            RuleItem ruleItem;
-            ruleItem.m_ruleName = sectionIt.first;
-            for (auto propertyIt : sectionIt.second) {
-                if (l4util::matchKey(propertyIt.first, "ClassName")) {
-                    ruleItem.m_className = propertyIt.second;
+        if (l4util::keyStartWith(sectionIt.first, SECTION_PREFIX_ALL)) {
+            if (l4util::matchKey(sectionIt.first, VRDemoArbiter::SECTION_IGNORE_LIST)) {
+                for (auto propertyIt : sectionIt.second) {
+                    m_ignoredProcessNameList.push_back(propertyIt.second);
                 }
-                else if (l4util::matchKey(propertyIt.first, "Type")) {
-                    ruleItem.m_type = (RuleType)parseValue(propertyIt.second, VRDemoArbiter::s_ruleTypeTokenMap);
-                }
-                else if (l4util::matchKey(propertyIt.first, "Message")) {
-                    ruleItem.setMessage((RuleMessage)parseValue(propertyIt.second, VRDemoArbiter::s_ruleMessageTokenMap));
-                }
-                else if (l4util::matchKey(propertyIt.first, "Action")) {
-                    ruleItem.m_action = (RuleAction)parseValue(propertyIt.second, VRDemoArbiter::s_ruleActionTokenMap);
-                }
-                else {
-                    LOG4CPLUS_WARN(logger, "Unknow property: " << propertyIt.first << ", in section: " << sectionIt.first);
-                }                                                                                          
-            }
-            if (ruleItem.isValid()) {
-                m_ruleItemMap[sectionIt.first] = ruleItem;
             }
             else {
-                LOG4CPLUS_WARN(logger, "Invalid section: " << sectionIt.first);
+                RuleItem ruleItem;
+                ruleItem.m_ruleName = sectionIt.first;
+                for (auto propertyIt : sectionIt.second) {
+                    if (l4util::matchKey(propertyIt.first, "ClassName")) {
+                        ruleItem.m_className = propertyIt.second;
+                    }
+                    else if (l4util::matchKey(propertyIt.first, "Type")) {
+                        ruleItem.m_type = (RuleType)parseValue(propertyIt.second, VRDemoArbiter::s_ruleTypeTokenMap);
+                    }
+                    else if (l4util::matchKey(propertyIt.first, "Message")) {
+                        ruleItem.setMessage((RuleMessage)parseValue(propertyIt.second, VRDemoArbiter::s_ruleMessageTokenMap));
+                    }
+                    else if (l4util::matchKey(propertyIt.first, "Action")) {
+                        ruleItem.m_action = (RuleAction)parseValue(propertyIt.second, VRDemoArbiter::s_ruleActionTokenMap);
+                    }
+                    else {
+                        LOG4CPLUS_WARN(logger, "Unknow property: " << propertyIt.first << ", in section: " << sectionIt.first);
+                    }
+                }
+                if (ruleItem.isValid()) {
+                    m_ruleItemMap[sectionIt.first] = ruleItem;
+                }
+                else {
+                    LOG4CPLUS_WARN(logger, "Invalid section: " << sectionIt.first);
+                }
             }
         }
     }       
@@ -200,6 +207,7 @@ bool VRDemoArbiter::init(const std::string &loggerName, const Toggles& toggles)
         LOG4CPLUS_DEBUG(logger, "VR Demo Arbitar inited");
         m_logger = logger;
         m_toggles = &toggles;
+        m_trace = trace;
     }
 	return result;
 }

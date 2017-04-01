@@ -244,7 +244,7 @@ copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;ARCHIVE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -267,8 +267,8 @@ copy /Y $(ProjectDir)..\Common\log4cplus\bin\log4cplus_x64.dll $(TargetDir)
 echo copying log4cplus props...
 copy /Y $(ProjectDir)log4cplus.props $(TargetDir)
 
-echo copying rule config...
-copy /Y $(ProjectDir)rule_config.ini $(TargetDir)
+echo copying settings...
+copy /Y $(ProjectDir)settings.ini $(TargetDir)
 
 cd $(TargetDir)
 del /q *.exp 

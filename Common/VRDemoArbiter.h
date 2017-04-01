@@ -88,17 +88,20 @@ private:
     typedef std::list<std::string> NameList;
     typedef std::map<std::string, RuleItem> RuleItemMap;
 public:
-    VRDemoArbiter::VRDemoArbiter() {};
+    VRDemoArbiter::VRDemoArbiter() :
+        m_toggles(nullptr),
+        m_trace(false) {
+    };
     VRDemoArbiter::~VRDemoArbiter() {};
     static VRDemoArbiter& VRDemoArbiter::getInstance() {
         static VRDemoArbiter instance;
         return instance;
     }
-    bool init(const std::string &loggerName, const Toggles &toggles);
+    bool init(const std::string &loggerName, const Toggles &toggles, bool trace);
     bool arbitrate(RuleType type, int message, HWND wnd);
-    static const std::string FILE_SETTINGS;
-    static const std::string PREFIX_MAXIMIZE_GAMES;
-    static const std::string PREFIX_HIDE_STEAM_VR_NOTIFICATION;
+    static const std::string SECTION_PREFIX_MAXIMIZE_GAMES;
+    static const std::string SECTION_PREFIX_HIDE_STEAM_VR_NOTIFICATION;
+    static const std::string SECTION_PREFIX_ALL;
 private:
 	bool ifIgnore(const std::string &processName);
 
@@ -111,12 +114,13 @@ private:
     static TokenMap s_ruleTypeTokenMap;
     static TokenMap s_ruleMessageTokenMap;
     static TokenMap s_ruleActionTokenMap;
-    static const std::string IGNORE_LIST_SECTION;
+    static const std::string SECTION_IGNORE_LIST;
 
     NameList m_ignoredProcessNameList; // TODO: use set
     RuleItemMap m_ruleItemMap;
     log4cplus::Logger m_logger;
 
     const Toggles *m_toggles;
+    bool m_trace;
 };
 

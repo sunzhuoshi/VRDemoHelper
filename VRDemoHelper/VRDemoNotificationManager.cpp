@@ -13,7 +13,9 @@
 // Use a guid to uniquely identify our icon
 #ifdef _DEBUG
 class __declspec(uuid("BC719626-7CD0-4FF2-B9B4-6D821515C9E8")) HelperIcon;
-#else 
+#elif defined(ARCHIVE) 
+class __declspec(uuid("BC719626-7CD0-4FF2-B9B4-6D821515C9E0")) HelperIcon;
+#elif
 class __declspec(uuid("BC719626-7CD0-4FF2-B9B4-6D821515C9E9")) HelperIcon;
 #endif 
 

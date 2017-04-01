@@ -89,7 +89,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return FALSE;
 	}
 
-	LOG4CPLUS_INFO(clientLogger, "VRDemoHelper is starting");
+	LOG4CPLUS_INFO(clientLogger, "VR Demo Helper is starting");
 
 	if (!ParseCommandLineArguments())
 	{
@@ -117,7 +117,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
     VRDemoWindowPoller::VRDemoWindowPollerPtr poller(new VRDemoWindowPoller());
-    if (!poller->init(togglesWrapper.getToggles())) {
+    if (!poller->init(togglesWrapper.getToggles(), 0 != options.bTrace)) {
         LOG4CPLUS_ERROR(clientLogger, "Failed to init window poller");
         if (logServer && logServer->isRunning()) {
             logServer->stop();
@@ -149,6 +149,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
+    LOG4CPLUS_INFO(clientLogger, "VR Demo Helper started");
+
     // 主消息循环: 
     while (GetMessage(&msg, nullptr, 0, 0))
     {
@@ -166,7 +168,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		logServer->stop();
 	}
 
-	LOG4CPLUS_INFO(clientLogger, "VRDemoHelper exited");
+	LOG4CPLUS_INFO(clientLogger, "VR Demo Helper exited");
     return (int) msg.wParam;
 }
 
@@ -310,9 +312,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_HOTKEY:
         switch (HIWORD(lParam)) {
         case VK_F8:
-            VRDemoNotificationManager::getInstance().modifyNotificationIcon(
-                0 != togglesWrapper.togglePause()
-            );
+            togglesWrapper.togglePause();
             break;
         }
         break;

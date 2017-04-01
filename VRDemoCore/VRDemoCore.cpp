@@ -58,7 +58,7 @@ void fnDelayInit()
         if (VRDemoConfigurator::getInstance().init(szConfigFilePath, VR_DEMO_LOGGER_SERVER)) {
             if (!VRDemoArbiter::getInstance().init(
                 VR_DEMO_LOGGER_SERVER,
-                toggles)) 
+                toggles, 0 != bTrace)) 
             {
                 LOG4CPLUS_ERROR(logger, "Failed to init VR Demo Arbiter");
             }

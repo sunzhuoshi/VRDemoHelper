@@ -13,7 +13,7 @@ public:
     typedef log4cplus::helpers::SharedObjectPtr<VRDemoWindowPoller> VRDemoWindowPollerPtr;
     VRDemoWindowPoller();
     ~VRDemoWindowPoller();
-    bool init(const VRDemoArbiter::Toggles& toggles);
+    bool init(const VRDemoArbiter::Toggles& toggles, bool trace);
     void run();
     void stop();
     void pause();

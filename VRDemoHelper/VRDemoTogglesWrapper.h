@@ -2,6 +2,7 @@
 
 #include "VRDemoArbiter.h"
 #include "VRDemoEventDispatcher.h"
+#include "VRDemoNotificationManager.h"
 
 class VRDemoTogglesWrapper {
 public:
@@ -13,6 +14,9 @@ public:
         VRDemoEventDispatcher::getInstance().dispatchEvent(
             VRDemoEventDispatcher::EV_PAUSE_CHANGED,
             m_toggles.m_pause
+        );
+        VRDemoNotificationManager::getInstance().modifyNotificationIcon(
+            0 != m_toggles.m_pause
         );
         return m_toggles.m_pause;
     }
