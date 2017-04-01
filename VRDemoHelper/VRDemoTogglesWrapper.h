@@ -6,9 +6,9 @@
 
 class VRDemoTogglesWrapper {
 public:
-    inline BOOL getPause() { return m_toggles.m_pause; };
-    inline BOOL getMaximmizeGames() { return m_toggles.m_maximizeGames; };
-    inline BOOL getHideSteamVrNotification() { return m_toggles.m_hideSteamVrNotifcation; };
+    inline bool getPause() { return 0 != m_toggles.m_pause; };
+    inline bool getMaximmizeGames() { return 0 != m_toggles.m_maximizeGames; };
+    inline bool getHideSteamVrNotification() { return 0 != m_toggles.m_hideSteamVrNotifcation; };
     inline BOOL togglePause() {
         m_toggles.m_pause = !m_toggles.m_pause;
         VRDemoEventDispatcher::getInstance().dispatchEvent(

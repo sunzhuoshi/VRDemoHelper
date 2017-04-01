@@ -377,9 +377,9 @@ VOID ShowContextMenu(HWND hwnd, POINT pt)
 			{
 				uFlags |= TPM_LEFTALIGN;
 			}
-            CheckMenuItem(hSubMenu, IDM_PAUSE, MF_BYCOMMAND | togglesWrapper.getPause() ? MF_CHECKED : MF_UNCHECKED);
-            CheckMenuItem(hSubMenu, IDM_MAXIMIZE_GAMES, MF_BYCOMMAND | togglesWrapper.getMaximmizeGames() ? MF_CHECKED : MF_UNCHECKED);
-            CheckMenuItem(hSubMenu, IDM_HIDE_STEAM_VR_NOTIFICATION, MF_BYCOMMAND | togglesWrapper.getHideSteamVrNotification() ? MF_CHECKED : MF_UNCHECKED);
+            CheckMenuItem(hSubMenu, IDM_PAUSE, MF_BYCOMMAND | (togglesWrapper.getPause() ? MF_CHECKED : MF_UNCHECKED));
+            CheckMenuItem(hSubMenu, IDM_MAXIMIZE_GAMES, MF_BYCOMMAND | (togglesWrapper.getMaximmizeGames() ? MF_CHECKED : MF_UNCHECKED));
+            CheckMenuItem(hSubMenu, IDM_HIDE_STEAM_VR_NOTIFICATION, MF_BYCOMMAND | (togglesWrapper.getHideSteamVrNotification() ? MF_CHECKED : MF_UNCHECKED));
             TrackPopupMenuEx(hSubMenu, uFlags, pt.x, pt.y, hwnd, NULL);
 		}
 		DestroyMenu(hMenu);
