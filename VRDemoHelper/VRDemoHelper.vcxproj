@@ -157,8 +157,8 @@ copy /Y $(ProjectDir)..\Common\log4cplus\bin\log4cplusD_x64.dll $(TargetDir)
 echo copying log4cplus props...
 copy /Y $(ProjectDir)log4cplus.props $(TargetDir)
 
-echo copying rule config...
-copy /Y $(ProjectDir)rule_config.ini $(TargetDir)</Command>
+echo copying settings...
+copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -234,7 +234,7 @@ echo copying log4cplus props...
 copy /Y $(ProjectDir)log4cplus.props $(TargetDir)
 
 echo copying rule config...
-copy /Y $(ProjectDir)rule_config.ini $(TargetDir)</Command>
+copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Archive|x64'">
@@ -326,7 +326,7 @@ del /q *.log
     <Image Include="VRDemoHelper.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="rule_config.ini" />
+    <None Include="settings.ini" />
     <None Include="log4cplus.props" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

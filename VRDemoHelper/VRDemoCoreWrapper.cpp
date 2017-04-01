@@ -9,7 +9,7 @@ const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore.dll"; // TODO: 
 #else
 const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore_x86.dll";
 #endif
-const std::string VRDemoCoreWrapper::FILE_RULE_CONFIG = "rule_config.ini";
+const std::string VRDemoCoreWrapper::FILE_SETTINGS = "settings.ini";
 const std::string VRDemoCoreWrapper::FUNCTION_INIT = "fnInit";
 const std::string VRDemoCoreWrapper::FUNCTION_HOOK_PROC = "fnWndMsgProc";
 const std::string VRDemoCoreWrapper::FUNCTION_SET_PAUSE = "fnSetPause";
@@ -38,7 +38,7 @@ bool VRDemoCoreWrapper::init(BOOL trace)
         SetPauseFuncPtr setPauseFunc = (SetPauseFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_PAUSE.c_str());
 
         if (initFunc && hookProc && setPauseFunc) {
-            if (initFunc(l4util::getFileFullPath(FILE_RULE_CONFIG).c_str(), trace)) {
+            if (initFunc(l4util::getFileFullPath(FILE_SETTINGS).c_str(), trace)) {
                 m_hook = SetWindowsHookEx(
                     WH_CBT,
                     hookProc,

@@ -20,7 +20,7 @@ private:
     SetPauseFuncPtr m_setPauseFunc;
 
     static const std::string FILE_HOOK_DLL;
-    static const std::string FILE_RULE_CONFIG;
+    static const std::string FILE_SETTINGS;
     static const std::string FUNCTION_INIT;
     static const std::string FUNCTION_HOOK_PROC;
     static const std::string FUNCTION_SET_PAUSE;

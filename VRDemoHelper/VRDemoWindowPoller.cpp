@@ -26,7 +26,7 @@ bool VRDemoWindowPoller::init()
     bool result = false;
 
     if (VRDemoArbiter::getInstance().init(
-        l4util::getFileFullPath(VRDemoArbiter::RULE_CONFIG_FILE),
+        l4util::getFileFullPath(VRDemoArbiter::FILE_SETTINGS),
         VR_DEMO_LOGGER_CLIENT
     )) {
         start();

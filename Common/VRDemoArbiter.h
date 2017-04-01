@@ -93,7 +93,7 @@ public:
     bool arbitrate(RuleType type, int message, HWND wnd);
     void setMaximizeGames(bool maximizeGames) { m_maximizeGames = maximizeGames; }
     void setHideSteamVrNotification(bool hideSteamVrNotification) { m_hideSteamVrNotifcation = hideSteamVrNotification; }
-    static const std::string RULE_CONFIG_FILE;
+    static const std::string FILE_SETTINGS;
     static const std::string PREFIX_MAXIMIZE_GAMES;
     static const std::string PREFIX_HIDE_STEAM_VR_NOTIFICATION;
 private:

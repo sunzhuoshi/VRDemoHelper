@@ -7,7 +7,7 @@
 #include "util\l4util.h"
 
 const std::string VRDemoArbiter::IGNORE_LIST_SECTION = "IgnoreList";
-const std::string VRDemoArbiter::RULE_CONFIG_FILE = "rule_config.ini";
+const std::string VRDemoArbiter::FILE_SETTINGS = "settings.ini";
 const std::string VRDemoArbiter::PREFIX_HIDE_STEAM_VR_NOTIFICATION = "SteamVR";
 const std::string VRDemoArbiter::PREFIX_MAXIMIZE_GAMES = "Game";
 
