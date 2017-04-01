@@ -63,7 +63,7 @@ public:
                         }
                         break;
                     case RT_MESSAGE:
-                        if (!m_className.empty() && RA_UNKNOWN != m_action && RM_UNKNOWN != m_action) {
+                        if (!m_className.empty() && RA_UNKNOWN != m_action && RM_UNKNOWN != m_message) {
                             valid = true;
                         }
                         break;
