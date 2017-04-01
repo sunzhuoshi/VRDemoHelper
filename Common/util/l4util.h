@@ -13,6 +13,10 @@ namespace l4util {
         return result;
     }
 
+    inline void toUpper(std::string &str) {
+        std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+    }
+
 	inline std::string trim(const std::string &str)
 	{
 		std::string result;
@@ -56,7 +60,6 @@ namespace l4util {
 		}
 		return result;
 	}
-
 	std::string getCurrentExePath();
 	std::string getFileFullPath(const std::string &relativePath);
 	std::string getCurrentProcessName();

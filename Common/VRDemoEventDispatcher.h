@@ -23,11 +23,12 @@ public:
     enum Event {
         EV_PAUSE_CHANGED,
         EV_MAXIMIZE_GAMES_CHANGED,
-        EV_HIDE_STEAM_VR_NOTIFICATION_CHANGED
+        EV_HIDE_STEAM_VR_NOTIFICATION_CHANGED,
+        EV_ALL     // for lazy users like me
     };
     typedef log4cplus::helpers::SharedObjectPtr<IVRDemoEventListener> VRDemoEventListenerPtr;
     typedef std::list<VRDemoEventListenerPtr> VRDemoEventListenerList;
-    typedef std::map<int, VRDemoEventListenerList> VRDemoEventListersMap;
+    typedef std::map<int, VRDemoEventListenerList> VRDemoEventListenersMap;
 
     VRDemoEventDispatcher();
     ~VRDemoEventDispatcher();
@@ -38,6 +39,7 @@ public:
     void addEventListener(int event, VRDemoEventListenerPtr listener);
     void dispatchEvent(int event, unsigned long long param);
 private:
-    VRDemoEventListersMap m_eventListenersMap;
+    VRDemoEventListenersMap m_eventListenersMap;
+    VRDemoEventListenerList m_globalEventListeners;
 };
 

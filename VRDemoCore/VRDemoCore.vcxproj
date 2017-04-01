@@ -224,6 +224,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\util\l4util.h" />
+    <ClInclude Include="..\Common\VRDemoConfigurator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="VRDemoCore.h" />
     <ClInclude Include="..\Common\VRDemoArbiter.h" />
@@ -231,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Common\util\l4util.cpp" />
+    <ClCompile Include="..\Common\VRDemoConfigurator.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

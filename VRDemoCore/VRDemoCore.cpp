@@ -5,8 +5,10 @@
 #include "VRDemoCore.h"
 
 #include <log4cplus/log4cplus.h>
+
 #include "util/l4util.h"
 #include "VRDemoArbiter.h"
+#include "VRDemoConfigurator.h"
 
 #define HELPER_NAME "VRDemoHelper"				// used to tell if we're in helper process
 
@@ -16,9 +18,7 @@ BOOL bIsHelperProcess = FALSE;
 #pragma data_seg(".shared")
 VRDEMOCORE_API CHAR szConfigFilePath[MAX_PATH] = "";
 VRDEMOCORE_API BOOL bTrace = FALSE;
-VRDEMOCORE_API BOOL bPause = FALSE;
-VRDEMOCORE_API BOOL bMaximizeGames = TRUE;
-VRDEMOCORE_API BOOL bHideSteamVrNotification = TRUE;
+VRDEMOCORE_API VRDemoArbiter::Toggles toggles = { FALSE, TRUE, TRUE };
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
@@ -33,7 +33,7 @@ BOOL fnIsHelperProcess()
 			result = TRUE;
 		}
 	}
-//	result = false; // debug hack, it will cause crash
+	//result = false; // debug hack, it will cause crash
 	return result;
 }
 
@@ -54,9 +54,18 @@ void fnDelayInit()
 	if (!bIsHelperProcess) {
 		fnInitLog();
 		log4cplus::Logger logger = log4cplus::Logger::getInstance(VR_DEMO_LOGGER_SERVER);
-		if (!VRDemoArbiter::getInstance().init(szConfigFilePath, VR_DEMO_LOGGER_SERVER)) {
-			LOG4CPLUS_ERROR(logger, "Failed to parse rule config file: " << szConfigFilePath << std::endl);
-		}
+
+        if (VRDemoConfigurator::getInstance().init(szConfigFilePath, VR_DEMO_LOGGER_SERVER)) {
+            if (!VRDemoArbiter::getInstance().init(
+                VR_DEMO_LOGGER_SERVER,
+                toggles)) 
+            {
+                LOG4CPLUS_ERROR(logger, "Failed to init VR Demo Arbiter");
+            }
+        }
+        else {
+            LOG4CPLUS_ERROR(logger, "Failed to init VR Demo Configurator, file path: " << szConfigFilePath);
+        }
 	}
 }
 
@@ -71,7 +80,7 @@ VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lPar
 	}
 
 	// we don't handle hook messages in helper process
-	if (!bIsHelperProcess && !bPause)
+	if (!bIsHelperProcess && !toggles.m_pause)
 	{
 		switch (nCode)
 		{
@@ -96,19 +105,19 @@ VRDEMOCORE_API BOOL WINAPI fnInit(const char *szConfigFilePath_, BOOL bTrace_)
 	return TRUE;
 }
 
-VRDEMOCORE_API VOID WINAPI fnSetPause(BOOL bPause_)
+VRDEMOCORE_API VOID WINAPI fnSetPause(BOOL bPause)
 {
-    bPause = bPause_;
+    toggles.m_pause = bPause;
 }
 
-VRDEMOCORE_API VOID WINAPI fnSetMaximizeGames(BOOL nMaximizeGames_)
+VRDEMOCORE_API VOID WINAPI fnSetMaximizeGames(BOOL nMaximizeGames)
 {
-    bPause = nMaximizeGames_;
+    toggles.m_maximizeGames = nMaximizeGames;
 }
 
 
-VRDEMOCORE_API VOID WINAPI fnHideSteamVrNotification(BOOL nHideSteamVrNotification)
+VRDEMOCORE_API VOID WINAPI fnSetHideSteamVrNotification(BOOL nHideSteamVrNotification)
 {
-    bPause = nHideSteamVrNotification;
+    toggles.m_hideSteamVrNotifcation = nHideSteamVrNotification;
 }
 

@@ -9,6 +9,11 @@
 class VRDemoArbiter
 {
 public:
+    struct Toggles{
+        BOOL m_pause;
+        BOOL m_maximizeGames;
+        BOOL m_hideSteamVrNotifcation;
+    };
 	static const int UNKNOWN_TOKEN = -1;
 	enum RuleMessage {
 		RM_UNKNOWN = UNKNOWN_TOKEN,
@@ -89,10 +94,8 @@ public:
         static VRDemoArbiter instance;
         return instance;
     }
-    bool init(const std::string &configFilePath, const std::string &loggerName);
+    bool init(const std::string &loggerName, const Toggles &toggles);
     bool arbitrate(RuleType type, int message, HWND wnd);
-    void setMaximizeGames(bool maximizeGames) { m_maximizeGames = maximizeGames; }
-    void setHideSteamVrNotification(bool hideSteamVrNotification) { m_hideSteamVrNotifcation = hideSteamVrNotification; }
     static const std::string FILE_SETTINGS;
     static const std::string PREFIX_MAXIMIZE_GAMES;
     static const std::string PREFIX_HIDE_STEAM_VR_NOTIFICATION;
@@ -104,8 +107,6 @@ private:
     void performShowWindowAction(HWND wnd, const RuleItem &ruleItem);
 
     int parseValue(const std::string &token, const TokenMap &tokenMap);
-	bool parseIgnoreListSection(const std::string &filePath);
-	bool parseRuleSection(const std::string &sectionName, const std::string &filePath, RuleItem &ruleItem);
 
     static TokenMap s_ruleTypeTokenMap;
     static TokenMap s_ruleMessageTokenMap;
@@ -114,9 +115,8 @@ private:
 
     NameList m_ignoredProcessNameList; // TODO: use set
     RuleItemMap m_ruleItemMap;
-    std::string m_configFilePath;
     log4cplus::Logger m_logger;
-    bool m_maximizeGames;
-    bool m_hideSteamVrNotifcation;
+
+    const Toggles *m_toggles;
 };
 

@@ -33,6 +33,9 @@
     <ClInclude Include="..\Common\util\l4util.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\VRDemoConfigurator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -48,6 +51,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\VRDemoArbiter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\VRDemoConfigurator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
