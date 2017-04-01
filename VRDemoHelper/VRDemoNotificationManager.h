@@ -19,6 +19,7 @@ public:
     }
     void addNotificationIcon();
     void deleteNotificationIcon();
+    void modifyNotificationIcon(bool pause);
     inline void addNotificationInfo(int infoStringId) {
         this->addNotificationInfo(infoStringId, NOTIFICATION_INFO_DEFAULT_TIME_OUT);
     }

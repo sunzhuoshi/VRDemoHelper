@@ -63,6 +63,12 @@
     <ClInclude Include="..\Common\VRDemoDefine.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="VRDemoHotKeyManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VRDemoTogglesWrapper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -101,12 +107,18 @@
     <ClCompile Include="..\Common\VRDemoConfigurator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="VRDemoHotKeyManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="VRDemoHelper.ico">
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="Notification.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="Notification-Paused.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

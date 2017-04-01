@@ -294,9 +294,11 @@ del /q *.log
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="VRDemoCoreWrapper.h" />
     <ClInclude Include="VRDemoHelper.h" />
+    <ClInclude Include="VRDemoHotKeyManager.h" />
     <ClInclude Include="VRDemoLogServer.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VRDemoNotificationManager.h" />
+    <ClInclude Include="VRDemoTogglesWrapper.h" />
     <ClInclude Include="VRDemoWindowPoller.h" />
     <ClInclude Include="XGetopt.h" />
   </ItemGroup>
@@ -316,6 +318,7 @@ del /q *.log
     </ClCompile>
     <ClCompile Include="VRDemoCoreWrapper.cpp" />
     <ClCompile Include="VRDemoHelper.cpp" />
+    <ClCompile Include="VRDemoHotKeyManager.cpp" />
     <ClCompile Include="VRDemoLogServer.cpp" />
     <ClCompile Include="VRDemoNotificationManager.cpp" />
     <ClCompile Include="VRDemoWindowPoller.cpp" />
@@ -325,6 +328,7 @@ del /q *.log
     <ResourceCompile Include="VRDemoHelper.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Notification-Paused.ico" />
     <Image Include="Notification.ico" />
     <Image Include="VRDemoHelper.ico" />
   </ItemGroup>

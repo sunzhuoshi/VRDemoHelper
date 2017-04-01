@@ -60,6 +60,22 @@ void VRDemoNotificationManager::deleteNotificationIcon()
     Shell_NotifyIcon(NIM_DELETE, &nid);
 }
 
+void VRDemoNotificationManager::modifyNotificationIcon(bool pause)
+{
+    NOTIFYICONDATA nid = { sizeof(nid) };
+    int iconId = IDI_NOTIFICATIONICON;
+
+    if (pause) {
+        iconId = IDI_NOTIFICATIONICON_PAUSED;
+    }
+    nid.hWnd = m_wnd;
+    nid.uFlags = NIF_ICON | NIF_GUID;
+    nid.guidItem = __uuidof(HelperIcon);
+    LoadIconMetric(m_instance, MAKEINTRESOURCEW(iconId), LIM_SMALL, &nid.hIcon);
+    Shell_NotifyIcon(NIM_MODIFY, &nid);
+}
+
+
 void VRDemoNotificationManager::addNotificationInfo(int infoStringId, unsigned int timeOut)
 {
     NOTIFYICONDATA nid = { sizeof(nid) };
