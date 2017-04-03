@@ -128,7 +128,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
     if (!coreWrapper->init(0 != options.bTrace)) {
         MessageBox(NULL, "Failed to init core module",
-            l4util::loadString(IDS_ERROR_CAPTION).c_str(),
+            l4util::loadString(IDS_CAPTION_ERROR).c_str(),
             MB_OK
         );
         return FALSE;
@@ -434,7 +434,7 @@ BOOL IsAbleToRun()
 			LOG4CPLUS_ERROR(clientLogger, errorMsg.str());
 			MessageBox(NULL, 
 				errorMsg.str().c_str(), 
-				l4util::loadString(IDS_ERROR_CAPTION).c_str(), 
+				l4util::loadString(IDS_CAPTION_ERROR).c_str(), 
 				MB_OK
 			);
 			// TODO: send a notification message?
@@ -450,7 +450,7 @@ BOOL IsAbleToRun()
 		LOG4CPLUS_ERROR(clientLogger, errorMsg.str());;
 		MessageBox(NULL, 
 			errorMsg.str().c_str(), 
-			l4util::loadString(IDS_ERROR_CAPTION).c_str(), 
+			l4util::loadString(IDS_CAPTION_ERROR).c_str(), 
 			MB_OK
 		);
 	}

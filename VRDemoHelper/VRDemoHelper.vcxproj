@@ -280,7 +280,7 @@ del /q *.ipdb
 del /q *.pdb
 del /q *.lib
 del /q *.log
-</Command>
+del /q *lastcodeanalysissucceeded</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
