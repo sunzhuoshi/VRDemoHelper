@@ -455,19 +455,23 @@ VOID InitLogConfiguration()
 
     defaultProps << "log4cplus.rootLogger = DEBUG" << std::endl;
     defaultProps << "log4cplus.logger.CLIENT = DEBUG, CLIENT" << std::endl;
-    defaultProps << "log4cplus.logger.SERVER = DEBUG, SERVER" << std::endl;
     defaultProps << "log4cplus.appender.CLIENT = log4cplus::RollingFileAppender" << std::endl;
     defaultProps << "log4cplus.appender.CLIENT.MaxFileSize = 100MB" << std::endl;
     defaultProps << "log4cplus.appender.CLIENT.MaxBackupIndex = 10" << std::endl;
     defaultProps << "log4cplus.appender.CLIENT.File = helper.log" << std::endl;
     defaultProps << "log4cplus.appender.CLIENT.layout = log4cplus::PatternLayout" << std::endl;
     defaultProps << "log4cplus.appender.CLIENT.layout.ConversionPattern = [%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n" << std::endl;
-    defaultProps << "log4cplus.appender.SERVER = log4cplus::RollingFileAppender" << std::endl;
-    defaultProps << "log4cplus.appender.SERVER.MaxFileSize = 100MB" << std::endl;
-    defaultProps << "log4cplus.appender.SERVER.MaxBackupIndex = 10" << std::endl;
-    defaultProps << "log4cplus.appender.SERVER.File = helper.log" << std::endl;
-    defaultProps << "log4cplus.appender.SERVER.layout = log4cplus::PatternLayout" << std::endl;
-    defaultProps << "log4cplus.appender.SERVER.layout.ConversionPattern = [%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n" << std::endl;
+
+    // turn on server logger only in trace mode
+    if (options.bTrace) {
+        defaultProps << "log4cplus.logger.SERVER = DEBUG, SERVER" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER = log4cplus::RollingFileAppender" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.MaxFileSize = 100MB" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.MaxBackupIndex = 10" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.File = helper.log" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.layout = log4cplus::PatternLayout" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.layout.ConversionPattern = [%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n" << std::endl;
+    }
 
     log4cplus::PropertyConfigurator defaultConfigutator(std::istringstream(defaultProps.str()));
     defaultConfigutator.configure();
