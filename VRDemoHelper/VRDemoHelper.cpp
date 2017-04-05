@@ -93,7 +93,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             VR_DEMO_LOGGER_CLIENT
         )
     ) {  
-        VR_DEMO_ALERT(IDS_CAPTION_ERROR, "Failed to init configurator,\ncheck the log for detail.");
+        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init configurator,\ncheck the log for detail.");
         return FALSE;
     }
 
@@ -118,7 +118,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
     if (!coreWrapper->init(0 != options.bTrace)) {
-        VR_DEMO_ALERT(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
+        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
         return FALSE;
     }
 
