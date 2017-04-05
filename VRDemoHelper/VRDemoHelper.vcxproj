@@ -153,11 +153,9 @@
       <ShowProgress>false</ShowProgress>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>echo copying log4cplus dll...
+      <Command>echo copying log4cplus ...
 copy /Y $(ProjectDir)..\Common\log4cplus\bin\log4cplusD_x64.dll $(TargetDir)
-
-echo copying log4cplus props...
-copy /Y $(ProjectDir)log4cplus.props $(TargetDir)
+copy /Y $(ProjectDir)..\Common\log4cplus\bin\log4cplusD_x64.pdb $(TargetDir)
 
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
@@ -232,9 +230,6 @@ copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
       <Command>echo copying log4cplus dll...
 copy /Y $(ProjectDir)..\Common\log4cplus\bin\log4cplus_x64.dll $(TargetDir)
 
-echo copying log4cplus props...
-copy /Y $(ProjectDir)log4cplus.props $(TargetDir)
-
 echo copying rule config...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
     </PostBuildEvent>
@@ -266,9 +261,6 @@ copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
     <PostBuildEvent>
       <Command>echo copying log4cplus dll...
 copy /Y $(ProjectDir)..\Common\log4cplus\bin\log4cplus_x64.dll $(TargetDir)
-
-echo copying log4cplus props...
-copy /Y $(ProjectDir)log4cplus.props $(TargetDir)
 
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
@@ -337,7 +329,6 @@ del /q *lastcodeanalysissucceeded</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="settings.ini" />
-    <None Include="log4cplus.props" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
