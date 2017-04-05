@@ -86,13 +86,26 @@ bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
     return result;
 }
 
+bool VRDemoArbiter::hasRuleWithType(RuleType ruleType) const
+{
+    bool result = false;
+    for (const auto& it: m_ruleItemMap) {
+        if (it.second.m_type == ruleType) {
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
+
+
 
 bool VRDemoArbiter::ifIgnore(const std::string &processName)
 {
 	bool result = false;
 
-	for (NameList::const_iterator it = m_ignoredProcessNameList.begin(); it != m_ignoredProcessNameList.end(); ++it) {
-		if (0 == _stricmp(processName.c_str(), it->c_str())) {
+	for (const auto& it : m_ignoredProcessNameList) {
+		if (0 == _stricmp(processName.c_str(), it.c_str())) {
 			result = true;
 			break;
 		}
@@ -151,9 +164,9 @@ int VRDemoArbiter::parseValue(const std::string &token, const TokenMap &tokenMap
 	int result = UNKNOWN_TOKEN;
 	std::string trimmedToken = (token);
 
-	for (TokenMap::const_iterator it = tokenMap.begin(); it != tokenMap.end(); ++it) {
-		if (0 == _stricmp(it->second.c_str(), trimmedToken.c_str())) {
-			result = it->first;
+	for (const auto& it : tokenMap) {
+		if (0 == _stricmp(it.second.c_str(), trimmedToken.c_str())) {
+			result = it.first;
 			break;
 		}
 	}

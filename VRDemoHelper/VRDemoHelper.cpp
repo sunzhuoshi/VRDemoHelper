@@ -99,8 +99,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 	VRDemoLogServer::VRDemoLogServerPtr logServer;
-	if (options.bTrace) 
-	{
+	if (options.bTrace) {
 		logServer = new VRDemoLogServer();
 		if (!logServer->start(options.usPort))
 		{
@@ -119,7 +118,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
     if (!coreWrapper->init(0 != options.bTrace)) {
-        MessageBox(NULL, "Failed to init core module",
+        MessageBox(NULL, "Failed to init core module\ncheck the log for detail",
             l4util::loadString(IDS_CAPTION_ERROR).c_str(),
             MB_OK
         );
