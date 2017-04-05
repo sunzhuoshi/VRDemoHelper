@@ -115,7 +115,7 @@ bool VRDemoArbiter::ifIgnore(const std::string &processName)
 
 void VRDemoArbiter::performAction(HWND wnd, const RuleItem &ruleItem)
 {
-    LOG4CPLUS_WARN(m_logger, "Performing action, rule item: " << ruleItem.toString());
+    LOG4CPLUS_INFO(m_logger, "Performing action, rule item: " << ruleItem.toString());
     switch (ruleItem.m_action) {
     case RA_FULL:
         performFullScreenAction(wnd, ruleItem);
