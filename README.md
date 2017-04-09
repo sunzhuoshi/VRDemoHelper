@@ -50,9 +50,6 @@ the logserver listening port, default is 8888. You can set one in case of that i
 NOTE: used only in trace mode  
 
 ## Files
-### log4cplus.props  
-It uses [log4cplus](https://github.com/log4cplus/log4cplus) to log when in trace mode(option -t). There are 2 log files, one for helper itself, and the other for log server of hooked processes 
-
 ### settings.ini  
 Used to define windows(games and steam vr) to be processed, process to be ignored in trace mode
 
