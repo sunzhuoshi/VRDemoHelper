@@ -4,7 +4,7 @@
 #include <log4cplus\log4cplus.h>
 
 #include "util\l4util.h"
-#include <WinUser.h>
+#include "VRDemoArbiter.h"
 
 #ifdef _WIN64
 const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore.dll"; // TODO: rename to "VRDemoCore_x64.dll"
@@ -30,8 +30,12 @@ VRDemoCoreWrapper::VRDemoCoreWrapper():
 
 VRDemoCoreWrapper::~VRDemoCoreWrapper()
 {
-    UnhookWindowsHookEx(m_hook);
-    FreeLibrary(m_dll);
+    if (m_hook) {
+        UnhookWindowsHookEx(m_hook);
+    }
+    if (m_dll) {
+        FreeLibrary(m_dll);
+    }
 }
 
 bool VRDemoCoreWrapper::init(BOOL trace)
@@ -47,7 +51,7 @@ bool VRDemoCoreWrapper::init(BOOL trace)
         SetMaximizeGamesFuncPtr setMaximizeGamesFunc = (SetMaximizeGamesFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_MAXIMIZE_GAMES.c_str());
         SetHideSteamVrNotificationFuncPtr setHideSteamVrNotificationFunc = (SetHideSteamVrNotificationFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_HIDE_STEAM_VR_NOTIFICATION.c_str());
 
-        if (initFunc && hookProc && 
+        if (initFunc && hookProc &&
             setPauseFunc && setMaximizeGamesFunc && setHideSteamVrNotificationFunc) {
             if (initFunc(l4util::getFileFullPath(FILE_SETTINGS).c_str(), trace)) {
                 m_hook = SetWindowsHookEx(

@@ -36,7 +36,7 @@ Rename "Hide Steam VR Notification" to Set SteamVR for Demo(Turn on Arcade Mode,
 
 3. localization for existing strings
 
-4. add default implementation or create one if log4cplus.prop or settings.ini doesn't exist to make configuration files optional  
+4. add default implementation or create one if settings.ini doesn't exist to make configuration files optional  
    
 5. hook D3D to show FPS like fraps
 

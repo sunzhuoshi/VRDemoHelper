@@ -59,6 +59,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 VOID ShowContextMenu(HWND hwnd, POINT pt);
 BOOL ParseCommandLineArguments();
 BOOL IsAbleToRun();
+VOID InitLogConfiguration();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -70,17 +71,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	// init log first in main
 	log4cplus::Initializer initializer;
-	log4cplus::PropertyConfigurator::doConfigure(LOG_PROPERTY_FILE);
 
-    // at least one logger, after a successful configuration 
-	if (0 == log4cplus::Logger::getCurrentLoggers().size()) 
-	{
-
-		std::ostringstream msg;
-		msg << "Failed to init log module\nPlease check " << LOG_PROPERTY_FILE;
-		MessageBoxA(NULL, msg.str().c_str(), "Error!", MB_OK);
-		return FALSE;
-	}
+    InitLogConfiguration();
 
 	clientLogger = log4cplus::Logger::getInstance(VR_DEMO_LOGGER_CLIENT);
 
@@ -101,14 +93,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             VR_DEMO_LOGGER_CLIENT
         )
     ) {  
-        VR_DEMO_ALERT(IDS_CAPTION_ERROR, "Failed to init configurator\ncheck the log for detail");
+        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init configurator,\ncheck the log for detail.");
         return FALSE;
     }
 
 
 	VRDemoLogServer::VRDemoLogServerPtr logServer;
-	if (options.bTrace) 
-	{
+	if (options.bTrace) {
 		logServer = new VRDemoLogServer();
 		if (!logServer->start(options.usPort))
 		{
@@ -127,10 +118,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
     if (!coreWrapper->init(0 != options.bTrace)) {
-        MessageBox(NULL, "Failed to init core module",
-            l4util::loadString(IDS_CAPTION_ERROR).c_str(),
-            MB_OK
-        );
+        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
         return FALSE;
     }
 
@@ -455,4 +443,32 @@ BOOL IsAbleToRun()
 		);
 	}
 	return bResult;
+}
+
+VOID InitLogConfiguration()
+{
+    std::ostringstream defaultProps;
+
+    defaultProps << "log4cplus.rootLogger = DEBUG" << std::endl;
+    defaultProps << "log4cplus.logger.CLIENT = DEBUG, CLIENT" << std::endl;
+    defaultProps << "log4cplus.appender.CLIENT = log4cplus::RollingFileAppender" << std::endl;
+    defaultProps << "log4cplus.appender.CLIENT.MaxFileSize = 100MB" << std::endl;
+    defaultProps << "log4cplus.appender.CLIENT.MaxBackupIndex = 10" << std::endl;
+    defaultProps << "log4cplus.appender.CLIENT.File = helper.log" << std::endl;
+    defaultProps << "log4cplus.appender.CLIENT.layout = log4cplus::PatternLayout" << std::endl;
+    defaultProps << "log4cplus.appender.CLIENT.layout.ConversionPattern = [%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n" << std::endl;
+
+    // turn on server logger only in trace mode
+    if (options.bTrace) {
+        defaultProps << "log4cplus.logger.SERVER = DEBUG, SERVER" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER = log4cplus::RollingFileAppender" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.MaxFileSize = 100MB" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.MaxBackupIndex = 10" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.File = helper.log" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.layout = log4cplus::PatternLayout" << std::endl;
+        defaultProps << "log4cplus.appender.SERVER.layout.ConversionPattern = [%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n" << std::endl;
+    }
+
+    log4cplus::PropertyConfigurator defaultConfigutator(std::istringstream(defaultProps.str()));
+    defaultConfigutator.configure();
 }

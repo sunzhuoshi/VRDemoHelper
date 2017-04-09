@@ -86,13 +86,26 @@ bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
     return result;
 }
 
+bool VRDemoArbiter::hasRuleWithType(RuleType ruleType) const
+{
+    bool result = false;
+    for (const auto& it: m_ruleItemMap) {
+        if (it.second.m_type == ruleType) {
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
+
+
 
 bool VRDemoArbiter::ifIgnore(const std::string &processName)
 {
 	bool result = false;
 
-	for (NameList::const_iterator it = m_ignoredProcessNameList.begin(); it != m_ignoredProcessNameList.end(); ++it) {
-		if (0 == _stricmp(processName.c_str(), it->c_str())) {
+	for (const auto& it : m_ignoredProcessNameList) {
+		if (0 == _stricmp(processName.c_str(), it.c_str())) {
 			result = true;
 			break;
 		}
@@ -102,7 +115,7 @@ bool VRDemoArbiter::ifIgnore(const std::string &processName)
 
 void VRDemoArbiter::performAction(HWND wnd, const RuleItem &ruleItem)
 {
-    LOG4CPLUS_WARN(m_logger, "Performing action, rule item: " << ruleItem.toString());
+    LOG4CPLUS_INFO(m_logger, "Performing action, rule item: " << ruleItem.toString());
     switch (ruleItem.m_action) {
     case RA_FULL:
         performFullScreenAction(wnd, ruleItem);
@@ -151,9 +164,9 @@ int VRDemoArbiter::parseValue(const std::string &token, const TokenMap &tokenMap
 	int result = UNKNOWN_TOKEN;
 	std::string trimmedToken = (token);
 
-	for (TokenMap::const_iterator it = tokenMap.begin(); it != tokenMap.end(); ++it) {
-		if (0 == _stricmp(it->second.c_str(), trimmedToken.c_str())) {
-			result = it->first;
+	for (const auto& it : tokenMap) {
+		if (0 == _stricmp(it.second.c_str(), trimmedToken.c_str())) {
+			result = it.first;
 			break;
 		}
 	}
