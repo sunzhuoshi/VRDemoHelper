@@ -13,6 +13,7 @@ public:
         BOOL m_pause;
         BOOL m_maximizeGames;
         BOOL m_hideSteamVrNotifcation;
+        BOOL m_showFPS;
     };
 	static const int UNKNOWN_TOKEN = -1;
 	enum RuleMessage {

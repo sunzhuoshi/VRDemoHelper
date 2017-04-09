@@ -18,7 +18,7 @@ BOOL bIsHelperProcess = FALSE;
 #pragma data_seg(".shared")
 VRDEMOCORE_API CHAR szConfigFilePath[MAX_PATH] = "";
 VRDEMOCORE_API BOOL bTrace = FALSE;
-VRDEMOCORE_API VRDemoArbiter::Toggles toggles = { FALSE, TRUE, TRUE };
+VRDEMOCORE_API VRDemoArbiter::Toggles toggles = { FALSE, TRUE, TRUE, TRUE };
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
@@ -119,5 +119,10 @@ VRDEMOCORE_API VOID WINAPI fnSetMaximizeGames(BOOL nMaximizeGames)
 VRDEMOCORE_API VOID WINAPI fnSetHideSteamVrNotification(BOOL nHideSteamVrNotification)
 {
     toggles.m_hideSteamVrNotifcation = nHideSteamVrNotification;
+}
+
+VRDEMOCORE_API VOID WINAPI fnSetShowFPS(BOOL nShowFPS)
+{
+    toggles.m_showFPS = nShowFPS;
 }
 

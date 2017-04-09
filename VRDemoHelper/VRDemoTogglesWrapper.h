@@ -9,6 +9,7 @@ public:
     inline bool getPause() { return 0 != m_toggles.m_pause; };
     inline bool getMaximmizeGames() { return 0 != m_toggles.m_maximizeGames; };
     inline bool getHideSteamVrNotification() { return 0 != m_toggles.m_hideSteamVrNotifcation; };
+    inline bool getShowFPS() { return 0 != m_toggles.m_showFPS; };
     inline BOOL togglePause() {
         m_toggles.m_pause = !m_toggles.m_pause;
         VRDemoEventDispatcher::getInstance().dispatchEvent(
@@ -34,8 +35,15 @@ public:
             m_toggles.m_hideSteamVrNotifcation
         );
     }
+    inline void toggleShowFPS() {
+        m_toggles.m_showFPS = !m_toggles.m_showFPS;
+        VRDemoEventDispatcher::getInstance().dispatchEvent(
+            VRDemoEventDispatcher::EV_SHOW_FPS_CHANGED,
+            m_toggles.m_showFPS
+        );
+    }
     VRDemoTogglesWrapper() :
-        m_toggles({ FALSE, TRUE, TRUE }) {
+        m_toggles({ FALSE, TRUE, TRUE, TRUE }) {
     }
     const VRDemoArbiter::Toggles& getToggles() {
         return m_toggles;

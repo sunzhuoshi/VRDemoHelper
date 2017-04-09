@@ -17,6 +17,8 @@ const std::string VRDemoCoreWrapper::FUNCTION_HOOK_PROC = "fnWndMsgProc";
 const std::string VRDemoCoreWrapper::FUNCTION_SET_PAUSE = "fnSetPause";
 const std::string VRDemoCoreWrapper::FUNCTION_SET_MAXIMIZE_GAMES = "fnSetMaximizeGames";
 const std::string VRDemoCoreWrapper::FUNCTION_SET_HIDE_STEAM_VR_NOTIFICATION = "fnSetHideSteamVrNotification";
+const std::string VRDemoCoreWrapper::FUNCTION_SET_SHOW_FPS = "fnSetShowFPS";
+
 
 VRDemoCoreWrapper::VRDemoCoreWrapper():
     m_dll(nullptr),
@@ -50,6 +52,7 @@ bool VRDemoCoreWrapper::init(BOOL trace)
         SetPauseFuncPtr setPauseFunc = (SetPauseFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_PAUSE.c_str());
         SetMaximizeGamesFuncPtr setMaximizeGamesFunc = (SetMaximizeGamesFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_MAXIMIZE_GAMES.c_str());
         SetHideSteamVrNotificationFuncPtr setHideSteamVrNotificationFunc = (SetHideSteamVrNotificationFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_HIDE_STEAM_VR_NOTIFICATION.c_str());
+        SetShowFPSFunctionPtr setShowFPSFunc = (SetShowFPSFunctionPtr)GetProcAddress(m_dll, FUNCTION_SET_SHOW_FPS.c_str());
 
         if (initFunc && hookProc &&
             setPauseFunc && setMaximizeGamesFunc && setHideSteamVrNotificationFunc) {
@@ -64,6 +67,7 @@ bool VRDemoCoreWrapper::init(BOOL trace)
                     m_setPauseFunc = setPauseFunc;
                     m_setHideSteamVrNotificationFunc = setHideSteamVrNotificationFunc;
                     m_setMaximizeGamesFunc = setMaximizeGamesFunc;
+                    m_setShowFPSFunc = setShowFPSFunc;
 
                     VRDemoEventDispatcher::getInstance().addEventListener(
                         VRDemoEventDispatcher::EV_ALL,
@@ -98,6 +102,9 @@ void VRDemoCoreWrapper::handleEvent(int event, unsigned long long param)
         break;
     case VRDemoEventDispatcher::EV_MAXIMIZE_GAMES_CHANGED:
         m_setMaximizeGamesFunc(value);
+        break;
+    case VRDemoEventDispatcher::EV_SHOW_FPS_CHANGED:
+        m_setShowFPSFunc(value);
         break;
     default:
         break;

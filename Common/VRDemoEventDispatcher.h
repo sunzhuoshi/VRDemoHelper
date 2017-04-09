@@ -24,6 +24,7 @@ public:
         EV_PAUSE_CHANGED,
         EV_MAXIMIZE_GAMES_CHANGED,
         EV_HIDE_STEAM_VR_NOTIFICATION_CHANGED,
+        EV_SHOW_FPS_CHANGED,
         EV_ALL     // for lazy users like me
     };
     typedef log4cplus::helpers::SharedObjectPtr<IVRDemoEventListener> VRDemoEventListenerPtr;
