@@ -15,12 +15,19 @@
     __pragma (warning (pop))
 
 
-#define VR_DEMO_ALERT(captionStringId, text)                                                        \
+#define VR_DEMO_ALERT_SS(caption, text)                                                             \
     VR_DEMO_SUPPRESS_DOWHILE_WARNING()                                                              \
     do {                                                                                            \
         std::ostringstream msg;                                                                     \
         msg << text;                                                                                \
-        MessageBoxA(NULL, msg.str().c_str(), l4util::loadString(captionStringId).c_str(), MB_OK);   \
+        MessageBoxA(NULL, msg.str().c_str(), caption, MB_OK);                                       \
     } while (false)                                                                                 \
     VR_DEMO_RESTORE_DOWHILE_WARNING()
+
+#define VR_DEMO_ALERT_IS(captionStringId, text)                                                     \
+    VR_DEMO_ALERT_SS(l4util::loadString(captionStringId).c_str(), text)
+
+#define VR_DEMO_ALERT_II(captionStringId, textStringId)                                             \
+    VR_DEMO_ALERT_SS(l4util::loadString(captionStringId).c_str(), l4util::loadString(captionStringId).c_str())
+
 

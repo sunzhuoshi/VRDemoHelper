@@ -123,7 +123,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="log4cplus.props" />
     <None Include="settings.ini" />
   </ItemGroup>
   <ItemGroup>

@@ -99,6 +99,13 @@ public:
     }
     bool init(const std::string &loggerName, const Toggles &toggles, bool trace);
     bool arbitrate(RuleType type, int message, HWND wnd);
+    inline bool hasRuleWithTypePoll() const {
+        return hasRuleWithType(RT_POLL);
+    }
+    inline bool hasRuleWithTypeMessage() const {
+        return hasRuleWithType(RT_MESSAGE);
+    }
+    bool hasRuleWithType(RuleType ruleType) const;
     static const std::string SECTION_PREFIX_MAXIMIZE_GAMES;
     static const std::string SECTION_PREFIX_HIDE_STEAM_VR_NOTIFICATION;
     static const std::string SECTION_PREFIX_ALL;
