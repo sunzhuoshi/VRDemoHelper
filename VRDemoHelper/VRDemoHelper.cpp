@@ -317,22 +317,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_INITDIALOG:
-		{
-		RECT dlgRect, desktopRect;
-
-        // set dialog position to the center of client
-		if (GetWindowRect(hDlg, &dlgRect) && GetWindowRect(GetDesktopWindow(), &desktopRect))
-		{
-			SetWindowPos(hDlg,
-				NULL,
-				(desktopRect.right - desktopRect.left - dlgRect.right + dlgRect.left) / 2,
-				(desktopRect.bottom - desktopRect.top - dlgRect.bottom + dlgRect.top) / 2,
-				0,
-				0,
-				SWP_NOSIZE);
-		}
-		return (INT_PTR)TRUE;
-		}
+        break;
     case WM_COMMAND:
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
         {
