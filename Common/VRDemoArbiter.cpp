@@ -38,6 +38,8 @@ VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleActionTokenMap = {
 bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
 {
     bool result = false;
+
+    if (!m_toggles->m_pause) {
     char className[MAX_PATH];
     RuleAction action = RA_UNKNOWN;
     DWORD processId = 0;
@@ -46,7 +48,6 @@ bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
 
     std::string processName = l4util::getProcessNameWithWindow(wnd);
 
-    if (!m_toggles->m_pause) {
         // if we can't get process name, then we can do less...
         if (!ifIgnore(processName) && processName.size()) {
             RealGetWindowClassA(wnd, className, MAX_PATH);
