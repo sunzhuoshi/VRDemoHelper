@@ -16,8 +16,6 @@ public:
     bool init(const VRDemoArbiter::Toggles& toggles, bool trace);
     void run();
     void stop();
-    void pause();
-    void resume();
     static const int POLL_INTERVAL = 1000; // ms
 private:
     static BOOL CALLBACK enumWindowsProc(HWND wnd, LPARAM param);

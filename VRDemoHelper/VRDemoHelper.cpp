@@ -107,18 +107,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
+    VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
+    if (!coreWrapper->init(0 != options.bTrace)) {
+        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
+        return FALSE;
+    }
+
     VRDemoWindowPoller::VRDemoWindowPollerPtr poller(new VRDemoWindowPoller());
     if (!poller->init(togglesWrapper.getToggles(), 0 != options.bTrace)) {
         LOG4CPLUS_ERROR(clientLogger, "Failed to init window poller");
         if (logServer && logServer->isRunning()) {
             logServer->stop();
         }
-        return FALSE;
-    }
-
-    VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
-    if (!coreWrapper->init(0 != options.bTrace)) {
-        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
         return FALSE;
     }
 

@@ -9,12 +9,24 @@
 class VRDemoArbiter
 {
 public:
-    struct Toggles{
+    enum ToggleIndex {
+        TI_PAUSE = 0,
+        TI_MAXIMIZE_GAMES = 1,
+        TI_HIDE_STEAM_VR_NOTIFICATION = 2,
+        TI_SHOW_FPS = 3
+    };
+    static const int TI_MIN = TI_PAUSE;
+    static const int TI_MAX = TI_SHOW_FPS;
+    union Toggles {
+        struct {
         BOOL m_pause;
         BOOL m_maximizeGames;
         BOOL m_hideSteamVrNotifcation;
         BOOL m_showFPS;
     };
+        BOOL m_values[TI_MAX+1];
+    };
+    
 	static const int UNKNOWN_TOKEN = -1;
 	enum RuleMessage {
 		RM_UNKNOWN = UNKNOWN_TOKEN,

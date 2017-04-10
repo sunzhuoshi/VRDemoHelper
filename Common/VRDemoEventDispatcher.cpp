@@ -14,10 +14,6 @@ VRDemoEventDispatcher::~VRDemoEventDispatcher()
 
 void VRDemoEventDispatcher::addEventListener(int event, VRDemoEventListenerPtr listener)
 {
-    if (event == EV_ALL) {
-        m_globalEventListeners.push_back(listener);
-    }
-    else {
         VRDemoEventListenersMap::iterator it = m_eventListenersMap.find(event);
 
         if (it == m_eventListenersMap.end()) {
@@ -25,21 +21,16 @@ void VRDemoEventDispatcher::addEventListener(int event, VRDemoEventListenerPtr l
         }
         VRDemoEventListenerList &eventList = m_eventListenersMap[event];
         eventList.push_back(listener);
-    }
 }
 
-void VRDemoEventDispatcher::dispatchEvent(int event, unsigned long long param)
+void VRDemoEventDispatcher::dispatchEvent(int event, unsigned long long param1, unsigned long long param2)
 {
     VRDemoEventListenersMap::iterator mit = m_eventListenersMap.find(event);
 
     if (mit != m_eventListenersMap.end()) {
         VRDemoEventListenerList &eventList = mit->second;
         for (VRDemoEventListenerList::iterator lit = eventList.begin(); lit != eventList.end(); ++lit) {
-            (*lit)->handleEvent(event, param);
+            (*lit)->handleEvent(event, param1, param2);
         }
-    }
-
-    for (auto it : m_globalEventListeners) {
-        (it->handleEvent(event, param));
     }
 }

@@ -14,18 +14,12 @@ const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore_x86.dll";
 const std::string VRDemoCoreWrapper::FILE_SETTINGS = "settings.ini";
 const std::string VRDemoCoreWrapper::FUNCTION_INIT = "fnInit";
 const std::string VRDemoCoreWrapper::FUNCTION_HOOK_PROC = "fnWndMsgProc";
-const std::string VRDemoCoreWrapper::FUNCTION_SET_PAUSE = "fnSetPause";
-const std::string VRDemoCoreWrapper::FUNCTION_SET_MAXIMIZE_GAMES = "fnSetMaximizeGames";
-const std::string VRDemoCoreWrapper::FUNCTION_SET_HIDE_STEAM_VR_NOTIFICATION = "fnSetHideSteamVrNotification";
-const std::string VRDemoCoreWrapper::FUNCTION_SET_SHOW_FPS = "fnSetShowFPS";
-
+const std::string VRDemoCoreWrapper::FUNCTION_SET_TOGGLE_VALUE = "fnSetToggleValue";
 
 VRDemoCoreWrapper::VRDemoCoreWrapper():
     m_dll(nullptr),
     m_hook(nullptr),
-    m_setPauseFunc(nullptr),
-    m_setHideSteamVrNotificationFunc(nullptr),
-    m_setMaximizeGamesFunc(nullptr)
+    m_setToggleValueFunc(nullptr)
 {
 }
 
@@ -49,13 +43,9 @@ bool VRDemoCoreWrapper::init(BOOL trace)
     if (m_dll) {
         InitFuncPtr initFunc = (InitFuncPtr)GetProcAddress(m_dll, FUNCTION_INIT.c_str());
         HOOKPROC hookProc = (HOOKPROC)GetProcAddress(m_dll, FUNCTION_HOOK_PROC.c_str());
-        SetPauseFuncPtr setPauseFunc = (SetPauseFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_PAUSE.c_str());
-        SetMaximizeGamesFuncPtr setMaximizeGamesFunc = (SetMaximizeGamesFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_MAXIMIZE_GAMES.c_str());
-        SetHideSteamVrNotificationFuncPtr setHideSteamVrNotificationFunc = (SetHideSteamVrNotificationFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_HIDE_STEAM_VR_NOTIFICATION.c_str());
-        SetShowFPSFunctionPtr setShowFPSFunc = (SetShowFPSFunctionPtr)GetProcAddress(m_dll, FUNCTION_SET_SHOW_FPS.c_str());
+        SetToggleValueFuncPtr setToggleValueFunc = (SetToggleValueFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_TOGGLE_VALUE.c_str());
 
-        if (initFunc && hookProc &&
-            setPauseFunc && setMaximizeGamesFunc && setHideSteamVrNotificationFunc) {
+        if (initFunc && hookProc && setToggleValueFunc) {
             if (initFunc(l4util::getFileFullPath(FILE_SETTINGS).c_str(), trace)) {
                 m_hook = SetWindowsHookEx(
                     WH_CBT,
@@ -64,13 +54,10 @@ bool VRDemoCoreWrapper::init(BOOL trace)
                     0
                 );
                 if (m_hook) {
-                    m_setPauseFunc = setPauseFunc;
-                    m_setHideSteamVrNotificationFunc = setHideSteamVrNotificationFunc;
-                    m_setMaximizeGamesFunc = setMaximizeGamesFunc;
-                    m_setShowFPSFunc = setShowFPSFunc;
+                    m_setToggleValueFunc = setToggleValueFunc;
 
                     VRDemoEventDispatcher::getInstance().addEventListener(
-                        VRDemoEventDispatcher::EV_ALL,
+                        VRDemoEventDispatcher::EV_TOGGLE_VALUE_CHANGED,
                         VRDemoEventDispatcher::VRDemoEventListenerPtr(this)
                     );
                     result = true;
@@ -90,18 +77,12 @@ bool VRDemoCoreWrapper::init(BOOL trace)
     return result;
 }
 
-void VRDemoCoreWrapper::handleEvent(int event, unsigned long long param)
+void VRDemoCoreWrapper::handleEvent(int event, unsigned long long param1, unsigned long long param2)
 {
-    BOOL value = 0 != param;
+    BOOL value = 0 != param2;
     switch (event) {
-    case VRDemoEventDispatcher::EV_PAUSE_CHANGED:
-        m_setPauseFunc(value);
-        break;
-    case VRDemoEventDispatcher::EV_HIDE_STEAM_VR_NOTIFICATION_CHANGED:
-        m_setHideSteamVrNotificationFunc(value);
-        break;
-    case VRDemoEventDispatcher::EV_MAXIMIZE_GAMES_CHANGED:
-        m_setMaximizeGamesFunc(value);
+    case VRDemoEventDispatcher::EV_TOGGLE_VALUE_CHANGED:
+        m_setToggleValueFunc(static_cast<int>(param1), value);
         break;
     case VRDemoEventDispatcher::EV_SHOW_FPS_CHANGED:
         m_setShowFPSFunc(value);
