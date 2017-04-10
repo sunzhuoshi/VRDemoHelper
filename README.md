@@ -42,13 +42,6 @@ Rename "Hide Steam VR Notification" to Set SteamVR for Demo(Turn on Arcade Mode,
 
 6. support win32 games and applications
 
-## Options
-### -t  
-turn on trace mode, in trace mode it logs hooked message. You can use it to diagnose why a rule doesn't work.  
-### -p [port]   
-the logserver listening port, default is 8888. You can set one in case of that it is already in used  
-NOTE: used only in trace mode  
-
 ## Files
 ### settings.ini  
 Used to define windows(games and steam vr) to be processed, process to be ignored in trace mode
