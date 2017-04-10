@@ -7,6 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VRDemoHelper", "VRDemoHelpe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VRDemoCore", "VRDemoCore\VRDemoCore.vcxproj", "{B269B01A-27A9-4678-9184-BD65D6746B4A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{51C42803-F4F6-4B22-A1FB-8CDAA3F487E4}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Archive|x64 = Archive|x64
