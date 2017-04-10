@@ -40,7 +40,7 @@ void VRDemoWindowPoller::run()
     {
         m_pollEvent.timed_wait(POLL_INTERVAL);
         if (m_runFlag && !m_toggles->m_pause) {
-            EnumWindows(&VRDemoWindowPoller::enumChildProc, (LPARAM)this);
+            EnumWindows(&VRDemoWindowPoller::enumWindowsProc, (LPARAM)this);
         }
     }
 }
@@ -53,7 +53,7 @@ void VRDemoWindowPoller::stop()
     this->join();
 }
 
-BOOL CALLBACK VRDemoWindowPoller::enumChildProc(HWND wnd, LPARAM param)
+BOOL CALLBACK VRDemoWindowPoller::enumWindowsProc(HWND wnd, LPARAM param)
 {
     VRDemoWindowPoller *poller = (VRDemoWindowPoller *)param;
     return poller->realEnumChildProc(wnd);

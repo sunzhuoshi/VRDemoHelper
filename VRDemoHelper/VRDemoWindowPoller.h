@@ -20,7 +20,7 @@ public:
     void resume();
     static const int POLL_INTERVAL = 1000; // ms
 private:
-    static BOOL CALLBACK enumChildProc(HWND wnd, LPARAM param);
+    static BOOL CALLBACK enumWindowsProc(HWND wnd, LPARAM param);
     BOOL realEnumChildProc(HWND wnd);
     bool m_runFlag;
     const VRDemoArbiter::Toggles *m_toggles;
