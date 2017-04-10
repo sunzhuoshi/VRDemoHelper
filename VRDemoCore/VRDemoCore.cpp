@@ -18,7 +18,7 @@ BOOL bIsHelperProcess = FALSE;
 #pragma data_seg(".shared")
 VRDEMOCORE_API CHAR szConfigFilePath[MAX_PATH] = "";
 VRDEMOCORE_API BOOL bTrace = FALSE;
-VRDEMOCORE_API VRDemoArbiter::Toggles toggles = { FALSE, TRUE, TRUE };
+VRDEMOCORE_API VRDemoArbiter::Toggles toggles = { FALSE, TRUE, TRUE, TRUE };
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
@@ -97,7 +97,7 @@ VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lPar
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-VRDEMOCORE_API BOOL WINAPI fnInit(const char *szConfigFilePath_, BOOL bTrace_)
+VRDEMOCORE_API BOOL WINAPI fnInit(const CHAR *szConfigFilePath_, BOOL bTrace_)
 {
 	strcpy_s(szConfigFilePath, MAX_PATH, szConfigFilePath_);
 	// TODO: local config file content into share data segment
@@ -105,19 +105,10 @@ VRDEMOCORE_API BOOL WINAPI fnInit(const char *szConfigFilePath_, BOOL bTrace_)
 	return TRUE;
 }
 
-VRDEMOCORE_API VOID WINAPI fnSetPause(BOOL bPause)
+VRDEMOCORE_API VOID WINAPI fnSetToggleValue(INT nIndex, BOOL nValue)
 {
-    toggles.m_pause = bPause;
-}
-
-VRDEMOCORE_API VOID WINAPI fnSetMaximizeGames(BOOL nMaximizeGames)
-{
-    toggles.m_maximizeGames = nMaximizeGames;
-}
-
-
-VRDEMOCORE_API VOID WINAPI fnSetHideSteamVrNotification(BOOL nHideSteamVrNotification)
-{
-    toggles.m_hideSteamVrNotifcation = nHideSteamVrNotification;
+    if (VRDemoArbiter::TI_MIN <= nIndex && VRDemoArbiter::TI_MAX >= nIndex) {
+        toggles.m_values[nIndex] = nValue;
+    }
 }
 

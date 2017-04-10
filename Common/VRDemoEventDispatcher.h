@@ -10,7 +10,7 @@
 class IVRDemoEventListener : virtual public log4cplus::helpers::SharedObject
 {
 public:
-    virtual void handleEvent(int event, unsigned long long param) = 0;
+    virtual void handleEvent(int event, unsigned long long param1, unsigned long long param2) = 0;
 };
 
 /*
@@ -21,10 +21,7 @@ class VRDemoEventDispatcher
 {
 public:
     enum Event {
-        EV_PAUSE_CHANGED,
-        EV_MAXIMIZE_GAMES_CHANGED,
-        EV_HIDE_STEAM_VR_NOTIFICATION_CHANGED,
-        EV_ALL     // for lazy users like me
+        EV_TOGGLE_VALUE_CHANGED
     };
     typedef log4cplus::helpers::SharedObjectPtr<IVRDemoEventListener> VRDemoEventListenerPtr;
     typedef std::list<VRDemoEventListenerPtr> VRDemoEventListenerList;
@@ -37,9 +34,8 @@ public:
         return instance;
     }
     void addEventListener(int event, VRDemoEventListenerPtr listener);
-    void dispatchEvent(int event, unsigned long long param);
+    void dispatchEvent(int event, unsigned long long param1, unsigned long long param2);
 private:
     VRDemoEventListenersMap m_eventListenersMap;
-    VRDemoEventListenerList m_globalEventListeners;
 };
 
