@@ -19,10 +19,8 @@
 #include <log4cplus/socketappender.h>
 
 #include "util/l4util.h"
-#include "XGetopt.h"
 #include "argcargv.h"
 #include "VRDemoConfigurator.h"
-#include "VRDemoLogServer.h"
 #include "VRDemoWindowPoller.h"
 #include "VRDemoCoreWrapper.h"
 #include "VRDemoNotificationManager.h"
@@ -36,18 +34,7 @@
 HINSTANCE hInst;                                // 当前实例
 CHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 CHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
-struct Options 								   // Parameters configured by command line arguments
-{
-	USHORT usPort;			// log server port
-	BOOL bTrace;			// only start log server when trace is on
-	Options():
-		usPort(8888),
-		bTrace(FALSE)
-	{
-	}
-} options;
 
-log4cplus::Logger clientLogger;
 VRDemoTogglesWrapper togglesWrapper;
 
 // 此代码模块中包含的函数的前向声明: 
@@ -57,7 +44,6 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 VOID ShowContextMenu(HWND hwnd, POINT pt);
-BOOL ParseCommandLineArguments();
 BOOL IsAbleToRun();
 VOID InitLogConfiguration();
 
@@ -74,23 +60,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     InitLogConfiguration();
 
-	clientLogger = log4cplus::Logger::getInstance(VR_DEMO_LOGGER_CLIENT);
+    log4cplus::Logger logger = log4cplus::Logger::getRoot();
 
 	if (!IsAbleToRun())
 	{
 		return FALSE;
 	}
 
-	LOG4CPLUS_INFO(clientLogger, "VR Demo Helper is starting");
-
-	if (!ParseCommandLineArguments())
-	{
-		return FALSE;
-	}	
+	LOG4CPLUS_INFO(logger, "VR Demo Helper is starting");
 
     if (!VRDemoConfigurator::getInstance().init(
-            l4util::getFileFullPath(VRDemoConfigurator::FILE_SETTINGS),
-            VR_DEMO_LOGGER_CLIENT
+            l4util::getFileFullPath(VRDemoConfigurator::FILE_SETTINGS)
         )
     ) {  
         VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init configurator,\ncheck the log for detail.");
@@ -98,27 +78,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
 
-	VRDemoLogServer::VRDemoLogServerPtr logServer;
-	if (options.bTrace) {
-		logServer = new VRDemoLogServer();
-		if (!logServer->start(options.usPort))
-		{
-			return FALSE;
-		}
-	}
-
     VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
-    if (!coreWrapper->init(0 != options.bTrace)) {
+    if (!coreWrapper->init()) {
         VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
         return FALSE;
     }
 
     VRDemoWindowPoller::VRDemoWindowPollerPtr poller(new VRDemoWindowPoller());
-    if (!poller->init(togglesWrapper.getToggles(), 0 != options.bTrace)) {
-        LOG4CPLUS_ERROR(clientLogger, "Failed to init window poller");
-        if (logServer && logServer->isRunning()) {
-            logServer->stop();
-        }
+    if (!poller->init(togglesWrapper.getToggles())) {
+        LOG4CPLUS_ERROR(logger, "Failed to init window poller");
         return FALSE;
     }
 
@@ -137,7 +105,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
-    LOG4CPLUS_INFO(clientLogger, "VR Demo Helper started");
+    LOG4CPLUS_INFO(logger, "VR Demo Helper started");
 
     // 主消息循环: 
     while (GetMessage(&msg, nullptr, 0, 0))
@@ -152,11 +120,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // stop muse be called, or poller thread will access data freed
     poller->stop();
 
-	if (options.bTrace) {
-		logServer->stop();
-	}
-
-	LOG4CPLUS_INFO(clientLogger, "VR Demo Helper exited");
+	LOG4CPLUS_INFO(logger, "VR Demo Helper exited");
     return (int) msg.wParam;
 }
 
@@ -359,43 +323,11 @@ VOID ShowContextMenu(HWND hwnd, POINT pt)
 	}
 }
 
-BOOL ParseCommandLineArguments()
-{
-	BOOL result = TRUE;
-	char *cmdLine = GetCommandLineA();
-
-	LOG4CPLUS_DEBUG(clientLogger, "command line: " << cmdLine);
-	char c;
-	while ((c = getopt(_ConvertCommandLineToArgcArgv(cmdLine), _ppszArgv, "tp:")) != EOF)
-	{
-		switch (c)
-		{
-		case 't':
-			LOG4CPLUS_DEBUG(clientLogger, "Option \"t\" found" << std::endl);
-			options.bTrace = TRUE;
-			break;
-		case 'p':
-			LOG4CPLUS_DEBUG(clientLogger, "Option \"p\" found: " << optarg << std::endl);
-			options.usPort = atoi(optarg);
-			break;
-		case '?':
-		default:
-			{
-			std::ostringstream msg;
-			msg << "Unknown arguments:\n" << cmdLine;
-			MessageBox(NULL, msg.str().c_str(), "Error", MB_OK);
-			result = FALSE;
-			break;
-			}
-		}
-	}
-	return result;
-}
-
 BOOL IsAbleToRun()
 {
 	BOOL bResult = FALSE;
 	std::ostringstream errorMsg;
+    log4cplus::Logger logger = log4cplus::Logger::getRoot();
 
 	HANDLE hMutex = CreateMutexA(NULL, TRUE, SINGLE_INSTANCE_MUTEX_NAME);
 	if (hMutex)
@@ -404,7 +336,7 @@ BOOL IsAbleToRun()
 		{
 			CloseHandle(hMutex);
 			errorMsg << l4util::loadString(IDC_VRDEMOHELPER) << " is already running";
-			LOG4CPLUS_ERROR(clientLogger, errorMsg.str());
+			LOG4CPLUS_ERROR(logger, errorMsg.str());
 			MessageBox(NULL, 
 				errorMsg.str().c_str(), 
 				l4util::loadString(IDS_CAPTION_ERROR).c_str(), 
@@ -420,7 +352,7 @@ BOOL IsAbleToRun()
 	else 
 	{
 		errorMsg << "Failed to create single instance lock, error code: " << GetLastError();
-		LOG4CPLUS_ERROR(clientLogger, errorMsg.str());;
+		LOG4CPLUS_ERROR(logger, errorMsg.str());;
 		MessageBox(NULL, 
 			errorMsg.str().c_str(), 
 			l4util::loadString(IDS_CAPTION_ERROR).c_str(), 
@@ -434,25 +366,13 @@ VOID InitLogConfiguration()
 {
     std::ostringstream defaultProps;
 
-    defaultProps << "log4cplus.rootLogger = DEBUG" << std::endl;
-    defaultProps << "log4cplus.logger.CLIENT = DEBUG, CLIENT" << std::endl;
-    defaultProps << "log4cplus.appender.CLIENT = log4cplus::RollingFileAppender" << std::endl;
-    defaultProps << "log4cplus.appender.CLIENT.MaxFileSize = 100MB" << std::endl;
-    defaultProps << "log4cplus.appender.CLIENT.MaxBackupIndex = 10" << std::endl;
-    defaultProps << "log4cplus.appender.CLIENT.File = helper.log" << std::endl;
-    defaultProps << "log4cplus.appender.CLIENT.layout = log4cplus::PatternLayout" << std::endl;
-    defaultProps << "log4cplus.appender.CLIENT.layout.ConversionPattern = [%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n" << std::endl;
-
-    // turn on server logger only in trace mode
-    if (options.bTrace) {
-        defaultProps << "log4cplus.logger.SERVER = DEBUG, SERVER" << std::endl;
-        defaultProps << "log4cplus.appender.SERVER = log4cplus::RollingFileAppender" << std::endl;
-        defaultProps << "log4cplus.appender.SERVER.MaxFileSize = 100MB" << std::endl;
-        defaultProps << "log4cplus.appender.SERVER.MaxBackupIndex = 10" << std::endl;
-        defaultProps << "log4cplus.appender.SERVER.File = helper.log" << std::endl;
-        defaultProps << "log4cplus.appender.SERVER.layout = log4cplus::PatternLayout" << std::endl;
-        defaultProps << "log4cplus.appender.SERVER.layout.ConversionPattern = [%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n" << std::endl;
-    }
+    defaultProps << "log4cplus.rootLogger = DEBUG, FILE" << std::endl;
+    defaultProps << "log4cplus.appender.FILE = log4cplus::RollingFileAppender" << std::endl;
+    defaultProps << "log4cplus.appender.FILE.MaxFileSize = 100MB" << std::endl;
+    defaultProps << "log4cplus.appender.FILE.MaxBackupIndex = 10" << std::endl;
+    defaultProps << "log4cplus.appender.FILE.File = helper.log" << std::endl;
+    defaultProps << "log4cplus.appender.FILE.layout = log4cplus::PatternLayout" << std::endl;
+    defaultProps << "log4cplus.appender.FILE.layout.ConversionPattern = [%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n" << std::endl;
 
     log4cplus::PropertyConfigurator defaultConfigutator(std::istringstream(defaultProps.str()));
     defaultConfigutator.configure();

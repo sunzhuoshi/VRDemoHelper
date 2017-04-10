@@ -27,16 +27,10 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="XGetopt.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="argcargv.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="VRDemoHelper.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VRDemoLogServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="VRDemoWindowPoller.h">
@@ -74,16 +68,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="XGetopt.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="argcargv.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="VRDemoHelper.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="VRDemoLogServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\util\l4util.cpp">

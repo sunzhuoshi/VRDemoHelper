@@ -290,12 +290,10 @@ del /q *lastcodeanalysissucceeded</Command>
     <ClInclude Include="VRDemoCoreWrapper.h" />
     <ClInclude Include="VRDemoHelper.h" />
     <ClInclude Include="VRDemoHotKeyManager.h" />
-    <ClInclude Include="VRDemoLogServer.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VRDemoNotificationManager.h" />
     <ClInclude Include="VRDemoTogglesWrapper.h" />
     <ClInclude Include="VRDemoWindowPoller.h" />
-    <ClInclude Include="XGetopt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Common\util\l4util.cpp" />
@@ -314,10 +312,8 @@ del /q *lastcodeanalysissucceeded</Command>
     <ClCompile Include="VRDemoCoreWrapper.cpp" />
     <ClCompile Include="VRDemoHelper.cpp" />
     <ClCompile Include="VRDemoHotKeyManager.cpp" />
-    <ClCompile Include="VRDemoLogServer.cpp" />
     <ClCompile Include="VRDemoNotificationManager.cpp" />
     <ClCompile Include="VRDemoWindowPoller.cpp" />
-    <ClCompile Include="XGetopt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VRDemoHelper.rc" />

@@ -7,14 +7,12 @@
 
 const std::string VRDemoConfigurator::FILE_SETTINGS = "settings.ini";
 
-bool VRDemoConfigurator::init(const std::string& configFilePath, const std::string& loggerName)
+bool VRDemoConfigurator::init(const std::string& configFilePath)
 {
     bool result = false;
     char buf[1024];
     DWORD p = 0, ret = GetPrivateProfileSectionNamesA(buf, sizeof(buf), configFilePath.c_str());
-    m_logger = log4cplus::Logger::getInstance(loggerName);
 
-    LOG4CPLUS_DEBUG(m_logger, "Initializing VR Demo Configurator, file path: " << configFilePath);
     if (0 < ret) {
         std::ostringstream sectionName;
         while (p < ret) {
@@ -29,7 +27,6 @@ bool VRDemoConfigurator::init(const std::string& configFilePath, const std::stri
             p++;
         }
         m_configFilePath = configFilePath;
-        LOG4CPLUS_DEBUG(m_logger, "VR Demo Configurator inited");
         result = true;
     }
     return result;
@@ -39,10 +36,7 @@ bool VRDemoConfigurator::init(const std::string& configFilePath, const std::stri
 void VRDemoConfigurator::parseSection(const std::string& configFilePath, const std::string& sectionName)
 {
     std::string sectionKey = l4util::toUpper(sectionName);
-    if (m_sectionMap.count(sectionKey)) {
-        LOG4CPLUS_WARN(m_logger, "Section already defined: " << sectionName);
-    }
-    else {
+    if (!m_sectionMap.count(sectionKey)) {
         char buf[1024] = "";
         DWORD p = 0, ret = GetPrivateProfileSectionA(sectionName.c_str(), buf, sizeof(buf), configFilePath.c_str());
         KeyValueMap properties;
@@ -58,15 +52,9 @@ void VRDemoConfigurator::parseSection(const std::string& configFilePath, const s
                     if (l4util::parseProperty(line.str(), keyValue)) {
                         std::string originalKey = keyValue.first;
                         l4util::toUpper(keyValue.first);
-                        if (properties.count(keyValue.first)) {
-                            LOG4CPLUS_WARN(m_logger, "Property already defined: " << originalKey << ", section: " << sectionName);
-                        }
-                        else {
+                        if (!properties.count(keyValue.first)) {
                             properties.insert(keyValue);
                         }
-                    }
-                    else {
-                        LOG4CPLUS_WARN(m_logger, "Invalid line: " << line.str());
                     }
                 }
                 line.str("");

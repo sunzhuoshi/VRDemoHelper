@@ -4,8 +4,6 @@
 #include <map>
 #include <list>
 
-#include <log4cplus\log4cplus.h>
-
 class VRDemoArbiter
 {
 public:
@@ -102,15 +100,14 @@ private:
     typedef std::map<std::string, RuleItem> RuleItemMap;
 public:
     VRDemoArbiter::VRDemoArbiter() :
-        m_toggles(nullptr),
-        m_trace(false) {
+        m_toggles(nullptr) {
     };
     VRDemoArbiter::~VRDemoArbiter() {};
     static VRDemoArbiter& VRDemoArbiter::getInstance() {
         static VRDemoArbiter instance;
         return instance;
     }
-    bool init(const std::string &loggerName, const Toggles &toggles, bool trace);
+    bool init(const Toggles &toggles);
     bool arbitrate(RuleType type, int message, HWND wnd);
     inline bool hasRuleWithTypePoll() const {
         return hasRuleWithType(RT_POLL);
@@ -138,9 +135,7 @@ private:
 
     NameList m_ignoredProcessNameList; // TODO: use set
     RuleItemMap m_ruleItemMap;
-    log4cplus::Logger m_logger;
 
     const Toggles *m_toggles;
-    bool m_trace;
 };
 
