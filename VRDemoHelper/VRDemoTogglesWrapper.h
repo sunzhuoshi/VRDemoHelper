@@ -36,13 +36,6 @@ public:
     inline void toggleShowFPS() {
         toggleValue(VRDemoArbiter::TI_SHOW_FPS);
     }
-    inline void toggleShowFPS() {
-        m_toggles.m_showFPS = !m_toggles.m_showFPS;
-        VRDemoEventDispatcher::getInstance().dispatchEvent(
-            VRDemoEventDispatcher::EV_SHOW_FPS_CHANGED,
-            m_toggles.m_showFPS
-        );
-    }
     VRDemoTogglesWrapper() :
         m_toggles({ FALSE, TRUE, TRUE, TRUE }) {
     }
