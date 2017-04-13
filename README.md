@@ -44,7 +44,7 @@ Rename "Hide Steam VR Notification" to Set SteamVR for Demo(Turn on Arcade Mode,
 
 ## Files
 ### settings.ini  
-Used to define windows(games and steam vr) to be processed, process to be ignored in trace mode
+Used to define windows(games and steam vr) to be processed
 
 ## FAQ
 none for now, if you have one, email me at sunzhuoshi#gmail.com
