@@ -18,7 +18,6 @@
 #include <log4cplus/socketappender.h>
 
 #include "util/l4util.h"
-#include "argcargv.h"
 #include "VRDemoConfigurator.h"
 #include "VRDemoWindowPoller.h"
 #include "VRDemoCoreWrapper.h"

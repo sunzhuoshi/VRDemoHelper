@@ -180,7 +180,25 @@ echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
 
 echo copying FW1FontWrapper dll...
-copy /Y $(ProjectDir)..\VRDemoCore\Libs\FW1FontWrapper\x64\FW1FontWrapper.dll
+copy /Y $(ProjectDir)..\VRDemoCore\Libs\FW1FontWrapper\x64\FW1FontWrapper.dll $(TargetDir)
+
+
+
+cd $(TargetDir)
+
+del /q *.exp 
+
+del /q *.iobj
+
+del /q *.ipdb
+
+del /q *.pdb
+
+del /q *.lib
+
+del /q *.log
+
+del /q *lastcodeanalysissucceeded
 
 </Command>
     </PostBuildEvent>
@@ -214,7 +232,6 @@ copy /Y $(ProjectDir)..\VRDemoCore\Libs\FW1FontWrapper\x64\FW1FontWrapper.dll
     <ClCompile Include="..\Common\VRDemoArbiter.cpp" />
     <ClCompile Include="..\Common\VRDemoEventDispatcher.cpp" />
     <ClCompile Include="..\Common\VRDemoConfigurator.cpp" />
-    <ClCompile Include="argcargv.cpp" />
     <ClCompile Include="jsoncpp\jsoncpp.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

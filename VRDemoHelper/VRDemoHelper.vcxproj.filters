@@ -86,9 +86,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="argcargv.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="VRDemoHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
