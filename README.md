@@ -4,8 +4,7 @@ A simple tool to make VR demonstration better and easier
 ## Features
 1. Maximize VR game window for demonstration, both win32(not supported now) and x64 games  
 
-2. Hide Steam VR popup window automatically(to be fully tested)  
-TODO: use overlap window or notification rather than popup window to show the notification?
+2. Minimize SteamVR window, configurate SteamVR(Arcade mode, block future warning notifications)  
 
 3. Configurable
 
@@ -23,24 +22,13 @@ Offer a shortcut in VRDemoHelper should be a resonable solution for non-professi
 ### TODO 
 1. make "pause" hotkey configuable(F8 by default)
 
-2. Turn on Steam VR Arcade mode by modifying $(Steam)/config/steamvr.settings and restart SteamVR process   
-	
-	<pre>
-	{
-   		"dashboard" : {
-      		"arcadeMode" : false
-   		}
-	}
-	</pre>
-Rename "Hide Steam VR Notification" to Set SteamVR for Demo(Turn on Arcade Mode, Minimize Steam VR, Hide Steam VR Notifications and etc)  
+2. localization for existing strings
 
-3. localization for existing strings
-
-4. add default implementation or create one if settings.ini doesn't exist to make configuration files optional  
+3. add default implementation or create one if settings.ini doesn't exist to make configuration files optional  
    
-5. hook D3D to show FPS like fraps
+4. hook D3D to show FPS like fraps
 
-6. support win32 games and applications
+5. support win32 games and applications
 
 ## Files
 ### settings.ini  
