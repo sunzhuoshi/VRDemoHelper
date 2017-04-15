@@ -10,6 +10,6 @@ extern VRDemoArbiter::Toggles toogles;
 
 extern "C" VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lParam);
 
-extern "C" VRDEMOCORE_API BOOL WINAPI fnInit(const CHAR *szRuleConfigFilePath, BOOL bTrace);
+extern "C" VRDEMOCORE_API BOOL WINAPI fnInit(const CHAR *szRuleConfigFilePath);
 
 extern "C" VRDEMOCORE_API VOID WINAPI fnSetToggleValue(INT nIndex, BOOL nValue);
