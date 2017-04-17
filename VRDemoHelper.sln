@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VRDemoHelper", "VRDemoHelper\VRDemoHelper.vcxproj", "{ACC86A34-F36C-4ABD-B227-4B7C9C1BA1F6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B269B01A-27A9-4678-9184-BD65D6746B4A} = {B269B01A-27A9-4678-9184-BD65D6746B4A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VRDemoCore", "VRDemoCore\VRDemoCore.vcxproj", "{B269B01A-27A9-4678-9184-BD65D6746B4A}"
 EndProject
