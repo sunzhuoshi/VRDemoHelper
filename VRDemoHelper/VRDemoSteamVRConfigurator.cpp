@@ -17,7 +17,7 @@
 extern VRDemoTogglesWrapper togglesWrapper;
 
 const std::string VRDemoSteamVRConfigurator::SETTINGS_FILE_NAME = "steamvr.vrsettings";
-const std::string VRDemoSteamVRConfigurator::SETTINGS_FILE_OLD_POSTFIX = ".old";
+const std::string VRDemoSteamVRConfigurator::SETTINGS_FILE_OLD_POSTFIX = ".ovs";
 const std::string VRDemoSteamVRConfigurator::SETTINGS_FILE_RELATIVE_PATH = "config\\" + VRDemoSteamVRConfigurator::SETTINGS_FILE_NAME;
 const std::string VRDemoSteamVRConfigurator::SETTINGS_SECTION_NAME = "SteamVRSettings";
 
