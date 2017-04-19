@@ -24,6 +24,7 @@
 #include "VRDemoNotificationManager.h"
 #include "VRDemoHotKeyManager.h"
 #include "VRDemoSteamVRConfigurator.h"
+#include "VRDemoTogglesWrapper.h"
 
 #define MAX_LOADSTRING 100
 #define SINGLE_INSTANCE_MUTEX_NAME "L4VRDemoHelperSingleInstanceMetux"
@@ -42,6 +43,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 VOID ShowContextMenu(HWND hwnd, POINT pt);
 BOOL IsAbleToRun();
 VOID InitLogConfiguration();
+VOID InitHelperConfiguration();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -73,8 +75,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+    InitHelperConfiguration();
+
     if (!VRDemoSteamVRConfigurator::getInstance().init()) {
-        togglesWrapper.setConfigurateVRNotification(FALSE);
+        togglesWrapper.setImproveSteamVR(FALSE);
         LOG4CPLUS_INFO(logger, "Failed to init SteamVR configurator, check if SteamVR is installed");
     }
 
@@ -202,13 +206,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
                 break;
             case IDM_SHOW_FPS:
-                togglesWrapper.toggleShowFPS();
+                togglesWrapper.toggleShowFPSAndSave();
                 break;
             case IDM_MAXIMIZE_GAMES:
-                togglesWrapper.toggleMaximizeGames();
+                togglesWrapper.toggleMaximizeGamesAndSave();
                 break;
             case IDM_IMPROVE_STEAM_VR:
-                togglesWrapper.toggleImproveSteamVR();
+                togglesWrapper.toggleImproveSteamVRAndSave();
                 break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
@@ -360,4 +364,10 @@ VOID InitLogConfiguration()
 
     log4cplus::PropertyConfigurator defaultConfigutator(std::istringstream(defaultProps.str()));
     defaultConfigutator.configure();
+}
+
+VOID InitHelperConfiguration()
+{
+    togglesWrapper.loadConfig();
+    // TODO: init hotkey configuration 
 }
