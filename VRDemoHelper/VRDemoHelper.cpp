@@ -201,9 +201,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 DestroyWindow(hWnd);
                 break;
             case IDM_PAUSE:
-            {
-                togglesWrapper.togglePause();
-            }
+                {
+                    togglesWrapper.togglePause();
+                }
                 break;
             case IDM_SHOW_FPS:
                 togglesWrapper.toggleShowFPSAndSave();
