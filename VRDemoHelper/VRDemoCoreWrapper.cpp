@@ -7,7 +7,7 @@
 #include "VRDemoArbiter.h"
 
 #ifdef _WIN64
-const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore.dll"; // TODO: rename to "VRDemoCore_x64.dll"
+const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore_x64.dll"; 
 #else
 const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore_x86.dll";
 #endif
@@ -79,7 +79,7 @@ bool VRDemoCoreWrapper::init()
 
 void VRDemoCoreWrapper::handleEvent(int event, unsigned long long param1, unsigned long long param2)
 {
-    BOOL value = 0 != param2;
+    bool value = 0 != param2;
     switch (event) {
     case VRDemoEventDispatcher::EV_TOGGLE_VALUE_CHANGED:
         m_setToggleValueFunc(static_cast<int>(param1), value);

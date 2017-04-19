@@ -26,7 +26,6 @@
 #include "VRDemoSteamVRConfigurator.h"
 
 #define MAX_LOADSTRING 100
-#define LOG_PROPERTY_FILE "log4cplus.props"
 #define SINGLE_INSTANCE_MUTEX_NAME "L4VRDemoHelperSingleInstanceMetux"
  
 HINSTANCE hInst;                                

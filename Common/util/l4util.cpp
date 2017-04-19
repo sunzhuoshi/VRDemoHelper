@@ -60,7 +60,7 @@ namespace l4util {
         HANDLE processHandle = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, processId);
 
         if (processHandle) {
-            GetProcessImageFileName(processHandle, buf, sizeof(buf));
+            GetProcessImageFileNameA(processHandle, buf, sizeof(buf));
             p = strrchr(buf, '\\');
             if (p) {
                 p++;

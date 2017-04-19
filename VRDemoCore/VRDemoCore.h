@@ -6,10 +6,8 @@
 
 #include "VRDemoArbiter.h"
 
-extern VRDemoArbiter::Toggles toogles;
+extern "C" LRESULT WINAPI fnWndMsgProc(INT nCode, WPARAM wParam, LPARAM lParam);
 
-extern "C" VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lParam);
+extern "C" bool WINAPI fnInit(const char *szRuleConfigFilePath);
 
-extern "C" VRDEMOCORE_API BOOL WINAPI fnInit(const CHAR *szRuleConfigFilePath);
-
-extern "C" VRDEMOCORE_API VOID WINAPI fnSetToggleValue(INT nIndex, BOOL nValue);
+extern "C" void WINAPI fnSetToggleValue(int nIndex, bool bValue);

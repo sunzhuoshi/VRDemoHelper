@@ -12,8 +12,8 @@
 
 // All instances share data segment
 #pragma data_seg(".shared")
-VRDEMOCORE_API CHAR szConfigFilePath[MAX_PATH] = "";
-VRDEMOCORE_API VRDemoArbiter::Toggles toggles = { FALSE, TRUE, TRUE, TRUE };
+CHAR szConfigFilePath[MAX_PATH] = "";
+VRDemoArbiter::Toggles toggles = { FALSE, TRUE, TRUE, TRUE };
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
@@ -46,7 +46,7 @@ void fnDelayInit()
 }
 
 // 这是导出函数的一个示例。
-VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lParam)
+LRESULT WINAPI fnWndMsgProc(INT nCode, WPARAM wParam, LPARAM lParam)
 {
     static BOOL bDelayInited = false;
 
@@ -73,17 +73,17 @@ VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lPar
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-VRDEMOCORE_API BOOL WINAPI fnInit(const CHAR *szConfigFilePath_)
+bool WINAPI fnInit(const char *szConfigFilePath_)
 {
 	strcpy_s(szConfigFilePath, MAX_PATH, szConfigFilePath_);
 	// TODO: local config file content into share data segment
-	return TRUE;
+	return true;
 }
 
-VRDEMOCORE_API VOID WINAPI fnSetToggleValue(INT nIndex, BOOL nValue)
+void WINAPI fnSetToggleValue(int nIndex, bool bValue)
 {
     if (VRDemoArbiter::TI_MIN <= nIndex && VRDemoArbiter::TI_MAX >= nIndex) {
-        toggles.m_values[nIndex] = nValue;
+        toggles.m_values[nIndex] = bValue;
     }
 }
 

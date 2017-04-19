@@ -11,8 +11,8 @@ public:
     bool init();
     void handleEvent(int event, unsigned long long param1, unsigned long long param2);
 private:
-    typedef BOOL(*InitFuncPtr)(const CHAR *);
-    typedef VOID(*SetToggleValueFuncPtr)(INT, BOOL);
+    typedef bool (WINAPI *InitFuncPtr)(const char *);
+    typedef void (WINAPI *SetToggleValueFuncPtr)(int, bool);
 
     HINSTANCE m_dll;
     HHOOK m_hook;

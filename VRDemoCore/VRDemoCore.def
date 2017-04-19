@@ -1,0 +1,5 @@
+LIBRARY VRDEMOCORE
+EXPORTS
+	fnInit				@1
+	fnSetToggleValue	@2
+	fnWndMsgProc		@3

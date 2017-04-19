@@ -165,7 +165,7 @@ DWORD VRDemoSteamVRConfigurator::findSteamVRProcessID()
 
     if (EnumProcesses(processIDs, sizeof(processIDs), &bytesReturned)) {
         size_t processCount = bytesReturned / sizeof(processIDs[0]);
-        for (int i = 0; i < processCount; ++i) {
+        for (size_t i = 0; i < processCount; ++i) {
             if (l4util::getProcessNameWithProcessId(processIDs[i]) == STEAM_VR_PROCESS_NAME) {
                 result = processIDs[i];
                 break;
