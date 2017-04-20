@@ -72,14 +72,14 @@
     <ClInclude Include="VRDemoSteamVRConfigurator.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\util\l4Singleton.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\3rdParty\jsoncpp\json\json.h">
       <Filter>jsoncpp\json</Filter>
     </ClInclude>
     <ClInclude Include="..\3rdParty\jsoncpp\json\json-forwards.h">
       <Filter>jsoncpp\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\util\L4Singleton.hpp">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

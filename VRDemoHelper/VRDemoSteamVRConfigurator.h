@@ -7,7 +7,7 @@
 
 #include "util\l4Singleton.hpp"
 
-class VRDemoSteamVRConfigurator : public l4Singleton<VRDemoSteamVRConfigurator>
+class VRDemoSteamVRConfigurator : public L4Singleton<VRDemoSteamVRConfigurator>
 {
 public:
     typedef std::map<std::string, Json::Value> PROPERTY_MAP;

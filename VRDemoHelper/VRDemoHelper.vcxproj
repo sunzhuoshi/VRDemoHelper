@@ -260,7 +260,7 @@ del /q *lastcodeanalysissucceeded
   <ItemGroup>
     <ClInclude Include="..\3rdParty\jsoncpp\json\json-forwards.h" />
     <ClInclude Include="..\3rdParty\jsoncpp\json\json.h" />
-    <ClInclude Include="..\Common\util\l4Singleton.hpp" />
+    <ClInclude Include="..\Common\util\L4Singleton.hpp" />
     <ClInclude Include="..\Common\VRDemoArbiter.h" />
     <ClInclude Include="..\Common\util\l4util.h" />
     <ClInclude Include="..\Common\VRDemoDefine.h" />

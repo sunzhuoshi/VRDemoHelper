@@ -1,8 +1,10 @@
 #pragma once
 #include <list>
 #include <map>
+
 #include <log4cplus\helpers\pointer.h>
 
+#include "util\L4Singleton.hpp"
 /*
     Event listener interface
     Note: We need to refer and hold the life of the listeners
@@ -17,7 +19,7 @@ public:
     Event dispatcher
     Note: not thread safe, needed?
 */
-class VRDemoEventDispatcher
+class VRDemoEventDispatcher : public L4Singleton<VRDemoEventDispatcher>
 {
 public:
     enum Event {
@@ -29,10 +31,6 @@ public:
 
     VRDemoEventDispatcher();
     ~VRDemoEventDispatcher();
-    static VRDemoEventDispatcher& getInstance() {
-        static VRDemoEventDispatcher instance;
-        return instance;
-    }
     void addEventListener(int event, VRDemoEventListenerPtr listener);
     void dispatchEvent(int event, unsigned long long param1, unsigned long long param2);
 private:

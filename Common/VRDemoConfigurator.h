@@ -5,17 +5,14 @@
 #include <string>
 
 #include "util\l4util.h"
+#include "util\L4Singleton.hpp"
 
-class VRDemoConfigurator
+class VRDemoConfigurator : public L4Singleton<VRDemoConfigurator>
 {
 public:
     typedef std::map<std::string, std::string> KeyValueMap;
     typedef std::map<std::string, KeyValueMap> SectionMap;
 
-    static VRDemoConfigurator& VRDemoConfigurator::getInstance() {
-        static VRDemoConfigurator instance;
-        return instance;
-    }
     bool init(const std::string& configFilePath);
     const SectionMap& getSections() const;
     bool findSection(const std::string& sectionName, const KeyValueMap **map) const;

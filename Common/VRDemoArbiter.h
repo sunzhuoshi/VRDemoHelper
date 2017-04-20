@@ -4,7 +4,9 @@
 #include <map>
 #include <list>
 
-class VRDemoArbiter
+#include "util\L4Singleton.hpp"
+
+class VRDemoArbiter : public L4Singleton<VRDemoArbiter>
 {
 public:
     enum ToggleIndex {
@@ -103,10 +105,6 @@ public:
         m_toggles(nullptr) {
     };
     VRDemoArbiter::~VRDemoArbiter() {};
-    static VRDemoArbiter& VRDemoArbiter::getInstance() {
-        static VRDemoArbiter instance;
-        return instance;
-    }
     bool init(const Toggles &toggles);
     bool arbitrate(RuleType type, int message, HWND wnd);
     inline bool hasRuleWithTypePoll() const {

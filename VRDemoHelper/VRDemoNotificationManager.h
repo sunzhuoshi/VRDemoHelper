@@ -4,15 +4,13 @@
 #include <thread>
 #include <log4cplus\thread\threads.h>
 
-class VRDemoNotificationManager
+#include "util\L4Singleton.hpp"
+
+class VRDemoNotificationManager : public L4Singleton<VRDemoNotificationManager>
 {
 public:
     VRDemoNotificationManager();
     ~VRDemoNotificationManager();
-    static VRDemoNotificationManager& VRDemoNotificationManager::getInstance() {
-        static VRDemoNotificationManager instance;
-        return instance;
-    }
     inline void init(HINSTANCE instance, HWND wnd) {
         m_instance = instance;
         m_wnd = wnd;
