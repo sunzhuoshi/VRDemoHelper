@@ -1,0 +1,1 @@
+Log4cplus uses static initialization, so we have to debug version dlls in our projects. Or it will crash.

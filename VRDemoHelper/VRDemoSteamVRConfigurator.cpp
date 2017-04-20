@@ -7,7 +7,7 @@
 #include <Psapi.h>
 
 #include "log4cplus\log4cplus.h"
-#include "jsoncpp\json\json.h"
+#include "json\json.h"
 #include "util\l4util.h"
 #include "VRDemoDefine.h"
 #include "VRDemoNotificationManager.h"

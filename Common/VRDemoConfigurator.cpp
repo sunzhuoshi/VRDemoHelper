@@ -3,7 +3,6 @@
 #include "VRDemoConfigurator.h"
 
 #include <sstream>
-#include "log4cplus\log4cplus.h"
 
 const std::string VRDemoConfigurator::FILE_SETTINGS = "settings.ini";
 

@@ -75,10 +75,10 @@
     <ClInclude Include="..\Common\util\l4Singleton.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="jsoncpp\json\json.h">
+    <ClInclude Include="..\3rdParty\jsoncpp\json\json.h">
       <Filter>jsoncpp\json</Filter>
     </ClInclude>
-    <ClInclude Include="jsoncpp\json\json-forwards.h">
+    <ClInclude Include="..\3rdParty\jsoncpp\json\json-forwards.h">
       <Filter>jsoncpp\json</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,7 +116,7 @@
     <ClCompile Include="VRDemoSteamVRConfigurator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="jsoncpp\jsoncpp.cpp">
+    <ClCompile Include="..\3rdParty\jsoncpp\jsoncpp.cpp">
       <Filter>jsoncpp</Filter>
     </ClCompile>
   </ItemGroup>
