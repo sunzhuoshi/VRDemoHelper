@@ -101,10 +101,8 @@ private:
     typedef std::list<std::string> NameList;
     typedef std::map<std::string, RuleItem> RuleItemMap;
 public:
-    VRDemoArbiter::VRDemoArbiter() :
-        m_toggles(nullptr) {
-    };
-    VRDemoArbiter::~VRDemoArbiter() {};
+    VRDemoArbiter() {};
+    ~VRDemoArbiter() {};
     bool init(const Toggles &toggles);
     bool arbitrate(RuleType type, int message, HWND wnd);
     inline bool hasRuleWithTypePoll() const {
@@ -133,6 +131,6 @@ private:
     NameList m_ignoredProcessNameList; // TODO: use set
     RuleItemMap m_ruleItemMap;
 
-    const Toggles *m_toggles;
+    const Toggles *m_toggles = nullptr;
 };
 

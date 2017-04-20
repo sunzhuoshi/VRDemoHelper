@@ -45,6 +45,24 @@
     <ClInclude Include="..\Common\util\l4util.h">
       <Filter>Common\util</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\OGET\OIGraphicsAPIHooker.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OGraphicsAPIHookerFactory.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OGraphicsAPICommonHooker.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\ODX11Hooker.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OInlineHookUtil.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OFPSCalculator.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -64,6 +82,18 @@
     </ClCompile>
     <ClCompile Include="..\Common\util\l4util.cpp">
       <Filter>Common\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\OGET\OGraphicsAPIHookerFactory.cpp">
+      <Filter>Common\OGET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\OGET\OGraphicsAPICommonHooker.cpp">
+      <Filter>Common\OGET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\OGET\ODX11Hooker.cpp">
+      <Filter>Common\OGET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\OGET\OInlineHookUtil.cpp">
+      <Filter>Common\OGET</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

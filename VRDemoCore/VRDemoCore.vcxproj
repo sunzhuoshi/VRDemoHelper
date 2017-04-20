@@ -170,6 +170,12 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\OGET\OFPSCalculator.h" />
+    <ClInclude Include="..\Common\OGET\OInlineHookUtil.h" />
+    <ClInclude Include="..\Common\OGET\ODX11Hooker.h" />
+    <ClInclude Include="..\Common\OGET\OGraphicsAPICommonHooker.h" />
+    <ClInclude Include="..\Common\OGET\OGraphicsAPIHookerFactory.h" />
+    <ClInclude Include="..\Common\OGET\OIGraphicsAPIHooker.h" />
     <ClInclude Include="..\Common\util\l4util.h" />
     <ClInclude Include="..\Common\VRDemoConfigurator.h" />
     <ClInclude Include="stdafx.h" />
@@ -178,6 +184,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Common\OGET\ODX11Hooker.cpp" />
+    <ClCompile Include="..\Common\OGET\OGraphicsAPICommonHooker.cpp" />
+    <ClCompile Include="..\Common\OGET\OGraphicsAPIHookerFactory.cpp" />
+    <ClCompile Include="..\Common\OGET\OInlineHookUtil.cpp" />
     <ClCompile Include="..\Common\util\l4util.cpp" />
     <ClCompile Include="..\Common\VRDemoConfigurator.cpp" />
     <ClCompile Include="dllmain.cpp">
