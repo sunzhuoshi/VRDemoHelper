@@ -19,6 +19,12 @@
     <Filter Include="jsoncpp\json">
       <UniqueIdentifier>{6596d3bd-00b2-45ca-a8ea-451e3e0db1b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{c97f8aab-c040-44d5-9696-d6406c7d7b6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\util">
+      <UniqueIdentifier>{5364f9a1-3bc2-4b27-bfcb-7cf35176a679}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -42,12 +48,6 @@
     <ClInclude Include="VRDemoWindowPoller.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\VRDemoArbiter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\util\l4util.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\VRDemoEventDispatcher.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -55,12 +55,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="VRDemoNotificationManager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\VRDemoConfigurator.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\VRDemoDefine.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="VRDemoHotKeyManager.h">
@@ -79,7 +73,19 @@
       <Filter>jsoncpp\json</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\util\L4Singleton.hpp">
-      <Filter>头文件</Filter>
+      <Filter>Common\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\util\l4util.h">
+      <Filter>Common\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\VRDemoArbiter.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\VRDemoConfigurator.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\VRDemoDefine.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,13 +95,7 @@
     <ClCompile Include="VRDemoHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\util\l4util.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="VRDemoWindowPoller.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\VRDemoArbiter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\VRDemoEventDispatcher.cpp">
@@ -107,9 +107,6 @@
     <ClCompile Include="VRDemoNotificationManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\VRDemoConfigurator.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="VRDemoHotKeyManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -118,6 +115,15 @@
     </ClCompile>
     <ClCompile Include="..\3rdParty\jsoncpp\jsoncpp.cpp">
       <Filter>jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\util\l4util.cpp">
+      <Filter>Common\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\VRDemoArbiter.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\VRDemoConfigurator.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

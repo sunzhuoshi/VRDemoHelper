@@ -13,7 +13,13 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="OGET">
+    <Filter Include="Common">
+      <UniqueIdentifier>{b021d056-404b-4380-add9-35d388f096ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\util">
+      <UniqueIdentifier>{67d3481b-6661-4a97-931e-568c105b82bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\OGET">
       <UniqueIdentifier>{a8b366e1-6216-4ab6-950d-7283b4075df0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -31,13 +37,13 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\VRDemoArbiter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\util\l4util.h">
-      <Filter>头文件</Filter>
+      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\VRDemoConfigurator.h">
-      <Filter>头文件</Filter>
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\util\l4util.h">
+      <Filter>Common\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -50,14 +56,14 @@
     <ClCompile Include="VRDemoCore.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\util\l4util.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\VRDemoArbiter.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\VRDemoConfigurator.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\util\l4util.cpp">
+      <Filter>Common\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
