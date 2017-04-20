@@ -1,6 +1,8 @@
 #pragma once
-#include <VRDemoEventDispatcher.h>
 #include <log4cplus\helpers\pointer.h>
+
+#include "VRDemoArbiter.h"
+#include "VRDemoEventDispatcher.h"
 
 class VRDemoCoreWrapper : public IVRDemoEventListener
 {
@@ -8,10 +10,10 @@ public:
     typedef log4cplus::helpers::SharedObjectPtr<VRDemoCoreWrapper> VRDemoCoreWrapperPtr;
     VRDemoCoreWrapper();
     ~VRDemoCoreWrapper();
-    bool init();
+    bool init(const VRDemoArbiter::Toggles& toggles);
     void handleEvent(int event, unsigned long long param1, unsigned long long param2);
 private:
-    typedef bool (WINAPI *InitFuncPtr)(const char *);
+    typedef bool (WINAPI *InitFuncPtr)(const char *, const VRDemoArbiter::Toggles&);
     typedef void (WINAPI *SetToggleValueFuncPtr)(int, bool);
 
     HINSTANCE m_dll;

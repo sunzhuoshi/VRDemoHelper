@@ -13,7 +13,7 @@
 // All instances share data segment
 #pragma data_seg(".shared")
 CHAR szConfigFilePath[MAX_PATH] = "";
-VRDemoArbiter::Toggles toggles = { FALSE, TRUE, TRUE, TRUE };
+VRDemoArbiter::Toggles toggles = { false, true, true, true };
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
@@ -73,10 +73,11 @@ LRESULT WINAPI fnWndMsgProc(INT nCode, WPARAM wParam, LPARAM lParam)
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-bool WINAPI fnInit(const char *szConfigFilePath_)
+bool WINAPI fnInit(const char *szConfigFilePath_, const VRDemoArbiter::Toggles& toggles_)
 {
 	strcpy_s(szConfigFilePath, MAX_PATH, szConfigFilePath_);
 	// TODO: local config file content into share data segment
+    toggles = toggles_;
 	return true;
 }
 

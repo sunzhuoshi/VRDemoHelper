@@ -43,7 +43,6 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 VOID ShowContextMenu(HWND hwnd, POINT pt);
 BOOL IsAbleToRun();
 VOID InitLogConfiguration();
-VOID InitHelperConfiguration();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -75,7 +74,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    InitHelperConfiguration();
+    // TODO: Add hotkey configuration
+    togglesWrapper.loadConfig();
 
     if (!VRDemoSteamVRConfigurator::getInstance().init()) {
         togglesWrapper.setImproveSteamVR(FALSE);
@@ -83,7 +83,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
-    if (!coreWrapper->init()) {
+    if (!coreWrapper->init(togglesWrapper.getToggles())) {
         VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
         return FALSE;
     }
@@ -366,8 +366,3 @@ VOID InitLogConfiguration()
     defaultConfigutator.configure();
 }
 
-VOID InitHelperConfiguration()
-{
-    togglesWrapper.loadConfig();
-    // TODO: init hotkey configuration 
-}
