@@ -12,9 +12,10 @@ extern VRDemoArbiter::Toggles toggles;
 
 typedef HRESULT(__stdcall *D3D11SwapChainPresentFunc) (IDXGISwapChain*, UINT, UINT);
 typedef HRESULT(__stdcall *D3D11SwapChainResizeBuffersFunc) (IDXGISwapChain*, UINT, UINT, UINT, DXGI_FORMAT, UINT);
-
+typedef HRESULT(__stdcall *D3D11SwapChainSetFullscreenStateFunc) (IDXGISwapChain*, BOOL, IDXGIOutput *);
 D3D11SwapChainPresentFunc g_originalD3D11SwapChainPresent = NULL;
 D3D11SwapChainResizeBuffersFunc g_originalD3D11SwapChainResizeBuffers = NULL;
+D3D11SwapChainSetFullscreenStateFunc g_originalD3D11SwapChainSetFullscreenState = NULL;
 
 ID3D11Device *g_device = NULL;
 ID3D11DeviceContext *g_context = NULL;
@@ -45,7 +46,6 @@ void UpdateBackBufferRenderTargetView(IDXGISwapChain* swapChain) {
         g_needUpdateBackBufferRenderTargetView = false;
     }
 }
-
 
 HRESULT __stdcall DetourD3D11ResizeBuffers(
     IDXGISwapChain* pSwapChain,
@@ -109,6 +109,11 @@ HRESULT __stdcall DetourD3D11Present(IDXGISwapChain* swapChain, UINT syncInterva
     return g_originalD3D11SwapChainPresent(swapChain, syncInterval, flags);
 }
 
+HRESULT DetourD3D11SetFullscreenState(IDXGISwapChain* swapChain, BOOL fullscreen, IDXGIOutput *target) {
+    HRESULT ret = g_originalD3D11SwapChainSetFullscreenState(swapChain, fullscreen, target);
+    g_needUpdateBackBufferRenderTargetView = SUCCEEDED(ret);
+    return ret;
+}
 
 ODX11Hooker::ODX11Hooker()
 {
@@ -147,10 +152,12 @@ void ODX11Hooker::hookWithWindow(HWND wnd)
         DWORD_PTR** tmp = reinterpret_cast<DWORD_PTR **>(swapChain);
         DWORD_PTR* swapChainVirtualTable = tmp[0];
 
-        // hook swap chain "Present" method
+        // hook swap chain "Present" method to draw FPS
         OInlineHookUtil::hook((void *)swapChainVirtualTable[8], DetourD3D11Present, (void **)&g_originalD3D11SwapChainPresent);
-        // hook swap chain "ResizeBuffers" method
+        // hook swap chain "ResizeBuffers" method to update back buffer render target view(Unreal 4 requires this, Unity, WoW don't)
         OInlineHookUtil::hook((void *)swapChainVirtualTable[13], DetourD3D11ResizeBuffers, (void **)&g_originalD3D11SwapChainResizeBuffers);
+        // hook swap chain "SetFullScreenState" method, for some Unity games don't call ResizeBuffers when toggling to fullscreen mode
+        OInlineHookUtil::hook((void *)swapChainVirtualTable[10], DetourD3D11SetFullscreenState, (void **)&g_originalD3D11SwapChainSetFullscreenState);
 
         device->Release();
         context->Release();
