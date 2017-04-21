@@ -98,6 +98,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;.\</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,6 +106,10 @@
       <AdditionalDependencies>FW1FontWrapper_x86.lib;libMinHook.x86.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\3rdParty\MiniHook;..\3rdParty\FW1FontWrapper\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>VRDemoCore.def</ModuleDefinitionFile>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,6 +127,7 @@
       <AdditionalLibraryDirectories>..\3rdParty\MiniHook;..\3rdParty\FW1FontWrapper\</AdditionalLibraryDirectories>
       <AdditionalDependencies>FW1FontWrapper_x64.lib;libMinHook.x64.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>VRDemoCore.def</ModuleDefinitionFile>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,6 +149,7 @@
       <AdditionalDependencies>FW1FontWrapper_x86.lib;libMinHook.x86.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\3rdParty\MiniHook;..\3rdParty\FW1FontWrapper\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>VRDemoCore.def</ModuleDefinitionFile>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,6 +162,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;.\</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,6 +172,7 @@
       <AdditionalDependencies>FW1FontWrapper_x64.lib;libMinHook.x64.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\3rdParty\MiniHook;..\3rdParty\FW1FontWrapper\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>VRDemoCore.def</ModuleDefinitionFile>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

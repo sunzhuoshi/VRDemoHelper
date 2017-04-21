@@ -105,6 +105,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>log4cplusD_x86.lib;libcurl_x86.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>echo copying log4cplus ...
@@ -135,6 +136,7 @@ copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
       <AdditionalDependencies>log4cplusD_x64.lib;libcurl_x64.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
     </Link>
     <ResourceCompile>
       <ShowProgress>false</ShowProgress>
