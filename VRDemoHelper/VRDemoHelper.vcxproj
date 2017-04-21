@@ -96,15 +96,15 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\Common;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cplusD_x86.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>log4cplusD_x86.lib;libcurl_x86.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>echo copying log4cplus ...
@@ -114,7 +114,10 @@ echo copying FW1FontWrapper dll...
 copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x86.dll $(TargetDir)
 
 echo copying settings...
-copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
+copy /Y $(ProjectDir)settings.ini $(TargetDir)
+
+echo copying VRDemoHelper.dat...
+copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,16 +125,16 @@ copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\Common;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>log4cplusD_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
+      <AdditionalDependencies>log4cplusD_x64.lib;libcurl_x64.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <ShowProgress>false</ShowProgress>
@@ -144,7 +147,10 @@ echo copying FW1FontWrapper dll...
 copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x64.dll $(TargetDir)
 
 echo copying settings...
-copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
+copy /Y $(ProjectDir)settings.ini $(TargetDir)
+
+echo copying VRDemoHelper.dat...
+copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -154,17 +160,17 @@ copy /Y $(ProjectDir)settings.ini $(TargetDir)</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\Common;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>log4cplus_x86.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>log4cplus_x86.lib;libcurl_x86.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -179,6 +185,9 @@ copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x86.dll $(TargetD
 
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
+
+echo copying VRDemoHelper.dat...
+copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
 
 
 
@@ -207,17 +216,17 @@ del /q *lastcodeanalysissucceeded
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\Common;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>log4cplus_x64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
+      <AdditionalDependencies>log4cplus_x64.lib;libcurl_x64.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -276,6 +285,7 @@ del /q *lastcodeanalysissucceeded
     <ClInclude Include="VRDemoNotificationManager.h" />
     <ClInclude Include="VRDemoSteamVRConfigurator.h" />
     <ClInclude Include="VRDemoTogglesWrapper.h" />
+    <ClInclude Include="VRDemoUpgradeChecker.h" />
     <ClInclude Include="VRDemoWindowPoller.h" />
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +305,7 @@ del /q *lastcodeanalysissucceeded
     <ClCompile Include="VRDemoHotKeyManager.cpp" />
     <ClCompile Include="VRDemoNotificationManager.cpp" />
     <ClCompile Include="VRDemoSteamVRConfigurator.cpp" />
+    <ClCompile Include="VRDemoUpgradeChecker.cpp" />
     <ClCompile Include="VRDemoWindowPoller.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -307,6 +318,7 @@ del /q *lastcodeanalysissucceeded
   </ItemGroup>
   <ItemGroup>
     <None Include="settings.ini" />
+    <None Include="VRDemoHelper.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

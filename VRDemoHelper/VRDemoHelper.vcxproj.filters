@@ -87,6 +87,9 @@
     <ClInclude Include="..\Common\VRDemoDefine.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="VRDemoUpgradeChecker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -125,6 +128,9 @@
     <ClCompile Include="..\Common\VRDemoConfigurator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="VRDemoUpgradeChecker.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="VRDemoHelper.ico">
@@ -139,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="settings.ini" />
+    <None Include="VRDemoHelper.dat" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VRDemoHelper.rc">
