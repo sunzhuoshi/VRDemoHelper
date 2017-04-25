@@ -244,7 +244,8 @@ copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x64.dll $(TargetD
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
 
-
+echo copying VRDemoHelper.dat...
+copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
 
 cd $(TargetDir)
 
