@@ -26,7 +26,6 @@ void OGraphicsAPICommonHooker::hook()
 
 void OGraphicsAPICommonHooker::run()
 {
-    assert(GetModuleHandleA("d3d11.dll"));
     HWND wnd = GetForegroundWindow();
 
     if (wnd) {
