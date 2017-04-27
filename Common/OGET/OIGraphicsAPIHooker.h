@@ -11,6 +11,7 @@ public:
         HT_OPENGL,
         HT_VULKAN
     };
+    virtual ~OIGraphicsAPIHooker() {};
     virtual HookerType getType() = 0;
     virtual void hook() = 0;
     virtual void unhook() = 0;
