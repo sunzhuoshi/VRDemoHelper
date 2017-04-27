@@ -12,14 +12,14 @@ const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore_x64.dll";
 const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore_x86.dll";
 #endif
 const std::string VRDemoCoreWrapper::FILE_SETTINGS = "settings.ini";
-const std::string VRDemoCoreWrapper::FUNCTION_INIT = "fnInit";
-const std::string VRDemoCoreWrapper::FUNCTION_HOOK_PROC = "fnWndMsgProc";
-const std::string VRDemoCoreWrapper::FUNCTION_SET_TOGGLE_VALUE = "fnSetToggleValue";
+const std::string VRDemoCoreWrapper::FUNCTION_INIT = "Init";
+const std::string VRDemoCoreWrapper::FUNCTION_HOOK_PROC = "CBTProc";
+const std::string VRDemoCoreWrapper::FUNCTION_SET_TOGGLE = "SetToggle";
 
 VRDemoCoreWrapper::VRDemoCoreWrapper():
     m_dll(nullptr),
     m_hook(nullptr),
-    m_setToggleValueFunc(nullptr)
+    m_setToggleFunc(nullptr)
 {
 }
 
@@ -43,9 +43,9 @@ bool VRDemoCoreWrapper::init(const VRDemoArbiter::Toggles& toggles)
     if (m_dll) {
         InitFuncPtr initFunc = (InitFuncPtr)GetProcAddress(m_dll, FUNCTION_INIT.c_str());
         HOOKPROC hookProc = (HOOKPROC)GetProcAddress(m_dll, FUNCTION_HOOK_PROC.c_str());
-        SetToggleValueFuncPtr setToggleValueFunc = (SetToggleValueFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_TOGGLE_VALUE.c_str());
+        SetToggleFuncPtr setToggleFunc = (SetToggleFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_TOGGLE.c_str());
 
-        if (initFunc && hookProc && setToggleValueFunc) {
+        if (initFunc && hookProc && setToggleFunc) {
             if (initFunc(l4util::getCurrentExePath().c_str(), toggles)) {
                 m_hook = SetWindowsHookEx(
                     WH_CBT,
@@ -54,7 +54,7 @@ bool VRDemoCoreWrapper::init(const VRDemoArbiter::Toggles& toggles)
                     0
                 );
                 if (m_hook) {
-                    m_setToggleValueFunc = setToggleValueFunc;
+                    m_setToggleFunc = setToggleFunc;
 
                     VRDemoEventDispatcher::getInstance().addEventListener(
                         VRDemoEventDispatcher::EV_TOGGLE_VALUE_CHANGED,
@@ -82,7 +82,7 @@ void VRDemoCoreWrapper::handleEvent(int event, unsigned long long param1, unsign
     bool value = 0 != param2;
     switch (event) {
     case VRDemoEventDispatcher::EV_TOGGLE_VALUE_CHANGED:
-        m_setToggleValueFunc(static_cast<int>(param1), value);
+        m_setToggleFunc(static_cast<int>(param1), value);
         break;
     default:
         break;

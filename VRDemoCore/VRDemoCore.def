@@ -1,4 +1,4 @@
  EXPORTS
-	fnInit				@1
-	fnSetToggleValue	@2
-	fnWndMsgProc		@3
+	Init				@1
+	SetToggle			@2
+	CBTProc				@3

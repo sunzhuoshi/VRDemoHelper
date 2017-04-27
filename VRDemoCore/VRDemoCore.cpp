@@ -17,45 +17,45 @@ VRDemoArbiter::Toggles g_toggles = { false, true, true, true };
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
-BOOL fnIsHelperProcess()
+bool IsHelperProcess()
 {
-    static BOOL bIsHelperProcess = FALSE;
-    static BOOL bCalled = FALSE;
-    if (!bCalled) {
-        CHAR szFileName[MAX_PATH];
-        if (0 < GetModuleFileNameA(NULL, szFileName, MAX_PATH))
+    static bool isHelperProcess = false;
+    static BOOL called = false;
+    if (!called) {
+        char fileName[MAX_PATH];
+        if (0 < GetModuleFileNameA(NULL, fileName, MAX_PATH))
         {
-            bCalled = TRUE;
-            if (strstr(szFileName, HELPER_NAME))
+            called = TRUE;
+            if (strstr(fileName, HELPER_NAME))
             {
-                bIsHelperProcess = TRUE;
+                isHelperProcess = true;
             }
         }
     }
-    return bIsHelperProcess;
+    return isHelperProcess;
 }
 
 void fnDelayInit()
 {
     // We do nothing when loaded by helper process(not necessary, either),
-    if (!fnIsHelperProcess()) {
+    if (!IsHelperProcess()) {
         if (VRDemoConfigurator::getInstance().init(g_rootPath + VRDemoConfigurator::FILE_SETTINGS)) {
             VRDemoArbiter::getInstance().init(g_toggles);
         }
     }
 }
 
-LRESULT WINAPI fnWndMsgProc(INT nCode, WPARAM wParam, LPARAM lParam)
+LRESULT WINAPI CBTProc(INT nCode, WPARAM wParam, LPARAM lParam)
 {
-    static BOOL bDelayInited = false;
+    static BOOL delayInited = false;
 
-    if (!bDelayInited) {
+    if (!delayInited) {
         fnDelayInit();
-        bDelayInited = TRUE;
+        delayInited = TRUE;
     }
 
 	// we don't handle hook messages in helper process
-	if (!fnIsHelperProcess() && !g_toggles.m_pause)
+	if (!IsHelperProcess() && !g_toggles.m_pause)
 	{
 		switch (nCode)
 		{
@@ -72,17 +72,17 @@ LRESULT WINAPI fnWndMsgProc(INT nCode, WPARAM wParam, LPARAM lParam)
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-bool WINAPI fnInit(const char *rootPath, const VRDemoArbiter::Toggles& toggles)
+bool WINAPI Init(const char *rootPath, const VRDemoArbiter::Toggles& toggles)
 {
 	strcpy_s(g_rootPath, MAX_PATH, rootPath);
     g_toggles = toggles;
 	return true;
 }
 
-void WINAPI fnSetToggleValue(int nIndex, bool bValue)
+void WINAPI SetToggle(int index, bool value)
 {
-    if (VRDemoArbiter::TI_MIN <= nIndex && VRDemoArbiter::TI_MAX >= nIndex) {
-        g_toggles.m_values[nIndex] = bValue;
+    if (VRDemoArbiter::TI_MIN <= index && VRDemoArbiter::TI_MAX >= index) {
+        g_toggles.m_values[index] = value;
     }
 }
 

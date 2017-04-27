@@ -14,17 +14,17 @@ public:
     void handleEvent(int event, unsigned long long param1, unsigned long long param2);
 private:
     typedef bool (WINAPI *InitFuncPtr)(const char *, const VRDemoArbiter::Toggles&);
-    typedef void (WINAPI *SetToggleValueFuncPtr)(int, bool);
+    typedef void (WINAPI *SetToggleFuncPtr)(int, bool);
 
     HINSTANCE m_dll;
     HHOOK m_hook;
 
-    SetToggleValueFuncPtr m_setToggleValueFunc;
+    SetToggleFuncPtr m_setToggleFunc;
 
     static const std::string FILE_HOOK_DLL;
     static const std::string FILE_SETTINGS;
     static const std::string FUNCTION_INIT;
     static const std::string FUNCTION_HOOK_PROC;
-    static const std::string FUNCTION_SET_TOGGLE_VALUE;
+    static const std::string FUNCTION_SET_TOGGLE;
 };
 
