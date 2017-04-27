@@ -25,6 +25,7 @@ private:
     Json::Value getEnvironment();
     std::string getTarget();
     std::string getTime();
+    std::string getResultKey();
     std::string getFileName();
     std::string getFileFullPath();
     void setFrameData(Json::Value& result);

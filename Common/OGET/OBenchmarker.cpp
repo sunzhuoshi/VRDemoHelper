@@ -28,6 +28,7 @@ bool OBenchmarker::init(VRDemoArbiter::Toggles& toggles)
     
     if (ret) {
         m_toggles = &toggles;
+        srand((unsigned int)time(NULL));
         m_inited = true;
     }
     return m_inited;
@@ -115,16 +116,16 @@ bool OBenchmarker::isResultValid(Json::Value& result)
 
 Json::Value OBenchmarker::generateResult()
 {
-    Json::Value result;
+    Json::Value resultValue, tagsValue(Json::arrayValue);
     
-    result["environment"] = getEnvironment();
-    result["target"] = getTarget();
-    result["time"] = getTime();
-    result["label"] = "";
-    result["tags"] = "[]";
-    setFPSData(result);
-    setFrameData(result);
-    return result;
+    resultValue["environment"] = getEnvironment();
+    resultValue["target"] = getTarget();
+    resultValue["time"] = getTime();
+    resultValue["label"] = "";
+    resultValue["tags"] = tagsValue;
+    setFPSData(resultValue);
+    setFrameData(resultValue);
+    return resultValue;
 }
 
 Json::Value OBenchmarker::getEnvironment()
@@ -165,11 +166,16 @@ std::string OBenchmarker::getTime()
     return buf;
 }
 
-std::string OBenchmarker::getFileName()
+std::string OBenchmarker::getResultKey()
 {
     std::stringstream buf;
-    buf << getTarget() << " " << getTime() << ".json";
+    buf << getTarget() << " " << getTime() << '-' << std::setw(3) << rand() % 1000;
     return buf.str();
+}
+
+std::string OBenchmarker::getFileName()
+{
+    return getResultKey() + ".json";
 }
 
 std::string OBenchmarker::getFileFullPath()
@@ -203,20 +209,13 @@ void OBenchmarker::setFrameData(Json::Value& result)
         }
         lastFrameTime = it;
     }
-    strBuf.str("");
-    strBuf.clear();
-    strBuf << "[";
 
-    auto it = frameTimeList.begin();
-    while (it != frameTimeList.end()) {
-        strBuf << std::setprecision(3) << *it;
-        it++;
-        if (it != frameTimeList.end()) {
-            strBuf << ", ";
-        }
+    Json::Value frameTimeListValue;
+    int index = 0;
+    for (auto& it : frameTimeList) {
+        frameTimeListValue[index++] = it;
     }
-    strBuf << "]";
-    result["frameTimeList"] = strBuf.str();
+    result["frameTimeList"] = frameTimeListValue;
 }
 
 void OBenchmarker::setFPSData(Json::Value& result)
@@ -262,18 +261,11 @@ void OBenchmarker::setFPSData(Json::Value& result)
     result["minFPS"] = minFPS;
     result["averageFPS"] = averageFPS;
     // fps list
-    std::ostringstream strBuf;
-    strBuf << "[";
-
-    auto it = fpsList.begin();
-    while (it != fpsList.end()) {
-        strBuf << *it;
-        it++;
-        if (it != fpsList.end()) {
-            strBuf << ", ";
-        }
+    Json::Value fpsListValue;
+    int index = 0;
+    for (auto& it : fpsList) {
+        fpsListValue[index++] = it;
     }
-    strBuf << "]";
-    result["fpsList"] = strBuf.str();
+    result["fpsList"] = fpsListValue;
 }
 
