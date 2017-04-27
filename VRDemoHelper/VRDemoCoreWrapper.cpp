@@ -13,7 +13,7 @@ const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore_x86.dll";
 #endif
 const std::string VRDemoCoreWrapper::FILE_SETTINGS = "settings.ini";
 const std::string VRDemoCoreWrapper::FUNCTION_INIT = "Init";
-const std::string VRDemoCoreWrapper::FUNCTION_HOOK_PROC = "CBTProc";
+const std::string VRDemoCoreWrapper::FUNCTION_HOOK_PROC_CBT = "CBTProc";
 const std::string VRDemoCoreWrapper::FUNCTION_SET_TOGGLE = "SetToggle";
 
 VRDemoCoreWrapper::VRDemoCoreWrapper():
@@ -42,7 +42,7 @@ bool VRDemoCoreWrapper::init(const VRDemoArbiter::Toggles& toggles)
     m_dll = LoadLibrary(l4util::getFileFullPath(FILE_HOOK_DLL).c_str());
     if (m_dll) {
         InitFuncPtr initFunc = (InitFuncPtr)GetProcAddress(m_dll, FUNCTION_INIT.c_str());
-        HOOKPROC hookProc = (HOOKPROC)GetProcAddress(m_dll, FUNCTION_HOOK_PROC.c_str());
+        HOOKPROC hookProc = (HOOKPROC)GetProcAddress(m_dll, FUNCTION_HOOK_PROC_CBT.c_str());
         SetToggleFuncPtr setToggleFunc = (SetToggleFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_TOGGLE.c_str());
 
         if (initFunc && hookProc && setToggleFunc) {

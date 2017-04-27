@@ -24,7 +24,7 @@ private:
     static const std::string FILE_HOOK_DLL;
     static const std::string FILE_SETTINGS;
     static const std::string FUNCTION_INIT;
-    static const std::string FUNCTION_HOOK_PROC;
+    static const std::string FUNCTION_HOOK_PROC_CBT;
     static const std::string FUNCTION_SET_TOGGLE;
 };
 
