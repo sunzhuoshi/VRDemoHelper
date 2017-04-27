@@ -1,5 +1,6 @@
 {
 	"version": "1.0.0.1",
+	"buildNumber": "20170425.1",
 	"latestVersionURL": "http://gifer.cn/vdh/version.json",
 	"downloadPageURL": "http://sunzhuoshi.github.io/VRDemoHelper"
 }
