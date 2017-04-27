@@ -97,7 +97,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;.\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;..\3rdParty\jsoncpp;.\</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -119,7 +119,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;.\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;..\3rdParty\jsoncpp;.\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,7 +139,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;.\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;..\3rdParty\jsoncpp;.\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,7 +161,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;.\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;..\3rdParty\jsoncpp;.\</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -179,6 +179,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\3rdParty\jsoncpp\json\json-forwards.h" />
+    <ClInclude Include="..\3rdParty\jsoncpp\json\json.h" />
+    <ClInclude Include="..\Common\OGET\OBenchmarker.h" />
     <ClInclude Include="..\Common\OGET\OFPSCalculator.h" />
     <ClInclude Include="..\Common\OGET\OInlineHookUtil.h" />
     <ClInclude Include="..\Common\OGET\ODX11Hooker.h" />
@@ -187,12 +190,15 @@
     <ClInclude Include="..\Common\OGET\OIGraphicsAPIHooker.h" />
     <ClInclude Include="..\Common\util\l4util.h" />
     <ClInclude Include="..\Common\VRDemoConfigurator.h" />
+    <ClInclude Include="..\Common\VRDemoDefine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="VRDemoCore.h" />
     <ClInclude Include="..\Common\VRDemoArbiter.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\3rdParty\jsoncpp\jsoncpp.cpp" />
+    <ClCompile Include="..\Common\OGET\OBenchmarker.cpp" />
     <ClCompile Include="..\Common\OGET\ODX11Hooker.cpp" />
     <ClCompile Include="..\Common\OGET\OGraphicsAPICommonHooker.cpp" />
     <ClCompile Include="..\Common\OGET\OGraphicsAPIHookerFactory.cpp" />

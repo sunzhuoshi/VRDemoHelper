@@ -35,6 +35,7 @@ CHAR szTitle[MAX_LOADSTRING];
 CHAR szWindowClass[MAX_LOADSTRING];           
 
 VRDemoTogglesWrapper togglesWrapper;
+VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper;
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -90,8 +91,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
-    if (!coreWrapper->init(togglesWrapper.getToggles())) {
+    coreWrapper = new(std::nothrow) VRDemoCoreWrapper();
+    if (coreWrapper && !coreWrapper->init(togglesWrapper.getToggles())) {
         VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
         return FALSE;
     }
@@ -256,6 +257,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (HIWORD(lParam)) {
         case VK_F8:
             togglesWrapper.togglePause();
+            break;
+        case VK_F6:
+            coreWrapper->toggleBenchmark();
             break;
         }
         break;

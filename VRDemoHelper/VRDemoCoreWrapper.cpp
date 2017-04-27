@@ -60,6 +60,8 @@ bool VRDemoCoreWrapper::init(const VRDemoArbiter::Toggles& toggles)
                         VRDemoEventDispatcher::EV_TOGGLE_VALUE_CHANGED,
                         VRDemoEventDispatcher::VRDemoEventListenerPtr(this)
                     );
+
+                    m_windowMessageToggleBenchmark = RegisterWindowMessageA(VR_DEMO_WINDOW_MESSAGE_TOGGLE_BENCHMARK);
                     result = true;
                 }
                 else {
@@ -88,3 +90,14 @@ void VRDemoCoreWrapper::handleEvent(int event, unsigned long long param1, unsign
         break;
     }
 }
+
+bool VRDemoCoreWrapper::toggleBenchmark()
+{
+    HWND wnd = GetForegroundWindow();
+    
+    if (wnd) {
+        SendMessageA(wnd, m_windowMessageToggleBenchmark, 0, 0);
+    }
+    return false;
+}
+

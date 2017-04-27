@@ -7,6 +7,7 @@
 #include "OFPSCalculator.h"
 #include "FW1FontWrapper\FW1FontWrapper.h"
 #include "VRDemoArbiter.h"
+#include "OGET\OBenchmarker.h"
 
 // TODO: remove dependency to VRDemoArbiter
 extern VRDemoArbiter::Toggles g_toggles;
@@ -79,7 +80,7 @@ HRESULT __stdcall DetourD3D11ResizeBuffers(
 HRESULT __stdcall DetourD3D11Present(IDXGISwapChain* swapChain, UINT syncInterval, UINT flags)
 {
     static bool inited = false;
-    static bool initOK = false;
+    static bool fpsInitOK = false;
     static OFPSCalculator<10000> fpsCalculator;
 
     if (!inited) {
@@ -93,18 +94,21 @@ HRESULT __stdcall DetourD3D11Present(IDXGISwapChain* swapChain, UINT syncInterva
         pFW1Factory->CreateFontWrapper(g_device, L"Arial", &g_fontWrapper);
         pFW1Factory->Release();
 
-        initOK = fpsCalculator.init();
+        fpsInitOK = fpsCalculator.init();
         inited = true;
     }
-    if (initOK && !g_toggles.m_pause && g_toggles.m_showFPS) {
-        unsigned int  fps = 0;
-        if (g_needUpdateBackBufferRenderTargetView) {
-            UpdateBackBufferRenderTargetView(swapChain);
-        }
-        g_context->OMSetRenderTargets(1, &g_backBufferRenderTargetView, nullptr);
+    if (!g_toggles.m_pause) {
+        OBenchmarker::getInstance().newFrame();
+        if (fpsInitOK && g_toggles.m_showFPS) {
+            unsigned int  fps = 0;
+            if (g_needUpdateBackBufferRenderTargetView) {
+                UpdateBackBufferRenderTargetView(swapChain);
+            }
+            g_context->OMSetRenderTargets(1, &g_backBufferRenderTargetView, nullptr);
 
-        if (fpsCalculator.presentNewFrameAndGetFPS(fps)) {
-            DrawFPS(fps);
+            if (fpsCalculator.presentNewFrameAndGetFPS(fps)) {
+                DrawFPS(fps);
+            }
         }
     }
     return g_originalD3D11SwapChainPresent(swapChain, syncInterval, flags);

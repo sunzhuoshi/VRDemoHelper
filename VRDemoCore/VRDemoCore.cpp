@@ -7,12 +7,15 @@
 #include "util/l4util.h"
 #include "VRDemoArbiter.h"
 #include "VRDemoConfigurator.h"
+#include "OGET\OBenchmarker.h"
 
 #define HELPER_NAME "VRDemoHelper"				// used to tell if we're in helper process
 
 // All instances share data segment
 #pragma data_seg(".shared")
 char g_rootPath[MAX_PATH] = "";
+// it is registered in system, so don't worry about conflit with other messages
+UINT g_windowMessageToggleBenchmark = 0;
 VRDemoArbiter::Toggles g_toggles = { false, true, true, true };
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
@@ -41,8 +44,20 @@ void fnDelayInit()
     if (!IsHelperProcess()) {
         if (VRDemoConfigurator::getInstance().init(g_rootPath + VRDemoConfigurator::FILE_SETTINGS)) {
             VRDemoArbiter::getInstance().init(g_toggles);
+            OBenchmarker::getInstance().init(g_toggles);
         }
     }
+}
+
+LRESULT WINAPI CallWndProc(INT nCode, WPARAM wParam, LPARAM lParam)
+{
+    if (HC_ACTION == nCode) {
+        PCWPSTRUCT params = (PCWPSTRUCT)lParam;
+        if (params->message == g_windowMessageToggleBenchmark) {
+            OBenchmarker::getInstance().toggle();
+        }
+    }
+    return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
 LRESULT WINAPI CBTProc(INT nCode, WPARAM wParam, LPARAM lParam)
@@ -76,6 +91,7 @@ bool WINAPI Init(const char *rootPath, const VRDemoArbiter::Toggles& toggles)
 {
 	strcpy_s(g_rootPath, MAX_PATH, rootPath);
     g_toggles = toggles;
+    g_windowMessageToggleBenchmark = RegisterWindowMessageA(VR_DEMO_WINDOW_MESSAGE_TOGGLE_BENCHMARK);
 	return true;
 }
 
