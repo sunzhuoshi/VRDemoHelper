@@ -267,9 +267,6 @@ del /q *lastcodeanalysissucceeded
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\3rdParty\jsoncpp\json\json-forwards.h" />
     <ClInclude Include="..\3rdParty\jsoncpp\json\json.h" />
     <ClInclude Include="..\Common\util\L4Singleton.hpp" />
