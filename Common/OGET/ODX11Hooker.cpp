@@ -8,7 +8,8 @@
 #include "FW1FontWrapper\FW1FontWrapper.h"
 #include "VRDemoArbiter.h"
 
-extern VRDemoArbiter::Toggles toggles;
+// TODO: remove dependency to VRDemoArbiter
+extern VRDemoArbiter::Toggles g_toggles;
 
 typedef HRESULT(__stdcall *D3D11SwapChainPresentFunc) (IDXGISwapChain*, UINT, UINT);
 typedef HRESULT(__stdcall *D3D11SwapChainResizeBuffersFunc) (IDXGISwapChain*, UINT, UINT, UINT, DXGI_FORMAT, UINT);
@@ -95,7 +96,7 @@ HRESULT __stdcall DetourD3D11Present(IDXGISwapChain* swapChain, UINT syncInterva
         initOK = fpsCalculator.init();
         inited = true;
     }
-    if (initOK && !toggles.m_pause && toggles.m_showFPS) {
+    if (initOK && !g_toggles.m_pause && g_toggles.m_showFPS) {
         unsigned int  fps = 0;
         if (g_needUpdateBackBufferRenderTargetView) {
             UpdateBackBufferRenderTargetView(swapChain);

@@ -12,8 +12,8 @@
 
 // All instances share data segment
 #pragma data_seg(".shared")
-CHAR szConfigFilePath[MAX_PATH] = "";
-VRDemoArbiter::Toggles toggles = { false, true, true, true };
+char g_rootPath[MAX_PATH] = "";
+VRDemoArbiter::Toggles g_toggles = { false, true, true, true };
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
@@ -39,13 +39,12 @@ void fnDelayInit()
 {
     // We do nothing when loaded by helper process(not necessary, either),
     if (!fnIsHelperProcess()) {
-        if (VRDemoConfigurator::getInstance().init(szConfigFilePath)) {
-            VRDemoArbiter::getInstance().init(toggles);
+        if (VRDemoConfigurator::getInstance().init(g_rootPath + VRDemoConfigurator::FILE_SETTINGS)) {
+            VRDemoArbiter::getInstance().init(g_toggles);
         }
     }
 }
 
-// 这是导出函数的一个示例。
 LRESULT WINAPI fnWndMsgProc(INT nCode, WPARAM wParam, LPARAM lParam)
 {
     static BOOL bDelayInited = false;
@@ -56,7 +55,7 @@ LRESULT WINAPI fnWndMsgProc(INT nCode, WPARAM wParam, LPARAM lParam)
     }
 
 	// we don't handle hook messages in helper process
-	if (!fnIsHelperProcess() && !toggles.m_pause)
+	if (!fnIsHelperProcess() && !g_toggles.m_pause)
 	{
 		switch (nCode)
 		{
@@ -73,18 +72,17 @@ LRESULT WINAPI fnWndMsgProc(INT nCode, WPARAM wParam, LPARAM lParam)
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-bool WINAPI fnInit(const char *szConfigFilePath_, const VRDemoArbiter::Toggles& toggles_)
+bool WINAPI fnInit(const char *rootPath, const VRDemoArbiter::Toggles& toggles)
 {
-	strcpy_s(szConfigFilePath, MAX_PATH, szConfigFilePath_);
-	// TODO: local config file content into share data segment
-    toggles = toggles_;
+	strcpy_s(g_rootPath, MAX_PATH, rootPath);
+    g_toggles = toggles;
 	return true;
 }
 
 void WINAPI fnSetToggleValue(int nIndex, bool bValue)
 {
     if (VRDemoArbiter::TI_MIN <= nIndex && VRDemoArbiter::TI_MAX >= nIndex) {
-        toggles.m_values[nIndex] = bValue;
+        g_toggles.m_values[nIndex] = bValue;
     }
 }
 

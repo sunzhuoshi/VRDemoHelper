@@ -46,7 +46,7 @@ bool VRDemoCoreWrapper::init(const VRDemoArbiter::Toggles& toggles)
         SetToggleValueFuncPtr setToggleValueFunc = (SetToggleValueFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_TOGGLE_VALUE.c_str());
 
         if (initFunc && hookProc && setToggleValueFunc) {
-            if (initFunc(l4util::getFileFullPath(FILE_SETTINGS).c_str(), toggles)) {
+            if (initFunc(l4util::getCurrentExePath().c_str(), toggles)) {
                 m_hook = SetWindowsHookEx(
                     WH_CBT,
                     hookProc,
