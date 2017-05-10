@@ -35,10 +35,10 @@ void VRDemoNotificationManager::init(HINSTANCE instance, HWND wnd)
 
     std::string notificationIconGUID;
     bool useDefaultGUID = false;
-
+       
     VRDemoConfigurator::getInstance().findValue(VRDemoConfigurator::SECTION_HELPER, "NotificationIconGUID", notificationIconGUID);
-    if (notificationIconGUID.empty() ||
-        NOERROR != CLSIDFromString(notificationIconGUID.c_str(), &m_notificationIconGUID)) {
+    // TODO: write a simple GUIDFromString function to replace UuidFromString(Rpcrt4.dll depended)
+    if (notificationIconGUID.empty() || RPC_S_OK != UuidFromStringA((unsigned char *)notificationIconGUID.c_str(), &m_notificationIconGUID)) {
         m_notificationIconGUID = __uuidof(HelperIcon);
     }
 }
@@ -54,7 +54,7 @@ void VRDemoNotificationManager::addNotificationIcon()
     // add the icon, setting the icon, tooltip, and callback message.
     // the icon will be identified with the GUID
     nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP | NIF_GUID;
-    nid.guidItem = __uuidof(HelperIcon);
+    nid.guidItem = m_notificationIconGUID;
     nid.uCallbackMessage = WMAPP_NOTIFYCALLBACK;
     LoadIconMetric(m_instance, MAKEINTRESOURCEW(IDI_NOTIFICATIONICON), LIM_SMALL, &nid.hIcon);
     LoadString(m_instance, IDS_TOOLTIP, nid.szTip, ARRAYSIZE(nid.szTip));
@@ -69,7 +69,7 @@ void VRDemoNotificationManager::deleteNotificationIcon()
 {
     NOTIFYICONDATA nid = { sizeof(nid) };
     nid.uFlags = NIF_GUID;
-    nid.guidItem = __uuidof(HelperIcon);
+    nid.guidItem = m_notificationIconGUID;
     Shell_NotifyIcon(NIM_DELETE, &nid);
 }
 
@@ -83,7 +83,7 @@ void VRDemoNotificationManager::modifyNotificationIcon(bool pause)
     }
     nid.hWnd = m_wnd;
     nid.uFlags = NIF_ICON | NIF_GUID;
-    nid.guidItem = __uuidof(HelperIcon);
+    nid.guidItem = m_notificationIconGUID;
     LoadIconMetric(m_instance, MAKEINTRESOURCEW(iconId), LIM_SMALL, &nid.hIcon);
     Shell_NotifyIcon(NIM_MODIFY, &nid);
 }

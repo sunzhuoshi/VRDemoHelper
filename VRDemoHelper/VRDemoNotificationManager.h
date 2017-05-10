@@ -11,7 +11,7 @@ class VRDemoNotificationManager : public L4Singleton<VRDemoNotificationManager>
 public:
     VRDemoNotificationManager();
     ~VRDemoNotificationManager();
-    inline void init(HINSTANCE instance, HWND wnd);
+    void init(HINSTANCE instance, HWND wnd);
     void addNotificationIcon();
     void deleteNotificationIcon();
     void modifyNotificationIcon(bool pause);
