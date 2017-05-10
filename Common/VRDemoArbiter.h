@@ -4,7 +4,9 @@
 #include <map>
 #include <list>
 
-class VRDemoArbiter
+#include "util\L4Singleton.hpp"
+
+class VRDemoArbiter : public L4Singleton<VRDemoArbiter>
 {
 public:
     enum ToggleIndex {
@@ -17,12 +19,12 @@ public:
     static const int TI_MAX = TI_SHOW_FPS;
     union Toggles {
         struct {
-        BOOL m_pause;
-        BOOL m_maximizeGames;
-        BOOL m_improveSteamVR;
-        BOOL m_showFPS;
+        bool m_pause;
+        bool m_maximizeGames;
+        bool m_improveSteamVR;
+        bool m_showFPS;
     };
-        BOOL m_values[TI_MAX+1];
+        bool m_values[TI_MAX+1];
     };
     
 	static const int UNKNOWN_TOKEN = -1;
@@ -99,14 +101,8 @@ private:
     typedef std::list<std::string> NameList;
     typedef std::map<std::string, RuleItem> RuleItemMap;
 public:
-    VRDemoArbiter::VRDemoArbiter() :
-        m_toggles(nullptr) {
-    };
-    VRDemoArbiter::~VRDemoArbiter() {};
-    static VRDemoArbiter& VRDemoArbiter::getInstance() {
-        static VRDemoArbiter instance;
-        return instance;
-    }
+    VRDemoArbiter() {};
+    ~VRDemoArbiter() {};
     bool init(const Toggles &toggles);
     bool arbitrate(RuleType type, int message, HWND wnd);
     inline bool hasRuleWithTypePoll() const {
@@ -135,6 +131,6 @@ private:
     NameList m_ignoredProcessNameList; // TODO: use set
     RuleItemMap m_ruleItemMap;
 
-    const Toggles *m_toggles;
+    const Toggles *m_toggles = nullptr;
 };
 

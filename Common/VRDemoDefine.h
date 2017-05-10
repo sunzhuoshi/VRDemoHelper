@@ -26,4 +26,5 @@
 #define VR_DEMO_ALERT_II(captionStringId, textStringId)                                             \
     VR_DEMO_ALERT_SS(l4util::loadString(captionStringId).c_str(), l4util::loadString(captionStringId).c_str())
 
-
+// window message used to toogle benchmark
+#define VR_DEMO_WINDOW_MESSAGE_TOGGLE_BENCHMARK "VRDemoWindowMessageToggleBenchmark"

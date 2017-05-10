@@ -17,7 +17,6 @@
 #define IDI_NOTIFICATIONICON_PAUSED     134
 #define IDI_NOTIFICATIONICON            207
 #define IDM_MAXIMIZE_GAMES              32785
-#define IDM_SHOW_FPS_OVERLAP            32786
 #define IDM_PAUSE                       32787
 #define IDM_OPTIONS                     32794
 #define IDM_IMPROVE_STEAM_VR            32795

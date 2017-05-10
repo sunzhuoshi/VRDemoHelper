@@ -3,7 +3,6 @@
 #include "VRDemoConfigurator.h"
 
 #include <sstream>
-#include "log4cplus\log4cplus.h"
 
 const std::string VRDemoConfigurator::FILE_SETTINGS = "settings.ini";
 const std::string VRDemoConfigurator::SECTION_HELPER = "VRDemoHelper";
@@ -51,6 +50,31 @@ bool VRDemoConfigurator::findSection(const std::string& sectionName, const VRDem
     else {
         return false;
     }
+}
+
+bool VRDemoConfigurator::valueToType(const std::string& value, bool* typeValue)
+{
+    const std::string trimmedValue = l4util::trim(value);
+    bool result = false;
+
+    if (0 < trimmedValue.length()) {
+        result = true;
+        if (typeValue) {
+            *typeValue = ("TRUE" == l4util::toUpper(trimmedValue));
+        }
+    }
+    return result;
+
+}
+
+std::string VRDemoConfigurator::typeToValue(const bool& typeValue)
+{
+    return typeValue ? "true" : "false";
+}
+
+bool VRDemoConfigurator::saveValue(const std::string& sectionName, const std::string& key, const std::string& value)
+{
+    return 0 != WritePrivateProfileStringA(sectionName.c_str(), key.c_str(), value.c_str(), m_configFilePath.c_str());
 }
 
 bool VRDemoConfigurator::findValue(const std::string& sectionName, const std::string& key, std::string& value) const

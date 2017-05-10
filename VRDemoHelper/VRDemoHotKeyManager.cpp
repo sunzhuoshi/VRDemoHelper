@@ -29,5 +29,6 @@ void VRDemoHotKeyManager::configurate(HWND wnd)
         }
     }
     */
-    RegisterHotKey(wnd, 1, 0, VK_F8);
+    RegisterHotKey(wnd, 1, 0, VK_F8);   // pause
+    RegisterHotKey(wnd, 2, 0, VK_F6);   // benchmark
 }

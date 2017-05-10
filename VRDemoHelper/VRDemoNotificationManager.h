@@ -4,16 +4,14 @@
 #include <thread>
 #include <log4cplus\thread\threads.h>
 
-class VRDemoNotificationManager
+#include "util\L4Singleton.hpp"
+
+class VRDemoNotificationManager : public L4Singleton<VRDemoNotificationManager>
 {
 public:
     VRDemoNotificationManager();
     ~VRDemoNotificationManager();
-    static VRDemoNotificationManager& VRDemoNotificationManager::getInstance() {
-        static VRDemoNotificationManager instance;
-        return instance;
-    }
-    void init(HINSTANCE instance, HWND wnd);
+    inline void init(HINSTANCE instance, HWND wnd);
     void addNotificationIcon();
     void deleteNotificationIcon();
     void modifyNotificationIcon(bool pause);

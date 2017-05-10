@@ -1,7 +1,7 @@
 #pragma once
 
 template <typename T>
-class l4Singleton
+class L4Singleton
 {
 public:
     static T& getInstance() {

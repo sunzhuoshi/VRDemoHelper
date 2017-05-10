@@ -24,9 +24,10 @@
 #include "VRDemoNotificationManager.h"
 #include "VRDemoHotKeyManager.h"
 #include "VRDemoSteamVRConfigurator.h"
+#include "VRDemoTogglesWrapper.h"
+#include "VRDemoUpgradeChecker.h"
 
 #define MAX_LOADSTRING 100
-#define LOG_PROPERTY_FILE "log4cplus.props"
 #define SINGLE_INSTANCE_MUTEX_NAME "L4VRDemoHelperSingleInstanceMetux"
  
 HINSTANCE hInst;                                
@@ -34,6 +35,7 @@ CHAR szTitle[MAX_LOADSTRING];
 CHAR szWindowClass[MAX_LOADSTRING];           
 
 VRDemoTogglesWrapper togglesWrapper;
+VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper;
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -65,6 +67,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	LOG4CPLUS_INFO(logger, "VR Demo Helper is starting");
+
+    if (!VRDemoUpgradeChecker::getInstance().init()) {
+        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to get local version info,\ncheck the log for detail.");
+        return FALSE;
+    }
+    VRDemoUpgradeChecker::getInstance().asynCheckUpgrade();
     
     if (!VRDemoConfigurator::getInstance().init(
             l4util::getFileFullPath(VRDemoConfigurator::FILE_SETTINGS)
@@ -74,13 +82,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+    // TODO: Add hotkey configuration
+    togglesWrapper.loadConfig();
+
     if (!VRDemoSteamVRConfigurator::getInstance().init()) {
-        togglesWrapper.setConfigurateVRNotification(FALSE);
+        togglesWrapper.setImproveSteamVR(FALSE);
         LOG4CPLUS_INFO(logger, "Failed to init SteamVR configurator, check if SteamVR is installed");
+        return FALSE;
     }
 
-    VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper(new VRDemoCoreWrapper());
-    if (!coreWrapper->init()) {
+    coreWrapper = new(std::nothrow) VRDemoCoreWrapper();
+    if (coreWrapper && !coreWrapper->init(togglesWrapper.getToggles())) {
         VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
         return FALSE;
     }
@@ -198,18 +210,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 DestroyWindow(hWnd);
                 break;
             case IDM_PAUSE:
-            {
-                togglesWrapper.togglePause();
-            }
+                {
+                    togglesWrapper.togglePause();
+                }
                 break;
             case IDM_SHOW_FPS:
-                togglesWrapper.toggleShowFPS();
+                togglesWrapper.toggleShowFPSAndSave();
                 break;
             case IDM_MAXIMIZE_GAMES:
-                togglesWrapper.toggleMaximizeGames();
+                togglesWrapper.toggleMaximizeGamesAndSave();
                 break;
             case IDM_IMPROVE_STEAM_VR:
-                togglesWrapper.toggleImproveSteamVR();
+                togglesWrapper.toggleImproveSteamVRAndSave();
                 break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
@@ -245,6 +257,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (HIWORD(lParam)) {
         case VK_F8:
             togglesWrapper.togglePause();
+            break;
+        case VK_F6:
+            coreWrapper->toggleBenchmark();
             break;
         }
         break;
@@ -362,3 +377,4 @@ VOID InitLogConfiguration()
     log4cplus::PropertyConfigurator defaultConfigutator(std::istringstream(defaultProps.str()));
     defaultConfigutator.configure();
 }
+

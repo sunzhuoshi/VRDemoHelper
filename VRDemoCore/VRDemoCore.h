@@ -1,15 +1,10 @@
-#ifdef VRDEMOCORE_EXPORTS
-#define VRDEMOCORE_API __declspec(dllexport)
-#else
-#define VRDEMOCORE_API __declspec(dllimport)
-#endif
+#pragma once
+#include "VRDemoArbiter.h"                        
 
-#include "VRDemoArbiter.h"
+extern "C" LRESULT WINAPI CBTProc(INT nCode, WPARAM wParam, LPARAM lParam);
 
-extern VRDemoArbiter::Toggles toogles;
+extern "C" LRESULT WINAPI CallWndProc(INT nCode, WPARAM wParam, LPARAM lParam);
 
-extern "C" VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lParam);
+extern "C" bool WINAPI Init(const char *rootPath, const VRDemoArbiter::Toggles& toggles);
 
-extern "C" VRDEMOCORE_API BOOL WINAPI fnInit(const CHAR *szRuleConfigFilePath);
-
-extern "C" VRDEMOCORE_API VOID WINAPI fnSetToggleValue(INT nIndex, BOOL nValue);
+extern "C" void WINAPI SetToggle(int index, bool value);

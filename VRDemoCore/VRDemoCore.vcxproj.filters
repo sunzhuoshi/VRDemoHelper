@@ -13,9 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <Filter Include="Common">
+      <UniqueIdentifier>{b021d056-404b-4380-add9-35d388f096ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\util">
+      <UniqueIdentifier>{67d3481b-6661-4a97-931e-568c105b82bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\OGET">
+      <UniqueIdentifier>{a8b366e1-6216-4ab6-950d-7283b4075df0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="jsoncpp">
+      <UniqueIdentifier>{0a2063a5-5c07-42c6-8f81-b7b6cf11c33b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="jsoncpp\json">
+      <UniqueIdentifier>{98819d5a-c853-46ec-bedf-b3947583e5cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -28,13 +40,43 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\VRDemoArbiter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common\util\l4util.h">
-      <Filter>头文件</Filter>
+      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\VRDemoConfigurator.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\util\l4util.h">
+      <Filter>Common\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OIGraphicsAPIHooker.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OGraphicsAPIHookerFactory.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OGraphicsAPICommonHooker.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\ODX11Hooker.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OInlineHookUtil.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OFPSCalculator.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\VRDemoDefine.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\OGET\OBenchmarker.h">
+      <Filter>Common\OGET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\jsoncpp\json\json.h">
+      <Filter>jsoncpp\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\jsoncpp\json\json-forwards.h">
+      <Filter>jsoncpp\json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -47,14 +89,37 @@
     <ClCompile Include="VRDemoCore.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\util\l4util.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\VRDemoArbiter.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\VRDemoConfigurator.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\util\l4util.cpp">
+      <Filter>Common\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\OGET\OGraphicsAPIHookerFactory.cpp">
+      <Filter>Common\OGET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\OGET\OGraphicsAPICommonHooker.cpp">
+      <Filter>Common\OGET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\OGET\ODX11Hooker.cpp">
+      <Filter>Common\OGET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\OGET\OInlineHookUtil.cpp">
+      <Filter>Common\OGET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\OGET\OBenchmarker.cpp">
+      <Filter>Common\OGET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\jsoncpp\jsoncpp.cpp">
+      <Filter>jsoncpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VRDemoCore.def">
+      <Filter>源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

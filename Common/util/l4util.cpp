@@ -7,14 +7,15 @@
 #include <Psapi.h>
 
 namespace l4util {
+    // ends with '\\'
 	std::string getCurrentExePath()
 	{
-		char buf[MAX_PATH] = "", *tmp;
+		char buf[MAX_PATH] = "", *tmp = nullptr;
 		if (GetModuleFileNameA(NULL, buf, MAX_PATH))
 		{
 			tmp = strrchr(buf, '\\');
-			if (tmp) {
-				*tmp = '\0';
+			if (tmp && tmp < buf + sizeof(buf) - 1) {
+				tmp[1] = '\0';
 			}
 		}
 		return std::string(buf);
@@ -22,9 +23,7 @@ namespace l4util {
 
 	std::string getFileFullPath(const std::string &dllFileName)
 	{
-		std::ostringstream result;
-		result << getCurrentExePath().c_str() << "\\" << dllFileName.c_str();
-		return result.str();
+        return getCurrentExePath() + dllFileName;
 	}
 
 	std::string getCurrentProcessName()
@@ -60,7 +59,7 @@ namespace l4util {
         HANDLE processHandle = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, processId);
 
         if (processHandle) {
-            GetProcessImageFileName(processHandle, buf, sizeof(buf));
+            GetProcessImageFileNameA(processHandle, buf, sizeof(buf));
             p = strrchr(buf, '\\');
             if (p) {
                 p++;

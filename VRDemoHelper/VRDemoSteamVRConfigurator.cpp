@@ -7,7 +7,7 @@
 #include <Psapi.h>
 
 #include "log4cplus\log4cplus.h"
-#include "jsoncpp\json\json.h"
+#include "json\json.h"
 #include "util\l4util.h"
 #include "VRDemoDefine.h"
 #include "VRDemoNotificationManager.h"
@@ -17,7 +17,7 @@
 extern VRDemoTogglesWrapper togglesWrapper;
 
 const std::string VRDemoSteamVRConfigurator::SETTINGS_FILE_NAME = "steamvr.vrsettings";
-const std::string VRDemoSteamVRConfigurator::SETTINGS_FILE_OLD_POSTFIX = ".old";
+const std::string VRDemoSteamVRConfigurator::SETTINGS_FILE_OLD_POSTFIX = ".ovs";
 const std::string VRDemoSteamVRConfigurator::SETTINGS_FILE_RELATIVE_PATH = "config\\" + VRDemoSteamVRConfigurator::SETTINGS_FILE_NAME;
 const std::string VRDemoSteamVRConfigurator::SETTINGS_SECTION_NAME = "SteamVRSettings";
 
@@ -165,7 +165,7 @@ DWORD VRDemoSteamVRConfigurator::findSteamVRProcessID()
 
     if (EnumProcesses(processIDs, sizeof(processIDs), &bytesReturned)) {
         size_t processCount = bytesReturned / sizeof(processIDs[0]);
-        for (int i = 0; i < processCount; ++i) {
+        for (size_t i = 0; i < processCount; ++i) {
             if (l4util::getProcessNameWithProcessId(processIDs[i]) == STEAM_VR_PROCESS_NAME) {
                 result = processIDs[i];
                 break;

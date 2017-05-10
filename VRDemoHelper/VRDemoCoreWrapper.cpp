@@ -7,19 +7,19 @@
 #include "VRDemoArbiter.h"
 
 #ifdef _WIN64
-const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore.dll"; // TODO: rename to "VRDemoCore_x64.dll"
+const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore_x64.dll"; 
 #else
 const std::string VRDemoCoreWrapper::FILE_HOOK_DLL = "VRDemoCore_x86.dll";
 #endif
 const std::string VRDemoCoreWrapper::FILE_SETTINGS = "settings.ini";
-const std::string VRDemoCoreWrapper::FUNCTION_INIT = "fnInit";
-const std::string VRDemoCoreWrapper::FUNCTION_HOOK_PROC = "fnWndMsgProc";
-const std::string VRDemoCoreWrapper::FUNCTION_SET_TOGGLE_VALUE = "fnSetToggleValue";
+const std::string VRDemoCoreWrapper::FUNCTION_INIT = "Init";
+const std::string VRDemoCoreWrapper::FUNCTION_HOOK_PROC_CBT = "CBTProc";
+const std::string VRDemoCoreWrapper::FUNCTION_SET_TOGGLE = "SetToggle";
 
 VRDemoCoreWrapper::VRDemoCoreWrapper():
     m_dll(nullptr),
     m_hook(nullptr),
-    m_setToggleValueFunc(nullptr)
+    m_setToggleFunc(nullptr)
 {
 }
 
@@ -34,7 +34,7 @@ VRDemoCoreWrapper::~VRDemoCoreWrapper()
     }
 }
 
-bool VRDemoCoreWrapper::init()
+bool VRDemoCoreWrapper::init(const VRDemoArbiter::Toggles& toggles)
 {
     bool result = false;
     log4cplus::Logger logger = log4cplus::Logger::getRoot();
@@ -42,11 +42,11 @@ bool VRDemoCoreWrapper::init()
     m_dll = LoadLibrary(l4util::getFileFullPath(FILE_HOOK_DLL).c_str());
     if (m_dll) {
         InitFuncPtr initFunc = (InitFuncPtr)GetProcAddress(m_dll, FUNCTION_INIT.c_str());
-        HOOKPROC hookProc = (HOOKPROC)GetProcAddress(m_dll, FUNCTION_HOOK_PROC.c_str());
-        SetToggleValueFuncPtr setToggleValueFunc = (SetToggleValueFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_TOGGLE_VALUE.c_str());
+        HOOKPROC hookProc = (HOOKPROC)GetProcAddress(m_dll, FUNCTION_HOOK_PROC_CBT.c_str());
+        SetToggleFuncPtr setToggleFunc = (SetToggleFuncPtr)GetProcAddress(m_dll, FUNCTION_SET_TOGGLE.c_str());
 
-        if (initFunc && hookProc && setToggleValueFunc) {
-            if (initFunc(l4util::getFileFullPath(FILE_SETTINGS).c_str())) {
+        if (initFunc && hookProc && setToggleFunc) {
+            if (initFunc(l4util::getCurrentExePath().c_str(), toggles)) {
                 m_hook = SetWindowsHookEx(
                     WH_CBT,
                     hookProc,
@@ -54,12 +54,14 @@ bool VRDemoCoreWrapper::init()
                     0
                 );
                 if (m_hook) {
-                    m_setToggleValueFunc = setToggleValueFunc;
+                    m_setToggleFunc = setToggleFunc;
 
                     VRDemoEventDispatcher::getInstance().addEventListener(
                         VRDemoEventDispatcher::EV_TOGGLE_VALUE_CHANGED,
                         VRDemoEventDispatcher::VRDemoEventListenerPtr(this)
                     );
+
+                    m_windowMessageToggleBenchmark = RegisterWindowMessageA(VR_DEMO_WINDOW_MESSAGE_TOGGLE_BENCHMARK);
                     result = true;
                 }
                 else {
@@ -79,12 +81,23 @@ bool VRDemoCoreWrapper::init()
 
 void VRDemoCoreWrapper::handleEvent(int event, unsigned long long param1, unsigned long long param2)
 {
-    BOOL value = 0 != param2;
+    bool value = 0 != param2;
     switch (event) {
     case VRDemoEventDispatcher::EV_TOGGLE_VALUE_CHANGED:
-        m_setToggleValueFunc(static_cast<int>(param1), value);
+        m_setToggleFunc(static_cast<int>(param1), value);
         break;
     default:
         break;
     }
 }
+
+bool VRDemoCoreWrapper::toggleBenchmark()
+{
+    HWND wnd = GetForegroundWindow();
+    
+    if (wnd) {
+        SendMessageA(wnd, m_windowMessageToggleBenchmark, 0, 0);
+    }
+    return false;
+}
+

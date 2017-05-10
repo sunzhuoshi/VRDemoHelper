@@ -2,7 +2,7 @@
 A simple tool to make VR demonstration better and easier
 
 ## Features
-1. Maximize VR game window for demonstration, both win32(not supported now) and x64 games  
+1. Maximize VR game window for demonstration, both win32 and x64 games  
 
 2. Minimize SteamVR window, configurate SteamVR(Arcade mode, block future warning notifications)  
 
@@ -28,7 +28,7 @@ Offer a shortcut in VRDemoHelper should be a resonable solution for non-professi
    
 4. hook D3D to show FPS like fraps
 
-5. support win32 games and applications
+5. package win32 and x64 files in one archive(run win32 version on win32, run both on x64)
 
 ## Files
 ### settings.ini  

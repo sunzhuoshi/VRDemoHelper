@@ -7,56 +7,70 @@
 #include "util/l4util.h"
 #include "VRDemoArbiter.h"
 #include "VRDemoConfigurator.h"
+#include "OGET\OBenchmarker.h"
 
 #define HELPER_NAME "VRDemoHelper"				// used to tell if we're in helper process
 
 // All instances share data segment
 #pragma data_seg(".shared")
-VRDEMOCORE_API CHAR szConfigFilePath[MAX_PATH] = "";
-VRDEMOCORE_API VRDemoArbiter::Toggles toggles = { FALSE, TRUE, TRUE, TRUE };
+char g_rootPath[MAX_PATH] = "";
+// it is registered in system, so don't worry about conflit with other messages
+UINT g_windowMessageToggleBenchmark = 0;
+VRDemoArbiter::Toggles g_toggles = { false, true, true, true };
 #pragma data_seg()
 #pragma comment(linker,"/section:.shared,rws")
 
-BOOL fnIsHelperProcess()
+bool IsHelperProcess()
 {
-    static BOOL bIsHelperProcess = FALSE;
-    static BOOL bCalled = FALSE;
-    if (!bCalled) {
-        CHAR szFileName[MAX_PATH];
-        if (0 < GetModuleFileNameA(NULL, szFileName, MAX_PATH))
+    static bool isHelperProcess = false;
+    static BOOL called = false;
+    if (!called) {
+        char fileName[MAX_PATH];
+        if (0 < GetModuleFileNameA(NULL, fileName, MAX_PATH))
         {
-            bCalled = TRUE;
-            if (strstr(szFileName, HELPER_NAME))
+            called = TRUE;
+            if (strstr(fileName, HELPER_NAME))
             {
-                bIsHelperProcess = TRUE;
+                isHelperProcess = true;
             }
         }
     }
-    return bIsHelperProcess;
+    return isHelperProcess;
 }
 
 void fnDelayInit()
 {
     // We do nothing when loaded by helper process(not necessary, either),
-    if (!fnIsHelperProcess()) {
-        if (VRDemoConfigurator::getInstance().init(szConfigFilePath)) {
-            VRDemoArbiter::getInstance().init(toggles);
+    if (!IsHelperProcess()) {
+        if (VRDemoConfigurator::getInstance().init(g_rootPath + VRDemoConfigurator::FILE_SETTINGS)) {
+            VRDemoArbiter::getInstance().init(g_toggles);
+            OBenchmarker::getInstance().init(g_toggles);
         }
     }
 }
 
-// 这是导出函数的一个示例。
-VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lParam)
+LRESULT WINAPI CallWndProc(INT nCode, WPARAM wParam, LPARAM lParam)
 {
-    static BOOL bDelayInited = false;
+    if (HC_ACTION == nCode) {
+        PCWPSTRUCT params = (PCWPSTRUCT)lParam;
+        if (params->message == g_windowMessageToggleBenchmark) {
+            OBenchmarker::getInstance().toggle();
+        }
+    }
+    return CallNextHookEx(NULL, nCode, wParam, lParam);
+}
 
-    if (!bDelayInited) {
+LRESULT WINAPI CBTProc(INT nCode, WPARAM wParam, LPARAM lParam)
+{
+    static BOOL delayInited = false;
+
+    if (!delayInited) {
         fnDelayInit();
-        bDelayInited = TRUE;
+        delayInited = TRUE;
     }
 
 	// we don't handle hook messages in helper process
-	if (!fnIsHelperProcess() && !toggles.m_pause)
+	if (!IsHelperProcess() && !g_toggles.m_pause)
 	{
 		switch (nCode)
 		{
@@ -73,17 +87,18 @@ VRDEMOCORE_API LRESULT WINAPI fnWndMsgProc(int nCode, WPARAM wParam, LPARAM lPar
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-VRDEMOCORE_API BOOL WINAPI fnInit(const CHAR *szConfigFilePath_)
+bool WINAPI Init(const char *rootPath, const VRDemoArbiter::Toggles& toggles)
 {
-	strcpy_s(szConfigFilePath, MAX_PATH, szConfigFilePath_);
-	// TODO: local config file content into share data segment
-	return TRUE;
+	strcpy_s(g_rootPath, MAX_PATH, rootPath);
+    g_toggles = toggles;
+    g_windowMessageToggleBenchmark = RegisterWindowMessageA(VR_DEMO_WINDOW_MESSAGE_TOGGLE_BENCHMARK);
+	return true;
 }
 
-VRDEMOCORE_API VOID WINAPI fnSetToggleValue(INT nIndex, BOOL nValue)
+void WINAPI SetToggle(int index, bool value)
 {
-    if (VRDemoArbiter::TI_MIN <= nIndex && VRDemoArbiter::TI_MAX >= nIndex) {
-        toggles.m_values[nIndex] = nValue;
+    if (VRDemoArbiter::TI_MIN <= index && VRDemoArbiter::TI_MAX >= index) {
+        g_toggles.m_values[index] = value;
     }
 }
 
