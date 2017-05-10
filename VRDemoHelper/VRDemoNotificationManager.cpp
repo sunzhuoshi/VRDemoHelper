@@ -3,7 +3,9 @@
 
 #include <CommCtrl.h>
 #include <shellapi.h>
+#include <Objbase.h>
 #include "VRDemoHelper.h"
+#include "VRDemoConfigurator.h"
 
 // we need commctrl v6 for LoadIconMetric()
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -11,11 +13,7 @@
 
 
 // Use a guid to uniquely identify our icon
-#ifdef _DEBUG
 class __declspec(uuid("BC719626-7CD0-4FF2-B9B4-6D821515C9E8")) HelperIcon;
-#else
-class __declspec(uuid("BC719626-7CD0-4FF2-B9B4-6D821515C9E9")) HelperIcon;
-#endif 
 
 
 VRDemoNotificationManager::VRDemoNotificationManager()
@@ -27,6 +25,21 @@ VRDemoNotificationManager::~VRDemoNotificationManager()
 {
     if (m_deleteInfoThread.get() && m_deleteInfoThread->joinable()) {
         m_deleteInfoThread->join();
+    }
+}
+
+void VRDemoNotificationManager::init(HINSTANCE instance, HWND wnd)
+{
+    m_instance = instance;
+    m_wnd = wnd;
+
+    std::string notificationIconGUID;
+    bool useDefaultGUID = false;
+
+    VRDemoConfigurator::getInstance().findValue(VRDemoConfigurator::SECTION_HELPER, "NotificationIconGUID", notificationIconGUID);
+    if (notificationIconGUID.empty() ||
+        NOERROR != CLSIDFromString(notificationIconGUID.c_str(), &m_notificationIconGUID)) {
+        m_notificationIconGUID = __uuidof(HelperIcon);
     }
 }
 

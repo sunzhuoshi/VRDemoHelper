@@ -13,10 +13,7 @@ public:
         static VRDemoNotificationManager instance;
         return instance;
     }
-    inline void init(HINSTANCE instance, HWND wnd) {
-        m_instance = instance;
-        m_wnd = wnd;
-    }
+    void init(HINSTANCE instance, HWND wnd);
     void addNotificationIcon();
     void deleteNotificationIcon();
     void modifyNotificationIcon(bool pause);
@@ -35,7 +32,8 @@ private:
     log4cplus::thread::ManualResetEvent m_event;
     bool            m_cancelFlag;
     unsigned int    m_timeOut;
-    
+    GUID            m_notificationIconGUID;
+
     static const unsigned int NOTIFICATION_INFO_DEFAULT_TIME_OUT = 2000;
 };
 

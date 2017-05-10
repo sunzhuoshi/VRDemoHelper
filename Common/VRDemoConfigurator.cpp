@@ -6,6 +6,7 @@
 #include "log4cplus\log4cplus.h"
 
 const std::string VRDemoConfigurator::FILE_SETTINGS = "settings.ini";
+const std::string VRDemoConfigurator::SECTION_HELPER = "VRDemoHelper";
 
 bool VRDemoConfigurator::init(const std::string& configFilePath)
 {
@@ -50,6 +51,24 @@ bool VRDemoConfigurator::findSection(const std::string& sectionName, const VRDem
     else {
         return false;
     }
+}
+
+bool VRDemoConfigurator::findValue(const std::string& sectionName, const std::string& key, std::string& value) const
+{
+    const KeyValueMap *map = nullptr;
+    bool ret = findSection(sectionName, &map);
+    if (ret) {
+        KeyValueMap::const_iterator it = map->find(key);
+
+        if (it != map->end()) {
+            value = it->second;
+            ret = true;
+        }
+        else {
+            ret = false;
+        }
+    }
+    return ret;
 }
 
 void VRDemoConfigurator::parseSection(const std::string& configFilePath, const std::string& sectionName)

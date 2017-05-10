@@ -19,7 +19,9 @@ public:
     bool init(const std::string& configFilePath);
     const SectionMap& getSections() const;
     bool findSection(const std::string& sectionName, const KeyValueMap **map) const;
+    bool findValue(const std::string& sectionName, const std::string& key, std::string& value) const;
     static const std::string FILE_SETTINGS;
+    static const std::string SECTION_HELPER;
 private:
     inline bool isInited() const { return 0 < m_configFilePath.size(); };
     void parseSection(const std::string& configFilePath, const std::string& sectionName);
