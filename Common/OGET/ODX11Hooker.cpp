@@ -169,7 +169,7 @@ void ODX11Hooker::hookWithWindow(HWND wnd)
         }
         // hook swap chain "SetFullScreenState" method, for some Unity games don't call ResizeBuffers when toggling to fullscreen mode
         target = (void *)swapChainVirtualTable[10];
-        if (OInlineHookUtil::hook((void *)swapChainVirtualTable[10], DetourD3D11SetFullscreenState, (void **)&g_originalD3D11SwapChainSetFullscreenState)) {
+        if (OInlineHookUtil::hook(target, DetourD3D11SetFullscreenState, (void **)&g_originalD3D11SwapChainSetFullscreenState)) {
             m_hookTargets.push_back(target);
         }
         device->Release();
