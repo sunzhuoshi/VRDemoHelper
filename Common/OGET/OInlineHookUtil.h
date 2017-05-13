@@ -5,4 +5,5 @@ public:
     static bool init();
     static void unint();
     static bool hook(void* targetFunc, void* detourFunc, void**originalFunc);
+    static bool unhook(void *targetFunc);
 };

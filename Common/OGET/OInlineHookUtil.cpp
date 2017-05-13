@@ -22,3 +22,11 @@ bool OInlineHookUtil::hook(void* targetFunc, void* detourFunc, void**originalFun
     }
     return MH_OK == ret;
 }
+
+bool OInlineHookUtil::unhook(void *targetFunc)
+{
+    if (!targetFunc) {
+        return false;
+    }
+    return MH_OK == MH_RemoveHook(targetFunc);
+}

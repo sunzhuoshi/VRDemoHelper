@@ -158,12 +158,20 @@ void ODX11Hooker::hookWithWindow(HWND wnd)
         DWORD_PTR* swapChainVirtualTable = tmp[0];
 
         // hook swap chain "Present" method to draw FPS
-        OInlineHookUtil::hook((void *)swapChainVirtualTable[8], DetourD3D11Present, (void **)&g_originalD3D11SwapChainPresent);
-        // hook swap chain "ResizeBuffers" method to update back buffer render target view(Unreal 4 requires this, Unity, WoW don't)
-        OInlineHookUtil::hook((void *)swapChainVirtualTable[13], DetourD3D11ResizeBuffers, (void **)&g_originalD3D11SwapChainResizeBuffers);
+        void *target = (void *)swapChainVirtualTable[8];
+        if (OInlineHookUtil::hook(target, DetourD3D11Present, (void **)&g_originalD3D11SwapChainPresent)) {
+            m_hookTargets.push_back(target);
+        }
+        // hook swap chain "ResizeBuffers" method to update back buffer render target view(Unreal 4 requires this, Unity, WoW does not)
+        target = (void *)swapChainVirtualTable[13];
+        if (OInlineHookUtil::hook(target, DetourD3D11ResizeBuffers, (void **)&g_originalD3D11SwapChainResizeBuffers)) {
+            m_hookTargets.push_back(target);
+        }
         // hook swap chain "SetFullScreenState" method, for some Unity games don't call ResizeBuffers when toggling to fullscreen mode
-        OInlineHookUtil::hook((void *)swapChainVirtualTable[10], DetourD3D11SetFullscreenState, (void **)&g_originalD3D11SwapChainSetFullscreenState);
-
+        target = (void *)swapChainVirtualTable[10];
+        if (OInlineHookUtil::hook((void *)swapChainVirtualTable[10], DetourD3D11SetFullscreenState, (void **)&g_originalD3D11SwapChainSetFullscreenState)) {
+            m_hookTargets.push_back(target);
+        }
         device->Release();
         context->Release();
         swapChain->Release();
@@ -172,5 +180,9 @@ void ODX11Hooker::hookWithWindow(HWND wnd)
 
 void ODX11Hooker::unhook()
 {
-
+    // TODO: check why only Unity games crach(DX samples and WoW don't crash) without unhook
+    for (auto& it : m_hookTargets) {
+        OInlineHookUtil::unhook(it);
+    }
+    m_hookTargets.clear();
 }
