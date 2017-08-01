@@ -272,12 +272,14 @@ del /q *lastcodeanalysissucceeded
     <ClInclude Include="..\Common\util\L4Singleton.hpp" />
     <ClInclude Include="..\Common\VRDemoArbiter.h" />
     <ClInclude Include="..\Common\util\l4util.h" />
+    <ClInclude Include="..\Common\VRDemoConfig.h" />
     <ClInclude Include="..\Common\VRDemoDefine.h" />
     <ClInclude Include="..\Common\VRDemoEventDispatcher.h" />
     <ClInclude Include="..\Common\VRDemoConfigurator.h" />
     <ClInclude Include="argcargv.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="VRDemoAutoRunner.h" />
     <ClInclude Include="VRDemoCoreWrapper.h" />
     <ClInclude Include="VRDemoHelper.h" />
     <ClInclude Include="VRDemoHotKeyManager.h" />
@@ -300,6 +302,7 @@ del /q *lastcodeanalysissucceeded
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="VRDemoAutoRunner.cpp" />
     <ClCompile Include="VRDemoCoreWrapper.cpp" />
     <ClCompile Include="VRDemoHelper.cpp" />
     <ClCompile Include="VRDemoHotKeyManager.cpp" />

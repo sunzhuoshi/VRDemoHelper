@@ -49,6 +49,7 @@ public:
 	struct RuleItem {
 		std::string m_ruleName;
 		std::string m_className;
+        std::string m_moduleFilter;
         RuleType    m_type;
 		RuleAction  m_action;
     private:
@@ -67,16 +68,18 @@ public:
         }
 		bool isValid() {
             bool valid = false;
+            bool filterOK = false;
 
             if (!m_ruleName.empty()) {
+                filterOK = !m_className.empty() || !m_moduleFilter.empty();
                 switch (m_type) {
                     case RT_POLL:
-                        if (!m_className.empty() && RA_UNKNOWN != m_action) {
+                        if (filterOK && RA_UNKNOWN != m_action) {
                             valid = true;
                         }
                         break;
                     case RT_MESSAGE:
-                        if (!m_className.empty() && RA_UNKNOWN != m_action && RM_UNKNOWN != m_message) {
+                        if (filterOK && RA_UNKNOWN != m_action && RM_UNKNOWN != m_message) {
                             valid = true;
                         }
                         break;
@@ -90,6 +93,7 @@ public:
             std::ostringstream buf;
             buf << "{ name: " << m_ruleName <<
                 ", className: " << m_className <<
+                ", moduleFilter: " << m_moduleFilter <<
                 ", type: " << s_ruleTypeTokenMap[m_type] <<
                 ", message: " << s_ruleMessageTokenMap[m_message] <<
                 ", action: " << s_ruleActionTokenMap[m_action];

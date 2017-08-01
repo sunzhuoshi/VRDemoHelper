@@ -26,6 +26,7 @@
 #include "VRDemoSteamVRConfigurator.h"
 #include "VRDemoTogglesWrapper.h"
 #include "VRDemoUpgradeChecker.h"
+#include "VRDemoAutoRunner.h"
 
 #define MAX_LOADSTRING 100
 #define SINGLE_INSTANCE_MUTEX_NAME "L4VRDemoHelperSingleInstanceMetux"
@@ -68,12 +69,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	LOG4CPLUS_INFO(logger, "VR Demo Helper is starting");
 
+#ifdef WITH_UPGRADE_CHECKER
     if (!VRDemoUpgradeChecker::getInstance().init()) {
         VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to get local version info,\ncheck the log for detail.");
         return FALSE;
     }
     VRDemoUpgradeChecker::getInstance().asynCheckUpgrade();
-    
+#endif // WITH_UPGRADE_CHECKER 
+
     if (!VRDemoConfigurator::getInstance().init(
             l4util::getFileFullPath(VRDemoConfigurator::FILE_SETTINGS)
         )
@@ -85,11 +88,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // TODO: Add hotkey configuration
     togglesWrapper.loadConfig();
 
+#ifdef WITH_STEAM_VR_CONFIGURATOR
     if (!VRDemoSteamVRConfigurator::getInstance().init()) {
         togglesWrapper.setImproveSteamVR(FALSE);
         LOG4CPLUS_INFO(logger, "Failed to init SteamVR configurator, check if SteamVR is installed");
         return FALSE;
     }
+#endif // WITH_STEAM_VR_CONFIGURATOR 
 
     coreWrapper = new(std::nothrow) VRDemoCoreWrapper();
     if (coreWrapper && !coreWrapper->init(togglesWrapper.getToggles())) {
@@ -109,6 +114,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     if (!InitInstance (hInstance, nCmdShow))
     {
+        LOG4CPLUS_ERROR(logger, "Failed to init instance");
         return FALSE;
     }
 
@@ -117,6 +123,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
     LOG4CPLUS_INFO(logger, "VR Demo Helper started");
+
+    VRDemoAutoRunner::getInstance().setup(VRDemoConfigurator::getInstance());
 
     while (GetMessage(&msg, nullptr, 0, 0))
     {

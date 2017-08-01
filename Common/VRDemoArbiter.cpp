@@ -40,7 +40,6 @@ bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
   
     if (!m_toggles->m_pause) {
         char className[MAX_PATH];
-        RuleAction action = RA_UNKNOWN;
         DWORD processId = 0;
 
         GetWindowThreadProcessId(wnd, &processId);
@@ -53,20 +52,24 @@ bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
 
             RuleItemMap::const_iterator it = m_ruleItemMap.begin();
             while (it != m_ruleItemMap.end()) {
-                BOOL okToGo = FALSE;
+                bool toggleOK = false;
+                bool moduleFilterOK = false;
+                bool classNameOK = false;
+                
                 if (l4util::keyStartWith(it->first, VRDemoArbiter::SECTION_PREFIX_MAXIMIZE_GAMES)) {
-                    okToGo = m_toggles->m_maximizeGames;
+                    toggleOK = m_toggles->m_maximizeGames;
                 }
                 else if (l4util::keyStartWith(it->first, VRDemoArbiter::SECTION_PREFIX_IMPROVE_STEAM_VR)) {
-                    okToGo = m_toggles->m_improveSteamVR;
+                    toggleOK = m_toggles->m_improveSteamVR;
                 }
                 else {
-                    okToGo = TRUE;
+                    toggleOK = true;
                 }
-                if (okToGo && type == it->second.m_type &&
-                    0 == it->second.m_className.compare(className) &&
-                    it->second.getMessage() == message) {
-                    action = it->second.m_action;
+
+                classNameOK = it->second.m_className.empty() ? true : 0 == it->second.m_className.compare(className);
+                moduleFilterOK = it->second.m_moduleFilter.empty() ? true : NULL != GetModuleHandleA(it->second.m_moduleFilter.c_str());
+                if (toggleOK && classNameOK && moduleFilterOK &&
+                    type == it->second.m_type && it->second.getMessage() == message) {
                     break;
                 }
                 ++it;
@@ -178,6 +181,9 @@ bool VRDemoArbiter::init(const Toggles& toggles)
                 for (auto propertyIt : sectionIt.second) {
                     if (l4util::matchKey(propertyIt.first, "ClassName")) {
                         ruleItem.m_className = propertyIt.second;
+                    }
+                    else if (l4util::matchKey(propertyIt.first, "ModuleFilter")) {
+                        ruleItem.m_moduleFilter = propertyIt.second;
                     }
                     else if (l4util::matchKey(propertyIt.first, "Type")) {
                         ruleItem.m_type = (RuleType)parseValue(propertyIt.second, VRDemoArbiter::s_ruleTypeTokenMap);
