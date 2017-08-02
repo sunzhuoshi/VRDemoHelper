@@ -98,7 +98,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // TODO: Add hotkey configuration
     togglesWrapper.loadConfig();
 
-#ifdef WITH_STEAM_VR_CONFIGURATOR
+#if WITH_STEAM_VR_CONFIGURATOR
     if (!VRDemoSteamVRConfigurator::getInstance().init()) {
         togglesWrapper.setImproveSteamVR(FALSE);
         LOG4CPLUS_INFO(logger, "Failed to init SteamVR configurator, check if SteamVR is installed");
@@ -254,7 +254,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_DESTROY:
+#if WITH_STEAM_VR_CONFIGURATOR
         VRDemoSteamVRConfigurator::getInstance().restoreSettings();
+#endif // WITH_STEAM_VR_CONFIGURATOR
         VRDemoNotificationManager::getInstance().deleteNotificationIcon();
         PostQuitMessage(0);
         break;
@@ -330,9 +332,13 @@ VOID ShowContextMenu(HWND hwnd, POINT pt)
             CheckMenuItem(hSubMenu, IDM_PAUSE, MF_BYCOMMAND | (togglesWrapper.getPause() ? MF_CHECKED : MF_UNCHECKED));
             CheckMenuItem(hSubMenu, IDM_MAXIMIZE_GAMES, MF_BYCOMMAND | (togglesWrapper.getMaximmizeGames() ? MF_CHECKED : MF_UNCHECKED));
 
+#if WITH_STEAM_VR_CONFIGURATOR
             bool steamVRConfiguratorActive = VRDemoSteamVRConfigurator::getInstance().isActive();
             CheckMenuItem(hSubMenu, IDM_IMPROVE_STEAM_VR, MF_BYCOMMAND | (togglesWrapper.getImproveSteamVR() ? MF_CHECKED : MF_UNCHECKED));
             EnableMenuItem(hSubMenu, IDM_IMPROVE_STEAM_VR, MF_BYCOMMAND | (steamVRConfiguratorActive? MF_ENABLED: MF_DISABLED));
+#else
+            EnableMenuItem(hSubMenu, IDM_IMPROVE_STEAM_VR, MF_BYCOMMAND | MF_DISABLED);
+#endif // WITH_STEAM_VR_CONFIGURATOR
 
             CheckMenuItem(hSubMenu, IDM_SHOW_FPS, MF_BYCOMMAND | (togglesWrapper.getShowFPS() ? MF_CHECKED : MF_UNCHECKED));
             TrackPopupMenuEx(hSubMenu, uFlags, pt.x, pt.y, hwnd, NULL);

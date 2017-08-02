@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#if WITH_STEAM_VR_CONFIGURATOR
 #include "VRDemoSteamVRConfigurator.h"
 
 #include <list>
@@ -326,3 +328,5 @@ void VRDemoSteamVRConfigurator::restartSteamVR(DWORD processID)
         CloseHandle(processHandle);
     }
 }
+
+#endif // WITH_STEAM_VR_CONFIGURATOR

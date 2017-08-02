@@ -64,7 +64,9 @@ public:
         bool newValue =  toggleValue(VRDemoArbiter::TI_IMPROVE_STEAM_VR);
 
         if (newValue) {
+#if WITH_STEAM_VR_CONFIGURATOR
             VRDemoSteamVRConfigurator::getInstance().applySettings();
+#endif // WITH_STEAM_VR_CONFIGURATOR
         }
         else {
             // We'll not restore settings file in running,

@@ -1,5 +1,6 @@
 #pragma once
 
+#if WITH_STEAM_VR_CONFIGURATOR 
 #include <map>
 #include <string>
 
@@ -46,4 +47,4 @@ private:
     PROPERTY_MAP m_targetSettings;
     PROPERTY_MAP m_oldSettings;
 };
-
+#endif // WITH_STEAM_VR_CONFIGURATOR
