@@ -76,38 +76,40 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$(ProjectName)_x86</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <TargetName>$(ProjectName)_x64</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)_x86</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)_x64</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);WITH_UPGRADE_CHECKER=$(WITH_UPGRADE_CHECKER);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Rpcrt4.lib;log4cplusD_x86.lib;libcurl_x86.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rpcrt4.lib;log4cplusD_x86.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -123,8 +125,10 @@ if $(WITH_FPS) NEQ 0 (
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
 
-echo copying VRDemoHelper.dat...
-copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
+if $(WITH_UPGRADE_CHECKER) NEQ 0 (
+  echo copying VRDemoHelper.dat...
+  copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
+)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -132,7 +136,7 @@ copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);WITH_UPGRADE_CHECKER=$(WITH_UPGRADE_CHECKER);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -141,7 +145,7 @@ copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Rpcrt4.lib;log4cplusD_x64.lib;libcurl_x64.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rpcrt4.lib;log4cplusD_x64.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
     </Link>
     <ResourceCompile>
@@ -158,8 +162,10 @@ if $(WITH_FPS) NEQ 0 (
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
 
-echo copying VRDemoHelper.dat...
-copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
+if $(WITH_UPGRADE_CHECKER) NEQ 0 (
+  echo copying VRDemoHelper.dat...
+  copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
+)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -173,7 +179,7 @@ copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);WITH_UPGRADE_CHECKER=$(WITH_UPGRADE_CHECKER);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -182,7 +188,7 @@ copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Rpcrt4.lib;log4cplus_x86.lib;libcurl_x86.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rpcrt4.lib;log4cplus_x86.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
@@ -201,9 +207,10 @@ if $(WITH_FPS) NEQ 0 (
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
 
-echo copying VRDemoHelper.dat...
-copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
-
+if $(WITH_UPGRADE_CHECKER) NEQ 0 (
+  echo copying VRDemoHelper.dat...
+  copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
+)
 
 
 cd $(TargetDir)
@@ -231,7 +238,7 @@ del /q *lastcodeanalysissucceeded
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);WITH_UPGRADE_CHECKER=$(WITH_UPGRADE_CHECKER);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -241,7 +248,7 @@ del /q *lastcodeanalysissucceeded
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Rpcrt4.lib;log4cplus_x64.lib;libcurl_x64.lib;ws2_32.lib;Crypt32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rpcrt4.lib;log4cplus_x64.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -259,8 +266,10 @@ if $(WITH_FPS) NEQ 0 (
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
 
-echo copying VRDemoHelper.dat...
-copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
+if $(WITH_UPGRADE_CHECKER) NEQ 0 (
+  echo copying VRDemoHelper.dat...
+  copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
+)
 
 cd $(TargetDir)
 

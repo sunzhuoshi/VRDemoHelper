@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#if WITH_UPGRADE_CHECKER
 #include "VRDemoUpgradeChecker.h"
 
 #include <fstream>
@@ -111,3 +113,4 @@ void VRDemoUpgradeChecker::processLatestVersionInfo(const std::string& jsonStrin
     }
 }
 
+#endif // WITH_UPGRADE_CHECKER

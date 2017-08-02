@@ -1,4 +1,5 @@
 #pragma once
+#if WITH_UPGRADE_CHECKER
 #include "util\L4Singleton.hpp"
 
 #include "util\l4util.h"
@@ -74,3 +75,4 @@ private:
     static const std::string PROPERTY_DOWNLOAD_PAGE_URL;
 };
 
+#endif // WITH_UPGRADE_CHECKER 

@@ -3,12 +3,16 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <WITH_FPS>0</WITH_FPS>
+    <WITH_UPGRADE_CHECKER>0</WITH_UPGRADE_CHECKER>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
   <ItemGroup>
     <BuildMacro Include="WITH_FPS">
       <Value>$(WITH_FPS)</Value>
+    </BuildMacro>
+    <BuildMacro Include="WITH_UPGRADE_CHECKER">
+      <Value>$(WITH_UPGRADE_CHECKER)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

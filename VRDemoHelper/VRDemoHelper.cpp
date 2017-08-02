@@ -3,6 +3,16 @@
 // NOTE: DO NOT add anything except comments before "stdafx.h", it will be omitted without any warning...
 #include "stdafx.h"
 
+#if WITH_UPGRADE_CHECKER
+#ifdef _WIN64
+#pragma comment(lib, "libcurl_x64.lib")
+#else
+#pragma comment(lib, "libcurl_x86.lib")
+#endif // _WIN64
+#pragma comment(lib, "Crypt32.lib")
+#pragma comment(lib, "wldap32.lib")
+#endif // WITH_UPGRADE_CHECKER
+
 #include "VRDemoHelper.h"
 
 #include <sstream>
@@ -69,7 +79,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	LOG4CPLUS_INFO(logger, "VR Demo Helper is starting");
 
-#ifdef WITH_UPGRADE_CHECKER
+#if WITH_UPGRADE_CHECKER
     if (!VRDemoUpgradeChecker::getInstance().init()) {
         VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to get local version info,\ncheck the log for detail.");
         return FALSE;
