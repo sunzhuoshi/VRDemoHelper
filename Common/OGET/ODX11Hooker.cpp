@@ -8,7 +8,6 @@
 #include "FW1FontWrapper\FW1FontWrapper.h"
 #include "VRDemoArbiter.h"
 #include "OGET\OBenchmarker.h"
-#include "VRDemoConfig.h"
 
 // TODO: remove dependency to VRDemoArbiter
 extern VRDemoArbiter::Toggles g_toggles;
