@@ -59,15 +59,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Common\VRDemo.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Common\VRDemo.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Common\VRDemo.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Common\VRDemo.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -96,7 +100,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -111,8 +115,10 @@
       <Command>echo copying log4cplus ...
 copy /Y $(ProjectDir)..\3rdParty\log4cplus\bin\log4cplusD_x86.dll $(TargetDir)
 
-echo copying FW1FontWrapper dll...
-copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x86.dll $(TargetDir)
+if $(WITH_FPS) NEQ 0 (
+  echo copying FW1FontWrapper dll...
+  copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x86.dll $(TargetDir)
+)
 
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
@@ -126,7 +132,7 @@ copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -145,15 +151,20 @@ copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
       <Command>echo copying log4cplus ...
 copy /Y $(ProjectDir)..\3rdParty\log4cplus\bin\log4cplusD_x64.dll $(TargetDir)
 
-echo copying FW1FontWrapper dll...
-copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x64.dll $(TargetDir)
-
+if $(WITH_FPS) NEQ 0 (
+  echo copying FW1FontWrapper dll...
+  copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x64.dll $(TargetDir)
+)
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
 
 echo copying VRDemoHelper.dat...
 copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -162,7 +173,7 @@ copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -182,9 +193,11 @@ copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)</Command>
       <Command>echo copying log4cplus ...
 copy /Y $(ProjectDir)..\3rdParty\log4cplus\bin\log4cplus_x86.dll $(TargetDir)
 
-echo copying FW1FontWrapper dll...
-copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x86.dll $(TargetDir)
-
+if $(WITH_FPS) NEQ 0 (
+  echo copying FW1FontWrapper dll...
+  copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x86.dll $(TargetDir)
+)
+ 
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)
 
@@ -218,7 +231,7 @@ del /q *lastcodeanalysissucceeded
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -238,8 +251,10 @@ del /q *lastcodeanalysissucceeded
       <Command>echo copying log4cplus ...
 copy /Y $(ProjectDir)..\3rdParty\log4cplus\bin\log4cplus_x64.dll $(TargetDir)
 
-echo copying FW1FontWrapper dll...
-copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x64.dll $(TargetDir)
+if $(WITH_FPS) NEQ 0 (
+  echo copying FW1FontWrapper dll...
+  copy /Y $(ProjectDir)..\3rdParty\FW1FontWrapper\FW1FontWrapper_x64.dll $(TargetDir)
+)
 
 echo copying settings...
 copy /Y $(ProjectDir)settings.ini $(TargetDir)

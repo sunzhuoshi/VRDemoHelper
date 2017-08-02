@@ -1,7 +1,19 @@
 ﻿// VRDemoCore.cpp : 定义 DLL 应用程序的导出函数。
 //
-
 #include "stdafx.h"
+
+#if WITH_FPS
+
+#ifdef _WIN64
+#pragma comment(lib, "FW1FontWrapper_x64.lib")
+#pragma comment(lib, "libMinHook.x64.lib")
+#else
+#pragma comment(lib, "FW1FontWrapper_x86.lib")
+#pragma comment(lib, "libMinHook.x86.lib")
+#endif // _WIN64
+
+#endif // WITH_FPS
+
 #include "VRDemoCore.h"
 
 #include "util/l4util.h"

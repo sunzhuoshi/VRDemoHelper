@@ -78,6 +78,9 @@
     <ClInclude Include="..\3rdParty\jsoncpp\json\json-forwards.h">
       <Filter>jsoncpp\json</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\VRDemoConfig.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

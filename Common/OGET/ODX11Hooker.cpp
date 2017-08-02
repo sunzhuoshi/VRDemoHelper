@@ -8,10 +8,12 @@
 #include "FW1FontWrapper\FW1FontWrapper.h"
 #include "VRDemoArbiter.h"
 #include "OGET\OBenchmarker.h"
+#include "VRDemoConfig.h"
 
 // TODO: remove dependency to VRDemoArbiter
 extern VRDemoArbiter::Toggles g_toggles;
 
+#if WITH_FPS
 typedef HRESULT(__stdcall *D3D11SwapChainPresentFunc) (IDXGISwapChain*, UINT, UINT);
 typedef HRESULT(__stdcall *D3D11SwapChainResizeBuffersFunc) (IDXGISwapChain*, UINT, UINT, UINT, DXGI_FORMAT, UINT);
 typedef HRESULT(__stdcall *D3D11SwapChainSetFullscreenStateFunc) (IDXGISwapChain*, BOOL, IDXGIOutput *);
@@ -120,6 +122,8 @@ HRESULT DetourD3D11SetFullscreenState(IDXGISwapChain* swapChain, BOOL fullscreen
     return ret;
 }
 
+#endif // WITH_FPS
+
 ODX11Hooker::ODX11Hooker()
 {
 }
@@ -127,14 +131,17 @@ ODX11Hooker::ODX11Hooker()
 
 ODX11Hooker::~ODX11Hooker()
 {
+#if WITH_FPS
     if (g_fontWrapper) {
         g_fontWrapper->Release();
         g_fontWrapper = nullptr;
     }
+#endif // WITH_FPS
 }
 
 void ODX11Hooker::hookWithWindow(HWND wnd)
 {
+#if WITH_FPS
     IDXGISwapChain* swapChain = NULL;
     ID3D11Device *device = NULL;
     ID3D11DeviceContext* context = NULL;
@@ -176,13 +183,16 @@ void ODX11Hooker::hookWithWindow(HWND wnd)
         context->Release();
         swapChain->Release();
     }
+#endif
 }
 
 void ODX11Hooker::unhook()
 {
+#if WITH_FPS
     // TODO: check why only Unity games crach(DX samples and WoW don't crash) without unhook
     for (auto& it : m_hookTargets) {
         OInlineHookUtil::unhook(it);
     }
     m_hookTargets.clear();
+#endif
 }
