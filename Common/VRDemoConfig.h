@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef WITH_UPGRADE_CHECKER
+#ifndef WITH_UPGRADE_CHECKER  // SHOULD be defined in property manager
 #define WITH_UPGRADE_CHECKER 0
 #endif
 
