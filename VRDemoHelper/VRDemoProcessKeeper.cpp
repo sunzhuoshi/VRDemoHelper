@@ -46,6 +46,7 @@ void VRDemoProcessKeeper::uninit()
     }
 #else
 #endif // MODE_PARENT
+    m_runFlag = false;
     m_thread.join();
 }
 
@@ -85,22 +86,25 @@ bool VRDemoProcessKeeper::createChildProcess()
 
 void VRDemoProcessKeeper::run()
 {
+    // TODO: use signal to speed up quit
+    while (m_runFlag) {
 #ifdef MODE_PARENT
-    if (!ifProcessRunning(m_childProcessID)) {
-        LOG4CPLUS_ERROR(m_logger, "Child process is not running, maybe crashed");
-        CloseHandle(m_childProcessHandle);
-        if (!createChildProcess()) {
-            LOG4CPLUS_ERROR(m_logger, "Exit parent process");
+        if (!ifProcessRunning(m_childProcessID)) {
+            LOG4CPLUS_ERROR(m_logger, "Child process is not running, maybe crashed");
+            CloseHandle(m_childProcessHandle);
+            if (!createChildProcess()) {
+                LOG4CPLUS_ERROR(m_logger, "Exit parent process");
+                ExitProcess(-1);
+            }
+        }
+#else
+        if (!ifProcessRunning(m_parentProcessID)) {
+            LOG4CPLUS_ERROR(m_logger, "Parent process is not running, exit child process");
             ExitProcess(-1);
         }
-    }
-#else
-    if (!ifProcessRunning(m_parentProcessID)) {
-        LOG4CPLUS_ERROR(m_logger, "Parent process is not running, exit child process");
-        ExitProcess(-1);
-    }
 #endif
-    Sleep(VRDemoProcessKeeper::CHECK_INTERVAL);
+        Sleep(VRDemoProcessKeeper::CHECK_INTERVAL);
+    }
 }
 
 bool VRDemoProcessKeeper::ifProcessRunning(DWORD processID)

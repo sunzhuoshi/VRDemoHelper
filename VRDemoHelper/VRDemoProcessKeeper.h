@@ -7,7 +7,7 @@
 class VRDemoProcessKeeper : public L4Singleton<VRDemoProcessKeeper>
 {
 public:
-    static const int CHECK_INTERVAL = 100; // ms
+    static const int CHECK_INTERVAL = 200; // ms
     VRDemoProcessKeeper();
     ~VRDemoProcessKeeper();
     bool init(DWORD parentProcessID);
@@ -19,6 +19,7 @@ private:
     bool ifProcessRunning(DWORD processID);
     void findChildProcessMainWindow();
 private:
+    bool m_runFlag = true;
     std::thread m_thread;
     DWORD m_parentProcessID;
     DWORD m_childProcessID;
