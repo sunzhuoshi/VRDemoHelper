@@ -55,6 +55,7 @@ VRDemoTogglesWrapper togglesWrapper;
 VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper;
 bool backgroundMode = false;
 DWORD parentProcessID = 0;
+HWND mainWindow = NULL;
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -145,8 +146,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    // process keeper(32bit parent, 64bit child) only needed on win64
-    if (l4util::isWin64()) {
+#ifdef _WIN64
+// child process, only enable if in background mode
+    bool keeperNeeded = backgroundMode;
+#else 
+// parent process, 
+    bool keeperNeeded = l4util::isWin64() && !backgroundMode;
+#endif 
+    if (keeperNeeded) {
         if (!VRDemoProcessKeeper::getInstance().init(parentProcessID)) {
             return FALSE;
         }
@@ -175,7 +182,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     poller->stop();
 #endif // _WIN64
 
-    if (l4util::isWin64()) {
+    if (keeperNeeded) {
         VRDemoProcessKeeper::getInstance().uninit();
     }
 
@@ -228,6 +235,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
+
+   mainWindow = hWnd;
 
    return TRUE;
 }
@@ -490,3 +499,7 @@ void ParseCommandLineArguments()
     }
 }
 
+void AyncCloseApplication()
+{
+    PostMessage(mainWindow, WM_CLOSE, 0, 0);
+}

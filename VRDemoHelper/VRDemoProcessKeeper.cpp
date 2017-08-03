@@ -26,6 +26,7 @@ VRDemoProcessKeeper::~VRDemoProcessKeeper()
 bool VRDemoProcessKeeper::init(DWORD parentProcessID)
 {
     m_logger = log4cplus::Logger::getRoot();
+    LOG4CPLUS_DEBUG(m_logger, "Initializing VRDemoProcessKeeper...");
 #ifdef MODE_PARENT
     if (!createChildProcess()) {
         return false;
@@ -39,6 +40,7 @@ bool VRDemoProcessKeeper::init(DWORD parentProcessID)
 
 void VRDemoProcessKeeper::uninit()
 {
+    LOG4CPLUS_DEBUG(m_logger, "Uninitializing VRDemoProcessKeeper...");
 #ifdef MODE_PARENT
     if (m_childProcessHandle) {
         TerminateProcess(m_childProcessHandle, 0);
@@ -94,13 +96,13 @@ void VRDemoProcessKeeper::run()
             CloseHandle(m_childProcessHandle);
             if (!createChildProcess()) {
                 LOG4CPLUS_ERROR(m_logger, "Exit parent process");
-                ExitProcess(-1);
+                AyncCloseApplication();
             }
         }
 #else
         if (!ifProcessRunning(m_parentProcessID)) {
             LOG4CPLUS_ERROR(m_logger, "Parent process is not running, exit child process");
-            ExitProcess(-1);
+            AyncCloseApplication();
         }
 #endif
         Sleep(VRDemoProcessKeeper::CHECK_INTERVAL);
@@ -109,10 +111,11 @@ void VRDemoProcessKeeper::run()
 
 bool VRDemoProcessKeeper::ifProcessRunning(DWORD processID)
 {
-    HANDLE processHandle = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, processID);
+    HANDLE processHandle = OpenProcess(SYNCHRONIZE, FALSE, processID);
     if (processHandle) {
+        DWORD ret = WaitForSingleObject(processHandle, 0);
         CloseHandle(processHandle);
-        return true;
+        return ret == WAIT_TIMEOUT;
     }
     else {
         return false;

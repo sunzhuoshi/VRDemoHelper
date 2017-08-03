@@ -11,3 +11,5 @@ UINT const WMAPP_NOTIFYCALLBACK = WM_APP + 1;
 #define HELPER_WINDOW_TITLE_CHILD_PROCESS_POSTFIX "(c)"  
 
 #define HELPER_MAX_LOADSTRING 100
+
+void AyncCloseApplication();
