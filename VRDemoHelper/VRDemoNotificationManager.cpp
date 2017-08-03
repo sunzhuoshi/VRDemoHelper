@@ -11,11 +11,6 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "comctl32.lib")
 
-
-// Use a guid to uniquely identify our icon
-class __declspec(uuid("BC719626-7CD0-4FF2-B9B4-6D821515C9E8")) HelperIcon;
-
-
 VRDemoNotificationManager::VRDemoNotificationManager()
 {
 }
@@ -39,7 +34,7 @@ void VRDemoNotificationManager::init(HINSTANCE instance, HWND wnd)
     VRDemoConfigurator::getInstance().findValue(VRDemoConfigurator::SECTION_HELPER, "NotificationIconGUID", notificationIconGUID);
     // TODO: write a simple GUIDFromString function to replace UuidFromString(Rpcrt4.dll depended)
     if (notificationIconGUID.empty() || RPC_S_OK != UuidFromStringA((unsigned char *)notificationIconGUID.c_str(), &m_notificationIconGUID)) {
-        m_notificationIconGUID = __uuidof(HelperIcon);
+        UuidCreateSequential(&m_notificationIconGUID);
     }
 }
 
