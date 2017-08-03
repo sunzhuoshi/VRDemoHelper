@@ -26,7 +26,7 @@ VRDemoProcessKeeper::~VRDemoProcessKeeper()
 bool VRDemoProcessKeeper::init(DWORD parentProcessID)
 {
     m_logger = log4cplus::Logger::getRoot();
-    LOG4CPLUS_DEBUG(m_logger, "Initializing VRDemoProcessKeeper...");
+    LOG4CPLUS_DEBUG(m_logger, "Initializing VR Demo Process Keeper...");
 #ifdef MODE_PARENT
     if (!createChildProcess()) {
         return false;
@@ -40,7 +40,7 @@ bool VRDemoProcessKeeper::init(DWORD parentProcessID)
 
 void VRDemoProcessKeeper::uninit()
 {
-    LOG4CPLUS_DEBUG(m_logger, "Uninitializing VRDemoProcessKeeper...");
+    LOG4CPLUS_DEBUG(m_logger, "Uninitializing VR Demo Process Keeper...");
 #ifdef MODE_PARENT
     if (m_childProcessHandle) {
         TerminateProcess(m_childProcessHandle, 0);
