@@ -7,6 +7,8 @@
 #include "VRDemoConfigurator.h"
 #include "VRDemoHelper.h"
 
+extern bool backgroundMode;
+
 // TODO: refactor it via a CPP file
 class VRDemoTogglesWrapper {
 public:
@@ -52,10 +54,12 @@ public:
         return newValue;
     }
     inline void togglePause() {
-        // quick hack here, no event listener used
-        VRDemoNotificationManager::getInstance().modifyNotificationIcon(
-            toggleValue(VRDemoArbiter::TI_PAUSE)
-        );
+        if (!backgroundMode) {
+            // quick hack here, no event listener used
+            VRDemoNotificationManager::getInstance().modifyNotificationIcon(
+                toggleValue(VRDemoArbiter::TI_PAUSE)
+            );
+        }
     }
     inline void toggleMaximizeGamesAndSave() {
          saveValue("MaximizeGames", toggleValue(VRDemoArbiter::TI_MAXIMIZE_GAMES));
@@ -100,7 +104,9 @@ public:
     }
 private:
     inline void saveValue(const std::string& key, bool value) {
-        VRDemoConfigurator::getInstance().saveValue(HELPER_SECTION_NAME, key, value);
+        if (!backgroundMode) {
+            VRDemoConfigurator::getInstance().saveValue(HELPER_SECTION_NAME, key, value);
+        }
     }
     VRDemoArbiter::Toggles m_toggles;
 };

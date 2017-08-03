@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#ifndef _WIN64
+
 #include "VRDemoWindowPoller.h"
 
 #include <log4cplus\log4cplus.h>
@@ -71,3 +74,4 @@ BOOL VRDemoWindowPoller::realEnumChildProc(HWND wnd)
     return cont;
 }
 
+#endif // _WIN64

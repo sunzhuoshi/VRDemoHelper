@@ -66,4 +66,5 @@ namespace l4util {
     std::string getProcessNameWithWindow(HWND wnd);
     std::string getProcessNameWithProcessId(DWORD processId);
     std::string loadString(UINT id);
+    bool isWin64();
 }

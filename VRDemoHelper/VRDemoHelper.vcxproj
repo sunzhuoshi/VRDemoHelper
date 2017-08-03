@@ -309,10 +309,13 @@ del /q *lastcodeanalysissucceeded
     <ClInclude Include="VRDemoHotKeyManager.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VRDemoNotificationManager.h" />
+    <ClInclude Include="VRDemoProcessKeeper.h" />
     <ClInclude Include="VRDemoSteamVRConfigurator.h" />
     <ClInclude Include="VRDemoTogglesWrapper.h" />
     <ClInclude Include="VRDemoUpgradeChecker.h" />
     <ClInclude Include="VRDemoWindowPoller.h" />
+    <ClInclude Include="XGetopt\argcargv.h" />
+    <ClInclude Include="XGetopt\XGetopt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rdParty\jsoncpp\jsoncpp.cpp" />
@@ -331,9 +334,12 @@ del /q *lastcodeanalysissucceeded
     <ClCompile Include="VRDemoHelper.cpp" />
     <ClCompile Include="VRDemoHotKeyManager.cpp" />
     <ClCompile Include="VRDemoNotificationManager.cpp" />
+    <ClCompile Include="VRDemoProcessKeeper.cpp" />
     <ClCompile Include="VRDemoSteamVRConfigurator.cpp" />
     <ClCompile Include="VRDemoUpgradeChecker.cpp" />
     <ClCompile Include="VRDemoWindowPoller.cpp" />
+    <ClCompile Include="XGetopt\argcargv.cpp" />
+    <ClCompile Include="XGetopt\XGetopt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VRDemoHelper.rc" />

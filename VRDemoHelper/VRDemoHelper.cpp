@@ -37,16 +37,24 @@
 #include "VRDemoTogglesWrapper.h"
 #include "VRDemoUpgradeChecker.h"
 #include "VRDemoAutoRunner.h"
+#include "VRDemoProcessKeeper.h"
+#include "XGetopt\argcargv.h"
+#include "XGetopt\XGetopt.h"
 
-#define MAX_LOADSTRING 100
-#define SINGLE_INSTANCE_MUTEX_NAME "L4VRDemoHelperSingleInstanceMetux"
+#ifdef _WIN64
+#define SINGLE_INSTANCE_MUTEX_NAME "L4VRDemoHelperSingleInstanceMetux_x64"
+#else
+#define SINGLE_INSTANCE_MUTEX_NAME "L4VRDemoHelperSingleInstanceMetux_x86"
+#endif // _WIN64
  
 HINSTANCE hInst;                                
-CHAR szTitle[MAX_LOADSTRING];                
-CHAR szWindowClass[MAX_LOADSTRING];           
+char szTitle[HELPER_MAX_LOADSTRING];                
+char szWindowClass[HELPER_MAX_LOADSTRING];
 
 VRDemoTogglesWrapper togglesWrapper;
 VRDemoCoreWrapper::VRDemoCoreWrapperPtr coreWrapper;
+bool backgroundMode = false;
+DWORD parentProcessID = 0;
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -56,6 +64,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 VOID ShowContextMenu(HWND hwnd, POINT pt);
 BOOL IsAbleToRun();
 VOID InitLogConfiguration();
+void ParseCommandLineArguments();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -72,12 +81,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     log4cplus::Logger logger = log4cplus::Logger::getRoot();
 
+    LOG4CPLUS_INFO(logger, "VR Demo Helper is starting");
+
 	if (!IsAbleToRun())
 	{
 		return FALSE;
 	}
 
-	LOG4CPLUS_INFO(logger, "VR Demo Helper is starting");
+    ParseCommandLineArguments();
 
 #if WITH_UPGRADE_CHECKER
     if (!VRDemoUpgradeChecker::getInstance().init()) {
@@ -112,14 +123,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+    // create window poller only in x86 version
+#ifndef _WIN64
     VRDemoWindowPoller::VRDemoWindowPollerPtr poller(new VRDemoWindowPoller());
     if (!poller->init(togglesWrapper.getToggles())) {
         LOG4CPLUS_ERROR(logger, "Failed to init window poller");
         return FALSE;
     }
+#endif // _WIN64
 
-    LoadStringA(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringA(hInstance, IDC_VRDEMOHELPER, szWindowClass, MAX_LOADSTRING);
+    LoadStringA(hInstance, IDS_APP_TITLE, szTitle, sizeof(szTitle));
+#ifdef _WIN64
+    strcat_s(szTitle, sizeof(szTitle), HELPER_WINDOW_TITLE_CHILD_PROCESS_POSTFIX);
+#endif
+    LoadStringA(hInstance, IDC_VRDEMOHELPER, szWindowClass, sizeof(szWindowClass));
     MyRegisterClass(hInstance);
 
     if (!InitInstance (hInstance, nCmdShow))
@@ -128,14 +145,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_VRDEMOHELPER));
-
-    MSG msg;
+    // process keeper(32bit parent, 64bit child) only needed on win64
+    if (l4util::isWin64()) {
+        if (!VRDemoProcessKeeper::getInstance().init(parentProcessID)) {
+            return FALSE;
+        }
+    }
 
     LOG4CPLUS_INFO(logger, "VR Demo Helper started");
 
+    // only set x86 version to auto run
+#ifndef _WIN64
     VRDemoAutoRunner::getInstance().setup(VRDemoConfigurator::getInstance());
+#endif // _WIN64
 
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_VRDEMOHELPER));
+    MSG msg;
     while (GetMessage(&msg, nullptr, 0, 0))
     {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
@@ -145,8 +170,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
+#ifndef _WIN64
     // stop muse be called, or poller thread will access data freed
     poller->stop();
+#endif // _WIN64
+
+    if (l4util::isWin64()) {
+        VRDemoProcessKeeper::getInstance().uninit();
+    }
 
 	LOG4CPLUS_INFO(logger, "VR Demo Helper exited");
     return (int) msg.wParam;
@@ -206,22 +237,28 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    log4cplus::Logger logger = log4cplus::Logger::getRoot();
+
     switch (message)
     {
 	case WM_CREATE:
 		{
-            VRDemoNotificationManager::getInstance().init(hInst, hWnd);
-            VRDemoNotificationManager::getInstance().addNotificationIcon();
-            VRDemoNotificationManager::getInstance().addNotificationInfo(IDS_NOTIFICATION_STARTED);
+            if (!backgroundMode) {
+                VRDemoNotificationManager::getInstance().init(hInst, hWnd);
+                VRDemoNotificationManager::getInstance().addNotificationIcon();
+                VRDemoNotificationManager::getInstance().addNotificationInfo(IDS_NOTIFICATION_STARTED);
+            }
         }
 		break;
     case WM_COMMAND:
         {
+            bool forwardToChild = true;
             int wmId = LOWORD(wParam);
             // 分析菜单选择: 
             switch (wmId)
             {
             case IDM_ABOUT:
+                forwardToChild = false;
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
             case IDM_EXIT:
@@ -242,8 +279,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 togglesWrapper.toggleImproveSteamVRAndSave();
                 break;
             default:
+                forwardToChild = false;
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
+#ifndef _WIN64
+            if (forwardToChild) {
+                VRDemoProcessKeeper::getInstance().sendMessageToChildProcess(message, wParam, lParam);
+            }
+#endif
+            LOG4CPLUS_DEBUG(logger, "message: " << message << ", wParam: " << wParam << ", lParam: " << lParam);
         }
         break;
     case WM_PAINT:
@@ -257,7 +301,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 #if WITH_STEAM_VR_CONFIGURATOR
         VRDemoSteamVRConfigurator::getInstance().restoreSettings();
 #endif // WITH_STEAM_VR_CONFIGURATOR
-        VRDemoNotificationManager::getInstance().deleteNotificationIcon();
+        if (!backgroundMode) {
+            VRDemoNotificationManager::getInstance().deleteNotificationIcon();
+        }
         PostQuitMessage(0);
         break;
 	case WMAPP_NOTIFYCALLBACK:
@@ -394,11 +440,53 @@ VOID InitLogConfiguration()
     defaultProps << "log4cplus.appender.FILE = log4cplus::RollingFileAppender" << std::endl;
     defaultProps << "log4cplus.appender.FILE.MaxFileSize = 100MB" << std::endl;
     defaultProps << "log4cplus.appender.FILE.MaxBackupIndex = 10" << std::endl;
-    defaultProps << "log4cplus.appender.FILE.File = helper.log" << std::endl;
+    defaultProps << "log4cplus.appender.FILE.File = ";
+#ifdef _WIN64
+    defaultProps << "helper_x64.log";
+#else
+    defaultProps << "helper_x86.log";
+#endif // _WIN64
+    defaultProps << std::endl;
     defaultProps << "log4cplus.appender.FILE.layout = log4cplus::PatternLayout" << std::endl;
     defaultProps << "log4cplus.appender.FILE.layout.ConversionPattern = [%-5p %d{%y-%m-%d %H:%M:%S}] %m%n%n" << std::endl;
 
     log4cplus::PropertyConfigurator defaultConfigutator(std::istringstream(defaultProps.str()));
     defaultConfigutator.configure();
+}
+
+void ParseCommandLineArguments()
+{
+    log4cplus::Logger logger = log4cplus::Logger::getRoot();
+
+    char *cmdLine = GetCommandLineA();
+
+    // eat the first token(exe path)
+    int count = 0;
+    while (cmdLine) {
+        if ('"' == *cmdLine) {
+            count++;
+        }
+        cmdLine++;
+        if (2 == count) {
+            break;
+        }
+    }
+
+    char c;
+    while ((c = getopt(_ConvertCommandLineToArgcArgv(cmdLine), _ppszArgv, "bp:")) != EOF) {
+        switch (c)
+        {
+        case 'b':
+            LOG4CPLUS_DEBUG(logger, "option b used");
+            backgroundMode = true;
+            break;
+        case 'p':
+            LOG4CPLUS_DEBUG(logger, "option p: " << optarg);
+            parentProcessID = atol(optarg);
+            break;
+        default:
+            break;
+        }
+    }
 }
 

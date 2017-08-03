@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef _WIN64
+
 #include "util\l4Singleton.hpp"
 
 class VRDemoConfigurator;
@@ -12,3 +14,4 @@ public:
     void setup(VRDemoConfigurator& configurator);
 };
 
+#endif // _WIN64

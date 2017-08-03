@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _WIN64
+
 #include <log4cplus\thread\threads.h>
 
 #include "VRDemoEventDispatcher.h"
@@ -26,3 +28,4 @@ private:
     log4cplus::thread::ManualResetEvent m_initEvent;
 };
 
+#endif // _WIN64

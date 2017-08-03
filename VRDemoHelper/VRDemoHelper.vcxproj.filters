@@ -25,6 +25,9 @@
     <Filter Include="Common\util">
       <UniqueIdentifier>{5364f9a1-3bc2-4b27-bfcb-7cf35176a679}</UniqueIdentifier>
     </Filter>
+    <Filter Include="XGetopt">
+      <UniqueIdentifier>{d210f255-49ab-465b-87e8-94989d536163}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -93,6 +96,15 @@
     <ClInclude Include="VRDemoAutoRunner.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="VRDemoProcessKeeper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XGetopt\argcargv.h">
+      <Filter>XGetopt</Filter>
+    </ClInclude>
+    <ClInclude Include="XGetopt\XGetopt.h">
+      <Filter>XGetopt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -136,6 +148,15 @@
     </ClCompile>
     <ClCompile Include="VRDemoAutoRunner.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="VRDemoProcessKeeper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XGetopt\argcargv.cpp">
+      <Filter>XGetopt</Filter>
+    </ClCompile>
+    <ClCompile Include="XGetopt\XGetopt.cpp">
+      <Filter>XGetopt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

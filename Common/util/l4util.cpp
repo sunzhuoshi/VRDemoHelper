@@ -92,4 +92,15 @@ namespace l4util {
 		return result;
 	}
 
+    bool isWin64()
+    {
+#if defined(_WIN64)
+        return true;  // 64-bit programs run only on Win64
+#else
+        // 32-bit programs run on both 32-bit and 64-bit Windows
+        // so must sniff
+        BOOL f64 = FALSE;
+        return IsWow64Process(GetCurrentProcess(), &f64) && f64;
+#endif
+    }
 }

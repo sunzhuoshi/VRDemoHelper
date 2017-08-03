@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#ifndef _WIN64
+
 #include "VRDemoAutoRunner.h"
 
 #include "VRDemoConfigurator.h"
@@ -45,3 +48,5 @@ void VRDemoAutoRunner::setup(VRDemoConfigurator& configurator) {
         }
     }
 }
+
+#endif // _WIN64
