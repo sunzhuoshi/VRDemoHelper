@@ -96,7 +96,8 @@ public:
                 ", moduleFilter: " << m_moduleFilter <<
                 ", type: " << s_ruleTypeTokenMap[m_type] <<
                 ", message: " << s_ruleMessageTokenMap[m_message] <<
-                ", action: " << s_ruleActionTokenMap[m_action];
+                ", action: " << s_ruleActionTokenMap[m_action] <<
+                " }";
             return buf.str();
         };
 	};
