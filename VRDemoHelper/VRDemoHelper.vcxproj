@@ -130,6 +130,10 @@ if $(WITH_UPGRADE_CHECKER) NEQ 0 (
   copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
 )</Command>
     </PostBuildEvent>
+    <Manifest>
+      <AdditionalManifestFiles>
+      </AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -190,6 +194,7 @@ if $(WITH_UPGRADE_CHECKER) NEQ 0 (
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Rpcrt4.lib;log4cplus_x86.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -230,6 +235,10 @@ del /q *.log
 del /q *lastcodeanalysissucceeded
 </Command>
     </PostBuildEvent>
+    <Manifest>
+      <AdditionalManifestFiles>
+      </AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -249,6 +258,7 @@ del /q *lastcodeanalysissucceeded
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\3rdParty\log4cplus\bin\;..\3rdParty\curl\bin</AdditionalLibraryDirectories>
       <AdditionalDependencies>Rpcrt4.lib;log4cplus_x64.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <PreBuildEvent>
       <Command>
