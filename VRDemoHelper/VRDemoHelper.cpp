@@ -120,6 +120,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     coreWrapper = new(std::nothrow) VRDemoCoreWrapper();
     if (coreWrapper && !coreWrapper->init(togglesWrapper.getToggles())) {
+        LOG4CPLUS_ERROR(logger, "Failed to init core module, exit");
         VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
         return FALSE;
     }
@@ -128,7 +129,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #ifndef _WIN64
     VRDemoWindowPoller::VRDemoWindowPollerPtr poller(new VRDemoWindowPoller());
     if (!poller->init(togglesWrapper.getToggles())) {
-        LOG4CPLUS_ERROR(logger, "Failed to init window poller");
+        LOG4CPLUS_ERROR(logger, "Failed to init window poller, exit");
+        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init window poller module,\ncheck the log for detail.");
         return FALSE;
     }
 #endif // _WIN64
@@ -142,7 +144,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     if (!InitInstance (hInstance, nCmdShow))
     {
-        LOG4CPLUS_ERROR(logger, "Failed to init instance");
+        LOG4CPLUS_ERROR(logger, "Failed to init instance, exit");
+        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init instance,\ncheck the log for detail.");
         return FALSE;
     }
 
@@ -155,6 +158,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #endif 
     if (keeperNeeded) {
         if (!VRDemoProcessKeeper::getInstance().init(parentProcessID)) {
+            LOG4CPLUS_ERROR(logger, "Failed to init VR Demo Keeper, exit");
+            VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init keeper module,\ncheck the log for detail.");
             return FALSE;
         }
     }
