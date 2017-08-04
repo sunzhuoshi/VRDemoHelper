@@ -6,6 +6,9 @@
 
 #include "util\l4util.h"
 #include "VRDemoConfigurator.h"
+#ifdef IN_VR_DEMO_HELPER
+#include <log4cplus\log4cplus.h>
+#endif
 
 const std::string VRDemoArbiter::SECTION_IGNORE_LIST = "A.IgnoreList";
 const std::string VRDemoArbiter::SECTION_PREFIX_IMPROVE_STEAM_VR = "A.SteamVR";
@@ -37,7 +40,7 @@ VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleActionTokenMap = {
 bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
 {
     bool result = false;
-  
+
     if (!m_toggles->m_pause) {
         char className[MAX_PATH];
         DWORD processId = 0;
@@ -139,14 +142,26 @@ void VRDemoArbiter::performFullScreenAction(HWND wnd, const RuleItem &ruleItem)
 	GetWindowRect(desktopWindow, &desktopRect);
 	GetWindowRect(wnd, &windowRect);
 
-	if (windowRect.left > desktopRect.left ||
-		windowRect.right < desktopRect.right ||
-		windowRect.top < desktopRect.top ||
-		windowRect.bottom < desktopRect.bottom) {
-		PostMessageA(wnd, WM_KEYDOWN, VK_MENU, 0);				// Post WM_KEYDOWN for Unreal games
-		// TODO: check if char code or repeat is necessary
-		PostMessageA(wnd, WM_SYSKEYDOWN, VK_RETURN, 1 << 29 | 0x001C0001);  // ALT down | char code = 1C | repeat = 1
-		PostMessageA(wnd, WM_KEYUP, VK_MENU, 0);				// Post WM_KEYUP for Unreal games  
+    if (windowRect.left > desktopRect.left ||
+        windowRect.right < desktopRect.right ||
+        windowRect.top < desktopRect.top ||
+        windowRect.bottom < desktopRect.bottom) {
+        bool perform = true;
+        // if we use poll to set full screen, then only when the window is foreground 
+        if (ruleItem.m_type == RuleType::RT_POLL && GetForegroundWindow() != wnd) {
+            perform = false;
+        }
+
+        if (perform) {
+#ifdef IN_VR_DEMO_HELPER
+            LOG4CPLUS_DEBUG(log4cplus::Logger::getRoot(), "Performing full screen action, rule: " << ruleItem.toString());
+#endif
+            PostMessageA(wnd, WM_KEYDOWN, VK_MENU, 0);				// Post WM_KEYDOWN for Unreal games
+            PostMessageA(wnd, WM_SYSKEYDOWN, VK_MENU, 1 << 29 | 1 << 24 | 0x00380001); // it is needed by NetEase lhsk
+            // TODO: check if char code or repeat is necessary for below line
+            PostMessageA(wnd, WM_SYSKEYDOWN, VK_RETURN, 1 << 29 | 0x001C0001);  // ALT down | char code = 1C | repeat = 1
+            PostMessageA(wnd, WM_KEYUP, VK_MENU, 0);				// Post WM_KEYUP for Unreal games  
+        }
 	}
 }
 
@@ -197,6 +212,14 @@ bool VRDemoArbiter::init(const Toggles& toggles)
                 }
                 if (ruleItem.isValid()) {
                     m_ruleItemMap[sectionIt.first] = ruleItem;
+#ifdef IN_VR_DEMO_HELPER
+                    LOG4CPLUS_DEBUG(log4cplus::Logger::getRoot(), "Added rule: " << ruleItem.toString());
+#endif
+                }
+                else {
+#ifdef IN_VR_DEMO_HELPER
+                    LOG4CPLUS_DEBUG(log4cplus::Logger::getRoot(), "Skipped invalid rule: " << ruleItem.toString());
+#endif
                 }
             }
         }
