@@ -37,6 +37,16 @@ VRDemoArbiter::TokenMap VRDemoArbiter::s_ruleActionTokenMap = {
     {VRDemoArbiter::RA_UNKNOWN, "UNKNOWN"}
 };
 
+VRDemoArbiter::VRDemoArbiter()
+{
+    m_ignoredProcessNameList.push_back("explorer.exe");
+}
+
+VRDemoArbiter::~VRDemoArbiter()
+{
+
+}
+
 bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
 {
     bool result = false;

@@ -106,8 +106,8 @@ private:
     typedef std::list<std::string> NameList;
     typedef std::map<std::string, RuleItem> RuleItemMap;
 public:
-    VRDemoArbiter() {};
-    ~VRDemoArbiter() {};
+    VRDemoArbiter();
+    ~VRDemoArbiter();
     bool init(const Toggles &toggles);
     bool arbitrate(RuleType type, int message, HWND wnd);
     inline bool hasRuleWithTypePoll() const {
