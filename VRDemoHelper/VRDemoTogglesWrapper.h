@@ -54,11 +54,10 @@ public:
         return newValue;
     }
     inline void togglePause() {
+        bool newPause = toggleValue(VRDemoArbiter::TI_PAUSE);
         if (!backgroundMode) {
             // quick hack here, no event listener used
-            VRDemoNotificationManager::getInstance().modifyNotificationIcon(
-                toggleValue(VRDemoArbiter::TI_PAUSE)
-            );
+            VRDemoNotificationManager::getInstance().modifyNotificationIcon(newPause);
         }
     }
     inline void toggleMaximizeGamesAndSave() {
