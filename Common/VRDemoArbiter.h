@@ -74,7 +74,7 @@ public:
                 filterOK = !m_className.empty() || !m_moduleFilter.empty();
                 switch (m_type) {
                     case RT_POLL:
-                        if (filterOK && RA_UNKNOWN != m_action) {
+                        if (filterOK && RA_UNKNOWN != m_action && RM_UNKNOWN == m_message) {
                             valid = true;
                         }
                         break;
