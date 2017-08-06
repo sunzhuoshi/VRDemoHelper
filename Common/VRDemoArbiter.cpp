@@ -49,8 +49,8 @@ bool VRDemoArbiter::arbitrate(RuleType type, int message, HWND wnd)
 
         std::string processName = l4util::getProcessNameWithWindow(wnd);
 
-        // if we can't get process name, then we can do less...
-        if (!ifIgnore(processName) && processName.size()) {
+        // sometimes, we can't get process name(e.g. no permission for LoL), just have a try
+        if (processName.empty() || !ifIgnore(processName)) {
             RealGetWindowClassA(wnd, className, MAX_PATH);
 
             RuleItemMap::const_iterator it = m_ruleItemMap.begin();
@@ -147,20 +147,42 @@ void VRDemoArbiter::performFullScreenAction(HWND wnd, const RuleItem &ruleItem)
         windowRect.top < desktopRect.top ||
         windowRect.bottom < desktopRect.bottom) {
         bool perform = true;
-        // if we use poll to set full screen, then only when the window is foreground 
-        if (ruleItem.m_type == RuleType::RT_POLL && GetForegroundWindow() != wnd) {
-            perform = false;
+
+        if (ruleItem.m_type == RuleType::RT_POLL) {
+            // if we use poll to set full screen, then only when the window is foreground 
+            if (GetForegroundWindow() != wnd) {
+                perform = false;
+            }
+            else {
+                auto it = m_pollFullscreenActionLogMap.find(wnd);
+                if (it != m_pollFullscreenActionLogMap.end() && GetTickCount() - it->second < POLL_FULLSREEN_ACTION_INTERVAL) {
+                    //perform = false;
+                }
+            }
         }
 
         if (perform) {
 #ifdef IN_VR_DEMO_HELPER
             LOG4CPLUS_DEBUG(log4cplus::Logger::getRoot(), "Performing full screen action, rule: " << ruleItem.toString());
+            LOG4CPLUS_DEBUG(log4cplus::Logger::getRoot(), "Sending simulation keyboard events...");
 #endif
+            // TODO: change keybd_event to SendInput
+            // use scan code for DirectInput, not virtual key code
+            keybd_event(0, 0x38, KEYEVENTF_SCANCODE, 0);     // VK_LMENU
+            keybd_event(0, 0x1C, KEYEVENTF_SCANCODE, 0);     // VK_RETURN
+            Sleep(100);                                      // for re7(DirectInput SHOULD be used, give it enough time to query key state before keyup)
+            keybd_event(0, 0x38, KEYEVENTF_KEYUP | KEYEVENTF_SCANCODE, 0);
+            keybd_event(0, 0x1C, KEYEVENTF_KEYUP | KEYEVENTF_SCANCODE, 0);
+
+            m_pollFullscreenActionLogMap[wnd] = GetTickCount();
+            /*
+            // TODO: check why it does not work with LoL(x86), re7(x64)
             PostMessageA(wnd, WM_KEYDOWN, VK_MENU, 0);				// Post WM_KEYDOWN for Unreal games
             PostMessageA(wnd, WM_SYSKEYDOWN, VK_MENU, 1 << 29 | 1 << 24 | 0x00380001); // it is needed by NetEase lhsk
-            // TODO: check if char code or repeat is necessary for below line
             PostMessageA(wnd, WM_SYSKEYDOWN, VK_RETURN, 1 << 29 | 0x001C0001);  // ALT down | char code = 1C | repeat = 1
-            PostMessageA(wnd, WM_KEYUP, VK_MENU, 0);				// Post WM_KEYUP for Unreal games  
+            PostMessageA(wnd, WM_SYSCHAR, VK_RETURN, 1 << 29 | 0x001C0001); // ALT down | char code = 1c | repeat = 1 
+            PostMessageA(wnd, WM_KEYUP, VK_MENU, 0);				// Post WM_KEYUP for Unreal games 
+            */
         }
 	}
 }

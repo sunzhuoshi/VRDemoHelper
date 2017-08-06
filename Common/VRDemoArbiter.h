@@ -137,5 +137,9 @@ private:
     RuleItemMap m_ruleItemMap;
 
     const Toggles *m_toggles = nullptr;
+
+    // used to limit frequency perform full screen action to same window in poll mode
+    std::map<HWND, DWORD> m_pollFullscreenActionLogMap;        
+    static const DWORD POLL_FULLSREEN_ACTION_INTERVAL = 1000; //ms
 };
 
