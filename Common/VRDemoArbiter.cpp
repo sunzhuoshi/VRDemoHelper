@@ -153,10 +153,10 @@ void VRDemoArbiter::performFullScreenAction(HWND wnd, const RuleItem &ruleItem)
 	GetWindowRect(desktopWindow, &desktopRect);
 	GetWindowRect(wnd, &windowRect);
 
-    if (windowRect.left > desktopRect.left ||
-        windowRect.right < desktopRect.right ||
-        windowRect.top < desktopRect.top ||
-        windowRect.bottom < desktopRect.bottom) {
+    if (windowRect.left != desktopRect.left ||
+        windowRect.right != desktopRect.right ||
+        windowRect.top != desktopRect.top ||
+        windowRect.bottom != desktopRect.bottom) {
         bool perform = true;
 
         if (ruleItem.m_type == RuleType::RT_POLL) {
