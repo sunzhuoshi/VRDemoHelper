@@ -26,12 +26,7 @@ VRDemoCoreWrapper::VRDemoCoreWrapper():
 
 VRDemoCoreWrapper::~VRDemoCoreWrapper()
 {
-    if (m_hook) {
-        UnhookWindowsHookEx(m_hook);
-    }
-    if (m_dll) {
-        FreeLibrary(m_dll);
-    }
+    uninit();
 }
 
 bool VRDemoCoreWrapper::init(const VRDemoArbiter::Toggles& toggles)
@@ -76,6 +71,9 @@ bool VRDemoCoreWrapper::init(const VRDemoArbiter::Toggles& toggles)
             LOG4CPLUS_ERROR(logger, "Invalid core exports, check your dll version");
         }
     }
+    if (!result) {
+        uninit();
+    }
     return result;
 }
 
@@ -101,3 +99,15 @@ bool VRDemoCoreWrapper::toggleBenchmark()
     return false;
 }
 
+
+void VRDemoCoreWrapper::uninit()
+{
+    if (m_hook) {
+        UnhookWindowsHookEx(m_hook);
+        m_hook = nullptr;
+    }
+    if (m_dll) {
+        FreeLibrary(m_dll);
+        m_dll = nullptr;
+    }
+}

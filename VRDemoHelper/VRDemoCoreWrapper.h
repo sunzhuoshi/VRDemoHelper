@@ -17,6 +17,8 @@ private:
     typedef bool (WINAPI *InitFuncPtr)(const char *, const VRDemoArbiter::Toggles&);
     typedef void (WINAPI *SetToggleFuncPtr)(int, bool);
 
+    void uninit();
+
     HINSTANCE m_dll = NULL;
     HHOOK m_hook = NULL;
     UINT m_windowMessageToggleBenchmark = 0;
