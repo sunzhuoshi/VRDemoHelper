@@ -86,7 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	if (!IsAbleToRun())
 	{
-		return FALSE;
+		return E_NOT_ABLE_TO_RUN;
 	}
 
     ParseCommandLineArguments();
@@ -103,8 +103,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             l4util::getFileFullPath(VRDemoConfigurator::FILE_SETTINGS)
         )
     ) {  
-        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init configurator,\ncheck the log for detail.");
-        return FALSE;
+        if (!backgroundMode) {
+            VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init configurator,\ncheck the log for detail.");
+        }
+        return E_INIT_FAILURE_CONFIGURATOR;
     }
 
     // TODO: Add hotkey configuration
@@ -118,11 +120,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 #endif // WITH_STEAM_VR_CONFIGURATOR 
 
-    coreWrapper = new(std::nothrow) VRDemoCoreWrapper();
-    if (coreWrapper && !coreWrapper->init(togglesWrapper.getToggles())) {
+    coreWrapper = new VRDemoCoreWrapper();
+    if (!coreWrapper->init(togglesWrapper.getToggles())) {
         LOG4CPLUS_ERROR(logger, "Failed to init core module, exit");
-        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
-        return FALSE;
+        if (!backgroundMode) {
+            VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init core module,\ncheck the log for detail.");
+        }
+        return E_INIT_FAILURE_CORE;
     }
 
     // create window poller only in x86 version
@@ -130,8 +134,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     VRDemoWindowPoller::VRDemoWindowPollerPtr poller(new VRDemoWindowPoller());
     if (!poller->init(togglesWrapper.getToggles())) {
         LOG4CPLUS_ERROR(logger, "Failed to init window poller, exit");
-        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init window poller module,\ncheck the log for detail.");
-        return FALSE;
+        if (!backgroundMode) {
+            VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init window poller module,\ncheck the log for detail.");
+        }
+        return E_INIT_FAILURE_POLLER;
     }
 #endif // _WIN64
 
@@ -145,8 +151,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (!InitInstance (hInstance, nCmdShow))
     {
         LOG4CPLUS_ERROR(logger, "Failed to init instance, exit");
-        VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init instance,\ncheck the log for detail.");
-        return FALSE;
+        if (!backgroundMode) {
+            VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init instance,\ncheck the log for detail.");
+        }
+        return E_INIT_FAILURE_INSTANCE;
     }
 
 #ifdef _WIN64
@@ -159,12 +167,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (keeperNeeded) {
         if (!VRDemoProcessKeeper::getInstance().init(parentProcessID)) {
             LOG4CPLUS_ERROR(logger, "Failed to init VR Demo Keeper, exit");
-            VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init keeper module,\ncheck the log for detail.");
-            return FALSE;
+            if (!backgroundMode) {
+                VR_DEMO_ALERT_IS(IDS_CAPTION_ERROR, "Failed to init keeper module,\ncheck the log for detail.");
+                VRDemoNotificationManager::getInstance().deleteNotificationIcon();
+            }
+            return E_INIT_FAILURE_KEEPER;
         }
     }
 
     LOG4CPLUS_INFO(logger, "VR Demo Helper started");
+    if (!backgroundMode) {
+        VRDemoNotificationManager::getInstance().addNotificationInfo(IDS_NOTIFICATION_STARTED);
+    }
 
     // only set x86 version to auto run
 #ifndef _WIN64
@@ -260,7 +274,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if (!backgroundMode) {
                 VRDemoNotificationManager::getInstance().init(hInst, hWnd);
                 VRDemoNotificationManager::getInstance().addNotificationIcon();
-                VRDemoNotificationManager::getInstance().addNotificationInfo(IDS_NOTIFICATION_STARTED);
             }
         }
 		break;
@@ -421,11 +434,13 @@ BOOL IsAbleToRun()
 			CloseHandle(hMutex);
 			errorMsg << l4util::loadString(IDC_VRDEMOHELPER) << " is already running";
 			LOG4CPLUS_ERROR(logger, errorMsg.str());
-			MessageBox(NULL, 
-				errorMsg.str().c_str(), 
-				l4util::loadString(IDS_CAPTION_ERROR).c_str(), 
-				MB_OK
-			);
+            if (!backgroundMode) {
+                MessageBox(NULL,
+                    errorMsg.str().c_str(),
+                    l4util::loadString(IDS_CAPTION_ERROR).c_str(),
+                    MB_OK
+                );
+            }
 			// TODO: send a notification message?
 		}
 		else 
@@ -437,11 +452,13 @@ BOOL IsAbleToRun()
 	{
 		errorMsg << "Failed to create single instance lock, error code: " << GetLastError();
 		LOG4CPLUS_ERROR(logger, errorMsg.str());;
-		MessageBox(NULL, 
-			errorMsg.str().c_str(), 
-			l4util::loadString(IDS_CAPTION_ERROR).c_str(), 
-			MB_OK
-		);
+        if (!backgroundMode) {
+            MessageBox(NULL,
+                errorMsg.str().c_str(),
+                l4util::loadString(IDS_CAPTION_ERROR).c_str(),
+                MB_OK
+            );
+        }
 	}
 	return bResult;
 }
