@@ -73,12 +73,21 @@ bool VRDemoProcessKeeper::createChildProcess()
     if (CreateProcessA(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
         m_childProcessID = pi.dwProcessId;
         m_childProcessHandle = pi.hProcess;
-        LOG4CPLUS_INFO(m_logger, "Child process created");
+        LOG4CPLUS_INFO(m_logger, "Child process created, pid: " << pi.dwProcessId);
         LOG4CPLUS_DEBUG(m_logger, "Waiting child process initialization...");
         DWORD ret = WaitForInputIdle(pi.hProcess, INFINITE);
-        LOG4CPLUS_DEBUG(m_logger, "Waiting result: " << ret);
-        findChildProcessMainWindow();
-        return true;
+        DWORD exitCode = 0;
+        GetExitCodeProcess(pi.hProcess, &exitCode);
+        LOG4CPLUS_DEBUG(m_logger, "Waiting result: " << ret << ", exit code: " << exitCode);
+        
+        if (0 == ret && STILL_ACTIVE == exitCode) {
+            findChildProcessMainWindow();
+            return true;
+        }
+        else {
+            LOG4CPLUS_ERROR(m_logger, "Child process exit abnormally");
+            return false;
+        }
     }
     else {
         LOG4CPLUS_ERROR(m_logger, "Failed to create child process, error: " << GetLastError());
