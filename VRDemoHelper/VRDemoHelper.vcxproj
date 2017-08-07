@@ -217,6 +217,8 @@ if $(WITH_UPGRADE_CHECKER) NEQ 0 (
   copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
 )
 
+echo copying ReadMe...
+copy /Y $(ProjectDir)ReadMe.txt $(TargetDir)
 
 cd $(TargetDir)
 
@@ -280,6 +282,9 @@ if $(WITH_UPGRADE_CHECKER) NEQ 0 (
   echo copying VRDemoHelper.dat...
   copy /Y $(ProjectDir)VRDemoHelper.dat $(TargetDir)
 )
+
+echo copying ReadMe...
+copy /Y $(ProjectDir)ReadMe.txt $(TargetDir)
 
 cd $(TargetDir)
 
@@ -362,6 +367,9 @@ del /q *lastcodeanalysissucceeded
   <ItemGroup>
     <None Include="settings.ini" />
     <None Include="VRDemoHelper.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
