@@ -23,4 +23,4 @@ Useful to demonstrate VR game with special SteamVR configuration
 Hotkeys
 F8 to pause/resume 
 
-Any further question, please email to sunzhuoshi@gmail.com
+Any bug, question or feature request, please email to sunzhuoshi@gmail.com
