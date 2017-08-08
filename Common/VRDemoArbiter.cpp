@@ -41,6 +41,7 @@ VRDemoArbiter::VRDemoArbiter()
 {
     m_ignoredProcessNameList.push_back("explorer.exe");
     m_ignoredProcessNameList.push_back("devenv.exe"); // it is a MUST when developing
+    m_ignoredProcessNameList.push_back("outlook.exe");
 }
 
 VRDemoArbiter::~VRDemoArbiter()
