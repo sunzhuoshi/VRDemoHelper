@@ -186,6 +186,7 @@ if $(WITH_UPGRADE_CHECKER) NEQ 0 (
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);WITH_UPGRADE_CHECKER=$(WITH_UPGRADE_CHECKER);%(PreprocessorDefinitions);IN_VR_DEMO_HELPER</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -252,6 +253,7 @@ del /q *lastcodeanalysissucceeded
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;CURL_STATICLIB;WITH_FPS=$(WITH_FPS);WITH_UPGRADE_CHECKER=$(WITH_UPGRADE_CHECKER);%(PreprocessorDefinitions);IN_VR_DEMO_HELPER</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\3rdParty\log4cplus\include;..\3rdParty\jsoncpp;..\3rdParty\curl\include;..\Common;.\;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

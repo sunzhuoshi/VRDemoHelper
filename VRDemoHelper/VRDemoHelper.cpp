@@ -75,8 +75,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-	// init log first in main
-	log4cplus::Initializer initializer;
+    // we can't use Initializer, for we use static VC runtime libs
+    // log4cplus::Initializer initializer;
+    log4cplus::initialize();
 
     InitLogConfiguration();
 

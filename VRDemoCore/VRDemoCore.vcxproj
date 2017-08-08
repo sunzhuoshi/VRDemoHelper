@@ -144,6 +144,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;WITH_FPS=$(WITH_FPS);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;..\3rdParty\jsoncpp;.\</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,7 +154,8 @@
       <AdditionalDependencies>FW1FontWrapper_x86.lib;libMinHook.x86.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\3rdParty\MiniHook;..\3rdParty\FW1FontWrapper\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>VRDemoCore.def</ModuleDefinitionFile>
-      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -167,6 +169,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\Common\log4cplus\include;..\Common;..\3rdParty;..\3rdParty\jsoncpp;.\</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,7 +179,8 @@
       <AdditionalDependencies>FW1FontWrapper_x64.lib;libMinHook.x64.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\3rdParty\MiniHook;..\3rdParty\FW1FontWrapper\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>VRDemoCore.def</ModuleDefinitionFile>
-      <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
